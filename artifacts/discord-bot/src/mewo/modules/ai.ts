@@ -386,56 +386,33 @@ export const cmdDownload: Handler = async (msg, args) => {
   }
 };
 
-async function imagineViaHorde(prompt: string, apiKey: string): Promise<Buffer> {
-  const submitRes = await fetch("https://stablehorde.net/api/v2/generate/async", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": apiKey,
-      "Client-Agent": "MewoBot:1.0:discord",
-    },
-    body: JSON.stringify({
-      prompt,
-      params: {
-        width: 512,
-        height: 512,
-        steps: 20,
-        cfg_scale: 7,
-        sampler_name: "k_euler_a",
-        n: 1,
+async function imagineViaHuggingFace(prompt: string, apiKey: string): Promise<Buffer> {
+  const res = await fetch(
+    "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
+    {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "x-use-cache": "false",
       },
-      nsfw: true,
-      censor_nsfw: false,
-      r2: false,
-    }),
-    signal: AbortSignal.timeout(15000),
-  });
-  if (!submitRes.ok) {
-    const body = await submitRes.text();
-    throw new Error(`horde submit ${submitRes.status}: ${body.slice(0, 200)}`);
-  }
-  const { id } = await submitRes.json() as { id: string };
-  for (let i = 0; i < 72; i++) {
-    await new Promise(r => setTimeout(r, 5000));
-    const checkRes = await fetch(`https://stablehorde.net/api/v2/generate/check/${id}`, {
-      headers: { "Client-Agent": "MewoBot:1.0:discord" },
-      signal: AbortSignal.timeout(10000),
-    });
-    const check = await checkRes.json() as { done: boolean; faulted?: boolean };
-    if (check.faulted) throw new Error("horde generation faulted");
-    if (check.done) {
-      const statusRes = await fetch(`https://stablehorde.net/api/v2/generate/status/${id}`, {
-        headers: { "Client-Agent": "MewoBot:1.0:discord" },
-        signal: AbortSignal.timeout(10000),
-      });
-      const status = await statusRes.json() as { generations: Array<{ img: string; model?: string }> };
-      const b64 = status.generations?.[0]?.img;
-      if (!b64) throw new Error("horde: no image in response");
-      console.log(`[MEWO AI] imagine done via horde model: ${status.generations[0]?.model}`);
-      return Buffer.from(b64, "base64");
+      body: JSON.stringify({
+        inputs: prompt,
+        parameters: {
+          num_inference_steps: 4,
+          width: 1024,
+          height: 1024,
+          guidance_scale: 0,
+        },
+      }),
+      signal: AbortSignal.timeout(60000),
     }
+  );
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`hf ${res.status}: ${body.slice(0, 300)}`);
   }
-  throw new Error("horde timeout");
+  return Buffer.from(await res.arrayBuffer());
 }
 
 async function imagineViaPollinations(prompt: string): Promise<{ buffer: Buffer; ext: string }> {
@@ -456,27 +433,23 @@ export const cmdGrokImagine: Handler = async (msg, args) => {
     return;
   }
   const prompt = args.join(" ");
-  const hordeKey = process.env.AI_HORDE_API_KEY;
-  const useHorde = hordeKey && hordeKey !== "0000000000";
+  const hfKey = process.env.HF_API_KEY ?? process.env.HUGGING_FACE_API_KEY ?? process.env.HF_API_TOKEN;
 
   const thinking = await msg.reply({
     embeds: [new EmbedBuilder()
       .setColor(0x00B4FF)
-      .setDescription(useHorde
-        ? "🎨 Generating image... (may take 1–2 minutes)"
-        : "🎨 Generating image... (this may take a few seconds)")
+      .setDescription("🎨 Generating image... (this may take a few seconds)")
     ]
   });
 
   try {
     let buffer: Buffer;
-    let ext = "jpg";
+    let ext = "png";
     let footer: string;
 
-    if (useHorde) {
-      buffer = await imagineViaHorde(prompt, hordeKey);
-      ext = "webp";
-      footer = "mewo • ai • AI Horde";
+    if (hfKey) {
+      buffer = await imagineViaHuggingFace(prompt, hfKey);
+      footer = "mewo • ai • FLUX.1-schnell";
     } else {
       const result = await imagineViaPollinations(prompt);
       buffer = result.buffer;
