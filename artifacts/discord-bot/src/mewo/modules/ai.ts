@@ -393,7 +393,7 @@ export const cmdGrokImagine: Handler = async (msg, args) => {
   }
   const prompt = args.join(" ");
   const thinking = await msg.reply({
-    embeds: [new EmbedBuilder().setColor(0x00B4FF).setDescription("🎨 Generating image... (this may take 30–90 seconds)")]
+    embeds: [new EmbedBuilder().setColor(0x00B4FF).setDescription("🎨 Generating image... (may take 1–3 minutes)")]
   });
   try {
     const apiKey = process.env.AI_HORDE_API_KEY ?? "0000000000";
@@ -408,54 +408,53 @@ export const cmdGrokImagine: Handler = async (msg, args) => {
       body: JSON.stringify({
         prompt,
         params: {
-          width: 1024,
-          height: 1024,
-          steps: 30,
+          width: 768,
+          height: 768,
+          steps: 20,
           cfg_scale: 7,
           sampler_name: "k_euler_a",
           n: 1,
         },
         nsfw: true,
         censor_nsfw: false,
-        models: ["Pony Diffusion V6 XL"],
-        r2: true,
+        r2: false,
       }),
     });
 
     if (!submitRes.ok) {
       const errData = await submitRes.json() as { message?: string };
-      console.error("[MEWO AI] imagine submit error:", errData);
+      console.error("[MEWO AI] imagine submit error:", JSON.stringify(errData));
       throw new Error("submit failed");
     }
 
-    const { id } = await submitRes.json() as { id: string };
+    const submitData = await submitRes.json() as { id: string; message?: string };
+    console.log("[MEWO AI] imagine job submitted:", submitData.id);
+    const { id } = submitData;
 
-    let imageUrl: string | null = null;
-    for (let i = 0; i < 36; i++) {
+    let imageBase64: string | null = null;
+    for (let i = 0; i < 72; i++) {
       await new Promise(r => setTimeout(r, 5000));
       const checkRes = await fetch(`https://stablehorde.net/api/v2/generate/check/${id}`, {
         headers: { "Client-Agent": "MewoBot:1.0:discord" },
       });
-      const check = await checkRes.json() as { done: boolean; faulted?: boolean; queue_position?: number; wait_time?: number };
+      const check = await checkRes.json() as { done: boolean; faulted?: boolean; wait_time?: number; queue_position?: number };
+      console.log(`[MEWO AI] imagine poll ${i + 1}: done=${check.done} faulted=${check.faulted} wait=${check.wait_time}s queue=${check.queue_position}`);
       if (check.faulted) throw new Error("generation faulted");
       if (check.done) {
         const statusRes = await fetch(`https://stablehorde.net/api/v2/generate/status/${id}`, {
           headers: { "Client-Agent": "MewoBot:1.0:discord" },
         });
-        const status = await statusRes.json() as { generations: Array<{ img: string }> };
-        const imgData = status.generations?.[0]?.img;
-        if (imgData) {
-          imageUrl = imgData;
-          break;
-        }
+        const status = await statusRes.json() as { generations: Array<{ img: string; censored?: boolean; model?: string }> };
+        imageBase64 = status.generations?.[0]?.img ?? null;
+        const model = status.generations?.[0]?.model ?? "unknown";
+        console.log(`[MEWO AI] imagine done via model: ${model}`);
+        break;
       }
     }
 
-    if (!imageUrl) throw new Error("timeout");
+    if (!imageBase64) throw new Error("timeout");
 
-    const imgRes = await fetch(imageUrl);
-    if (!imgRes.ok) throw new Error("image download failed");
-    const buffer = Buffer.from(await imgRes.arrayBuffer());
+    const buffer = Buffer.from(imageBase64, "base64");
 
     await thinking.delete().catch(() => {});
     await msg.reply({
@@ -464,7 +463,7 @@ export const cmdGrokImagine: Handler = async (msg, args) => {
         .setTitle("AI Image Generation")
         .setDescription(`> ${prompt.slice(0, 200)}`)
         .setImage("attachment://image.webp")
-        .setFooter({ text: "mewo • ai • AI Horde • Pony Diffusion XL" })
+        .setFooter({ text: "mewo • ai • AI Horde" })
       ],
       files: [{ attachment: buffer, name: "image.webp" }],
     });
