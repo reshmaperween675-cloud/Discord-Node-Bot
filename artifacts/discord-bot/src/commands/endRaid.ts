@@ -1,4 +1,4 @@
-import { Message, EmbedBuilder } from "discord.js";
+import { Message } from "discord.js";
 
 const MESSAGES = [
   "Raid completed. We live to lag another day.",
@@ -14,8 +14,8 @@ const MESSAGES = [
 ];
 
 const GIFS = [
-  "https://media.tenor.com/vqRpSNAMdH8AAAAC/konata-happy.gif",
-  "https://media.tenor.com/Uv6Q0zqxEN4AAAAC/lucky-star-konata.gif",
+  "https://tenor.com/view/konata-happy-lucky-star-yay-cute-gif-5972203048884378616",
+  "https://tenor.com/view/lucky-star-konata-tsk-tsk-tsk-tsk-tsk-anime-tsk-tsk-gif-11078715580433791793",
 ];
 
 function pick<T>(arr: T[]): T {
@@ -26,9 +26,5 @@ export async function handleEndCommand(message: Message): Promise<void> {
   const line = pick(MESSAGES);
   const gif = pick(GIFS);
 
-  const embed = new EmbedBuilder()
-    .setDescription(`# ${line}`)
-    .setImage(gif);
-
-  await message.reply({ embeds: [embed] });
+  await message.reply(`# ${line}\n${gif}`);
 }
