@@ -137,3 +137,14 @@ export async function flushAll(): Promise<void> {
 export function isUsingDatabase(): boolean {
   return useDb;
 }
+
+export async function pingDb(): Promise<{ ok: boolean; latencyMs?: number; error?: string }> {
+  if (!useDb) return { ok: false, error: "DATABASE_URL not set" };
+  try {
+    const start = Date.now();
+    await getPool().query("SELECT 1");
+    return { ok: true, latencyMs: Date.now() - start };
+  } catch (e: unknown) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}

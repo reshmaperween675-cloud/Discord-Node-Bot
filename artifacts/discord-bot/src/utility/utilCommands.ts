@@ -4,6 +4,7 @@ import {
   EmbedBuilder,
   GuildMember,
 } from "discord.js";
+import { pingDb } from "../persistence.js";
 
 const HR   = "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯";
 const FOOT = "Last Stand (LS)  ·  Utility";
@@ -218,9 +219,26 @@ export const pingData = new SlashCommandBuilder()
   .setDescription("Check the bot's network latency.");
 
 export async function executePing(interaction: ChatInputCommandInteraction): Promise<void> {
-  const ws  = interaction.client.ws.ping;
-  const bar = ws < 80 ? "🟢" : ws < 200 ? "🟡" : "🔴";
-  await interaction.editReply({ embeds: [utilEmbed(0x22c55e, "📡  NETWORK LATENCY", `${HR}\n▸  **WebSocket Ping** — ${bar} \`${ws}ms\`\n▸  **API Latency** — \`${Math.round(Date.now() - interaction.createdTimestamp)}ms\`\n${HR}`)] });
+  const ws     = interaction.client.ws.ping;
+  const wsBar  = ws < 80 ? "🟢" : ws < 200 ? "🟡" : "🔴";
+  const apiMs  = Math.round(Date.now() - interaction.createdTimestamp);
+
+  const db     = await pingDb();
+  const dbLine = db.ok
+    ? `🟢 **PostgreSQL** — connected \`${db.latencyMs}ms\``
+    : db.error === "DATABASE_URL not set"
+      ? `🔴 **No database** — data resets on every restart!`
+      : `🔴 **Database error** — \`${db.error}\``;
+
+  await interaction.editReply({
+    embeds: [
+      utilEmbed(
+        db.ok ? 0x22c55e : 0xef4444,
+        "📡  BOT STATUS",
+        `${HR}\n▸  **WebSocket** — ${wsBar} \`${ws}ms\`\n▸  **API Latency** — \`${apiMs}ms\`\n▸  ${dbLine}\n${HR}`,
+      ),
+    ],
+  });
 }
 
 // ── /channelinfo ──────────────────────────────────────────────────────────────
