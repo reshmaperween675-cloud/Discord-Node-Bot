@@ -19,6 +19,7 @@ import { handleMewoCommand } from "./mewo/router.js";
 
 import { data as setupPanelData, execute as setupPanelExecute } from "./commands/setupChallengePanel.js";
 import { handleEndCommand } from "./commands/endRaid.js";
+import { handleNsfwCommand } from "./commands/nsfw.js";
 import { handleCreateTicket } from "./tickets/ticketFlow.js";
 import { handleCloseTicket, handleDeleteTicket } from "./tickets/ticketControls.js";
 import {
@@ -716,6 +717,12 @@ client.on(Events.MessageCreate, async (message: Message) => {
   // ?end — raid end message with random quote and gif
   if (content.toLowerCase() === "?end") {
     handleEndCommand(message).catch((err) => console.error("[END] Unhandled error:", err));
+    return;
+  }
+
+  // ?nsfw — random NSFW gif (NSFW channels only)
+  if (content.toLowerCase() === "?nsfw") {
+    handleNsfwCommand(message).catch((err) => console.error("[NSFW] Unhandled error:", err));
     return;
   }
 
