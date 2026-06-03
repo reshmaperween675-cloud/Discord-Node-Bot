@@ -106,7 +106,7 @@ import {
 import { isLowoEnabled } from "./lowo/toggle.js";
 import { startLowoCron } from "./lowo/cron.js";
 import { startWeeklyResetScheduler } from "./leveling/weekly.js";
-import { startTrainingData, executeStartTraining, endTrainingData, executeEndTraining } from "./training/index.js";
+import { trainingData, executeTraining } from "./training/index.js";
 import {
   announceData, executeAnnounce,
   warnData, executeWarn,
@@ -226,8 +226,7 @@ const commands = [
   startRaidData.toJSON(),
   endRaidData.toJSON(),
   raidAnnounceData.toJSON(),
-  startTrainingData.toJSON(),
-  endTrainingData.toJSON(),
+  trainingData.toJSON(),
   announceData.toJSON(),
   warnData.toJSON(),
   clearwarnsData.toJSON(),
@@ -308,20 +307,16 @@ const commands = [
   stopData.toJSON(),
 ];
 
-const onMemeData = new SlashCommandBuilder()
-  .setName("onmeme")
-  .setDescription("Show the meme/fun command groups in this server")
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
-
-const offMemeData = new SlashCommandBuilder()
-  .setName("offmeme")
-  .setDescription("Hide the meme/fun command groups in this server")
-  .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
+const memeData = new SlashCommandBuilder()
+  .setName("meme")
+  .setDescription("Toggle meme/fun commands on or off in this server")
+  .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+  .addSubcommand((sub) => sub.setName("on").setDescription("Show the meme/fun command groups"))
+  .addSubcommand((sub) => sub.setName("off").setDescription("Hide the meme/fun command groups"));
 
 const baseCommands = [
   ...commands,
-  onMemeData.toJSON(),
-  offMemeData.toJSON(),
+  memeData.toJSON(),
   helpData.toJSON(),
   purgeConfigData.toJSON(),
   lowoEnableData.toJSON(),
@@ -356,8 +351,7 @@ const slashHandlers: Record<string, (i: ChatInputCommandInteraction) => Promise<
   startraid: executeStartRaid,
   endraid: executeEndRaid,
   raidannounce: executeRaidAnnounce,
-  starttraining: executeStartTraining,
-  endtraining: executeEndTraining,
+  training: executeTraining,
   announce: executeAnnounce,
   warn: executeWarn,
   clearwarns: executeClearWarns,
@@ -437,15 +431,17 @@ const slashHandlers: Record<string, (i: ChatInputCommandInteraction) => Promise<
   loop: executeLoop,
   stop: executeStop,
   ...FUN_HANDLERS,
-  onmeme: async (i) => {
-    setFunEnabled(true);
-    await reregisterPrimaryGuild();
-    await i.editReply({ content: "✅ Meme commands are now **ON**. They'll appear in a moment." });
-  },
-  offmeme: async (i) => {
-    setFunEnabled(false);
-    await reregisterPrimaryGuild();
-    await i.editReply({ content: "🚫 Meme commands are now **OFF** and hidden." });
+  meme: async (i) => {
+    const sub = i.options.getSubcommand();
+    if (sub === "on") {
+      setFunEnabled(true);
+      await reregisterPrimaryGuild();
+      await i.editReply({ content: "✅ Meme commands are now **ON**. They'll appear in a moment." });
+    } else {
+      setFunEnabled(false);
+      await reregisterPrimaryGuild();
+      await i.editReply({ content: "🚫 Meme commands are now **OFF** and hidden." });
+    }
   },
   help: executeHelp,
   purgeconfig: executePurgeConfig,

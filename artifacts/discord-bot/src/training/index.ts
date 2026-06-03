@@ -3,7 +3,6 @@ import {
   PermissionFlagsBits,
   ChatInputCommandInteraction,
   EmbedBuilder,
-  MessageFlags,
   TextChannel,
 } from "discord.js";
 import { saveTrainingLog, nextTrainingNumber } from "./store.js";
@@ -45,50 +44,69 @@ function findChannel(
   return null;
 }
 
-// ─── /starttraining ──────────────────────────────────────────────────────────
-
-export const startTrainingData = new SlashCommandBuilder()
-  .setName("starttraining")
-  .setDescription("Deploy a training session alert to the server.")
+export const trainingData = new SlashCommandBuilder()
+  .setName("training")
+  .setDescription("Manage training sessions.")
   .setDefaultMemberPermissions(ADMIN)
-  .addStringOption((o) =>
-    o
-      .setName("training_type")
-      .setDescription("Type of training (e.g. Combat Training, PvP Drills)")
-      .setRequired(true)
+  .addSubcommand((sub) =>
+    sub
+      .setName("start")
+      .setDescription("Deploy a training session alert to the server.")
+      .addStringOption((o) =>
+        o.setName("training_type").setDescription("Type of training (e.g. Combat Training, PvP Drills)").setRequired(true)
+      )
+      .addStringOption((o) =>
+        o.setName("game_link").setDescription("Roblox game link").setRequired(true)
+      )
+      .addStringOption((o) =>
+        o.setName("host").setDescription("Session host username or @mention").setRequired(true)
+      )
+      .addStringOption((o) =>
+        o.setName("duration").setDescription("Expected duration (e.g. 1h, 45 minutes)").setRequired(true)
+      )
+      .addRoleOption((o) =>
+        o.setName("ping_role").setDescription("Role to ping").setRequired(false)
+      )
+      .addStringOption((o) =>
+        o.setName("attendance").setDescription("Attendance requirement (e.g. Mandatory, Optional)").setRequired(false)
+      )
+      .addStringOption((o) =>
+        o.setName("notes").setDescription("Session overview / notes (optional)").setRequired(false)
+      )
   )
-  .addStringOption((o) =>
-    o.setName("game_link").setDescription("Roblox game link").setRequired(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName("host")
-      .setDescription("Session host username or @mention")
-      .setRequired(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName("duration")
-      .setDescription("Expected duration (e.g. 1h, 45 minutes)")
-      .setRequired(true)
-  )
-  .addRoleOption((o) =>
-    o.setName("ping_role").setDescription("Role to ping").setRequired(false)
-  )
-  .addStringOption((o) =>
-    o
-      .setName("attendance")
-      .setDescription("Attendance requirement (e.g. Mandatory, Optional)")
-      .setRequired(false)
-  )
-  .addStringOption((o) =>
-    o
-      .setName("notes")
-      .setDescription("Session overview / notes (optional)")
-      .setRequired(false)
+  .addSubcommand((sub) =>
+    sub
+      .setName("end")
+      .setDescription("Close a training session and log the results.")
+      .addStringOption((o) =>
+        o.setName("training_type").setDescription("Training type / session name").setRequired(true)
+      )
+      .addStringOption((o) =>
+        o.setName("host").setDescription("Session host username or @mention").setRequired(true)
+      )
+      .addStringOption((o) =>
+        o.setName("duration_completed").setDescription("Actual duration completed").setRequired(true)
+      )
+      .addStringOption((o) =>
+        o.setName("mvp").setDescription("MVP(s) — comma-separated for multiple").setRequired(true)
+      )
+      .addStringOption((o) =>
+        o.setName("notes").setDescription("Host notes — format: username — note (optional)").setRequired(false)
+      )
   );
 
-export async function executeStartTraining(
+export async function executeTraining(
+  interaction: ChatInputCommandInteraction
+): Promise<void> {
+  const sub = interaction.options.getSubcommand();
+  if (sub === "start") {
+    await executeStartTraining(interaction);
+  } else {
+    await executeEndTraining(interaction);
+  }
+}
+
+async function executeStartTraining(
   interaction: ChatInputCommandInteraction
 ): Promise<void> {
   const trainingType = interaction.options.getString("training_type", true);
@@ -102,25 +120,16 @@ export async function executeStartTraining(
   const sessionNumber = nextTrainingNumber();
 
   const fields: { name: string; value: string; inline?: boolean }[] = [
-    {
-      name: "◈  GAME LINK",
-      value: `[▸ Join the Session](${gameLink})`,
-    },
+    { name: "◈  GAME LINK", value: `[▸ Join the Session](${gameLink})` },
   ];
 
   if (notes) {
-    fields.push({
-      name: "◈  SESSION OVERVIEW",
-      value: `*${notes}*`,
-    });
+    fields.push({ name: "◈  SESSION OVERVIEW", value: `*${notes}*` });
   }
 
   const embed = new EmbedBuilder()
     .setColor(0xf97316)
-    .setAuthor({
-      name: "◇  TRAINING STARTING",
-      iconURL: interaction.guild?.iconURL() ?? undefined,
-    })
+    .setAuthor({ name: "◇  TRAINING STARTING", iconURL: interaction.guild?.iconURL() ?? undefined })
     .setTitle(trainingType)
     .setDescription(
       `> Host · ${host}\n` +
@@ -129,65 +138,17 @@ export async function executeStartTraining(
       `> Date · ${shortDate()}`
     )
     .addFields(fields)
-    .setFooter({
-      text: `Session #${sessionNumber}  ·  Called by ${interaction.user.username}`,
-      iconURL: interaction.user.displayAvatarURL(),
-    })
+    .setFooter({ text: `Session #${sessionNumber}  ·  Called by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() })
     .setTimestamp();
 
   const channel = interaction.channel as TextChannel | null;
-  if (!channel) {
-    await interaction.editReply({ content: "❌ Cannot post in this channel." });
-    return;
-  }
+  if (!channel) { await interaction.editReply({ content: "❌ Cannot post in this channel." }); return; }
 
-  await channel.send({
-    content: pingRole ? `${pingRole}` : undefined,
-    embeds: [embed],
-  });
-  await interaction.editReply({
-    content: `✅ Training Session #${sessionNumber} announced.`,
-  });
+  await channel.send({ content: pingRole ? `${pingRole}` : undefined, embeds: [embed] });
+  await interaction.editReply({ content: `✅ Training Session #${sessionNumber} announced.` });
 }
 
-// ─── /endtraining ────────────────────────────────────────────────────────────
-
-export const endTrainingData = new SlashCommandBuilder()
-  .setName("endtraining")
-  .setDescription("Close a training session and log the results.")
-  .setDefaultMemberPermissions(ADMIN)
-  .addStringOption((o) =>
-    o
-      .setName("training_type")
-      .setDescription("Training type / session name")
-      .setRequired(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName("host")
-      .setDescription("Session host username or @mention")
-      .setRequired(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName("duration_completed")
-      .setDescription("Actual duration completed")
-      .setRequired(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName("mvp")
-      .setDescription("MVP(s) — comma-separated for multiple")
-      .setRequired(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName("notes")
-      .setDescription("Host notes — format: username — note (optional)")
-      .setRequired(false)
-  );
-
-export async function executeEndTraining(
+async function executeEndTraining(
   interaction: ChatInputCommandInteraction
 ): Promise<void> {
   const trainingType      = interaction.options.getString("training_type", true);
@@ -199,25 +160,16 @@ export async function executeEndTraining(
   const sessionNumber = nextTrainingNumber();
 
   const fields: { name: string; value: string; inline?: boolean }[] = [
-    {
-      name: "SESSION MVP",
-      value: formatPerformers(mvp),
-    },
+    { name: "SESSION MVP", value: formatPerformers(mvp) },
   ];
 
   if (notes) {
-    fields.push({
-      name: "HOST NOTES",
-      value: `*${notes}*`,
-    });
+    fields.push({ name: "HOST NOTES", value: `*${notes}*` });
   }
 
   const embed = new EmbedBuilder()
     .setColor(0xf97316)
-    .setAuthor({
-      name: "◇  TRAINING ENDED",
-      iconURL: interaction.guild?.iconURL() ?? undefined,
-    })
+    .setAuthor({ name: "◇  TRAINING ENDED", iconURL: interaction.guild?.iconURL() ?? undefined })
     .setTitle(trainingType)
     .setDescription(
       `> Host · ${host}\n` +
@@ -225,10 +177,7 @@ export async function executeEndTraining(
       `> Date · ${shortDate()}`
     )
     .addFields(fields)
-    .setFooter({
-      text: `Session #${sessionNumber}  ·  Logged by ${interaction.user.username}`,
-      iconURL: interaction.user.displayAvatarURL(),
-    })
+    .setFooter({ text: `Session #${sessionNumber}  ·  Logged by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() })
     .setTimestamp();
 
   saveTrainingLog({
@@ -244,22 +193,14 @@ export async function executeEndTraining(
     sessionNumber,
   });
 
-  const resultsChannel = findChannel(
-    interaction,
-    "training-results",
-    "training-log"
-  );
+  const resultsChannel = findChannel(interaction, "training-results", "training-log");
 
   if (resultsChannel) {
     await resultsChannel.send({ embeds: [embed] });
-    await interaction.editReply({
-      content: `✅ Session #${sessionNumber} results posted to ${resultsChannel}.`,
-    });
+    await interaction.editReply({ content: `✅ Session #${sessionNumber} results posted to ${resultsChannel}.` });
   } else {
     const ch = interaction.channel as TextChannel | null;
     if (ch) await ch.send({ embeds: [embed] });
-    await interaction.editReply({
-      content: `✅ Session #${sessionNumber} concluded and results logged.`,
-    });
+    await interaction.editReply({ content: `✅ Session #${sessionNumber} concluded and results logged.` });
   }
 }
