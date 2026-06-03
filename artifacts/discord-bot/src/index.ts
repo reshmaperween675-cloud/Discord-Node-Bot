@@ -455,16 +455,18 @@ const slashHandlers: Record<string, (i: ChatInputCommandInteraction) => Promise<
   lowoadmin: executeLowoadmin,
 };
 
+const PRIMARY_GUILD_ID = "1479910330669990025";
+
 async function reregisterPrimaryGuild(): Promise<void> {
-  try {
-    await rest.put(
-      Routes.applicationCommands(client.user!.id),
-      { body: buildCommandList() },
-    );
-    console.log(`[TOGGLE] Re-registered global commands (fun=${isFunEnabled()})`);
-  } catch (err) {
-    console.error("[TOGGLE] Failed to re-register global commands:", err);
-  }
+  const list = buildCommandList();
+  await Promise.all([
+    rest.put(Routes.applicationCommands(client.user!.id), { body: list })
+      .then(() => console.log(`[TOGGLE] Re-registered global commands (fun=${isFunEnabled()})`))
+      .catch((err) => console.error("[TOGGLE] Failed to re-register global commands:", err)),
+    rest.put(Routes.applicationGuildCommands(client.user!.id, PRIMARY_GUILD_ID), { body: list })
+      .then(() => console.log(`[TOGGLE] Re-registered primary guild commands (fun=${isFunEnabled()})`))
+      .catch((err) => console.error("[TOGGLE] Failed to re-register primary guild commands:", err)),
+  ]);
 }
 
 const buttonHandlers: Record<string, (i: ButtonInteraction) => Promise<void>> = {
@@ -513,16 +515,23 @@ client.once(Events.ClientReady, async (readyClient) => {
 
   try {
     const list = buildCommandList();
-    await rest.put(Routes.applicationCommands(readyClient.user.id), { body: list });
-    console.log(`[READY] Registered ${list.length} global commands (fun=${isFunEnabled()}).`);
+    await Promise.all([
+      rest.put(Routes.applicationCommands(readyClient.user.id), { body: list })
+        .then(() => console.log(`[READY] Registered ${list.length} global commands (fun=${isFunEnabled()}).`))
+        .catch((err) => console.error("[ERROR] Failed to register global commands:", err)),
+      rest.put(Routes.applicationGuildCommands(readyClient.user.id, PRIMARY_GUILD_ID), { body: list })
+        .then(() => console.log(`[READY] Registered ${list.length} commands instantly to primary guild.`))
+        .catch((err) => console.error("[ERROR] Failed to register primary guild commands:", err)),
+    ]);
   } catch (err) {
-    console.error("[ERROR] Failed to register global commands:", err);
+    console.error("[ERROR] Failed during command registration:", err);
   }
 
   for (const [guildId] of readyClient.guilds.cache) {
+    if (guildId === PRIMARY_GUILD_ID) continue;
     try {
       await rest.put(Routes.applicationGuildCommands(readyClient.user.id, guildId), { body: [] });
-      console.log(`[READY] Cleared guild-scoped commands for: ${guildId}`);
+      console.log(`[READY] Cleared stale guild-scoped commands for: ${guildId}`);
     } catch (err) {
       console.error(`[ERROR] Failed to clear guild commands for ${guildId}:`, err);
     }
