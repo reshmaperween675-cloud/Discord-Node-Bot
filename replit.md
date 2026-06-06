@@ -60,6 +60,14 @@ Same design, layout, and styling as the PC leaderboard. Data is fully separate â
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
 
+## Agent Instructions
+
+- **Update `replit.md` after every piece of work.** Record what was changed, added, or removed so the next agent always has an accurate picture of the project state. Do this before finishing any task.
+
+## Recent Changes
+
+- **Fun slash commands removed (wired out, files kept):** All fun/meme slash command wiring has been removed from `src/index.ts`. The files (`fun/commands.ts`, `fun/data.ts`, `fun/gifService.ts`, `fun/toggle.ts`) are fully intact and can be re-wired on request. To restore: re-add the imports, `memeData` builder, `...FUN_HANDLERS` spread, `meme` handler, and `...FUN_COMMAND_NAMES` in `PUBLIC_COMMANDS`.
+
 ## User Preferences
 
 - **Never expose confidential information in user-facing content.** This includes: environment variable names (e.g. `OPENAI_API_KEY`), API key variable names, internal service names used for routing, deployment platform details, or any other developer-only implementation details. All Discord embeds, help text, error messages, and command descriptions shown to bot users must use plain, friendly language only. If a feature requires a certain configuration to work, say it is "unavailable" â€” never mention the missing key name or variable.
