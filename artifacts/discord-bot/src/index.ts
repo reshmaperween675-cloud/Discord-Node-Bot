@@ -198,6 +198,7 @@ import {
   handleBackupStats,
 } from "./verification/commands.js";
 import { handleHelp67 } from "./help67.js";
+import { handleAddRoleToAllChannels } from "./admin/commands.js";
 
 const token = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN;
 if (!token) {
@@ -738,6 +739,9 @@ client.on(Events.MessageCreate, async (message: Message) => {
       return;
     case "?help67":
       handleHelp67(message).catch((err) => console.error("[HELP67] Unhandled error:", err));
+      return;
+    case "?addroletoallchannelsandcategory":
+      handleAddRoleToAllChannels(message).catch((err) => console.error("[ADMIN] Unhandled error:", err));
       return;
   }
 

@@ -4,6 +4,10 @@ import {
   ChatInputCommandInteraction,
   EmbedBuilder,
   TextChannel,
+  Message,
+  GuildMember,
+  OverwriteType,
+  type PermissionOverwriteOptions,
 } from "discord.js";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
@@ -361,4 +365,83 @@ export async function executeEmbed(interaction: ChatInputCommandInteraction): Pr
 
   await channel.send({ embeds: [embed] });
   await interaction.editReply({ content: `✅ Embed sent to <#${channel.id}>.` });
+}
+
+// ── ?addroletoallchannelsandcategory ─────────────────────────────────────────
+export async function handleAddRoleToAllChannels(message: Message): Promise<void> {
+  if (!message.guild || !message.member) return;
+  if (!(message.member as GuildMember).permissions.has(PermissionFlagsBits.ManageGuild)) {
+    await message.reply({ content: "You need **Manage Server** permission to use this command." });
+    return;
+  }
+
+  const guild = message.guild;
+  const unverifiedRole = guild.roles.cache.find(
+    (r) => r.name.toLowerCase() === "unverified",
+  );
+
+  if (!unverifiedRole) {
+    const embed = new EmbedBuilder()
+      .setColor(0xff4444)
+      .setTitle("Role Not Found")
+      .setDescription(
+        "No role named **unverified** found in this server.\n\n" +
+        "Create a role called `unverified` first, then run this command again.",
+      );
+    await (message.channel as TextChannel).send({ embeds: [embed] });
+    return;
+  }
+
+  const progressEmbed = new EmbedBuilder()
+    .setColor(0x2f3136)
+    .setTitle("⚙️ Updating Channel Permissions...")
+    .setDescription(
+      `Adding **@${unverifiedRole.name}** to all channels and categories with **View Channel → Denied**.\nThis may take a moment...`,
+    );
+  const progressMsg = await (message.channel as TextChannel).send({ embeds: [progressEmbed] });
+
+  const channels = await guild.channels.fetch();
+  const deny: PermissionOverwriteOptions = { ViewChannel: false };
+
+  let success = 0;
+  let failed = 0;
+  const failedNames: string[] = [];
+
+  for (const [, channel] of channels) {
+    if (!channel) continue;
+    try {
+      await channel.permissionOverwrites.edit(
+        unverifiedRole,
+        deny,
+        { reason: `?addroletoallchannelsandcategory by ${message.author.tag}`, type: OverwriteType.Role },
+      );
+      success++;
+    } catch {
+      failed++;
+      if (failedNames.length < 10) failedNames.push(`#${channel.name}`);
+    }
+  }
+
+  const lines: string[] = [
+    `✅ Updated **${success}** channel${success !== 1 ? "s" : ""} and categor${success !== 1 ? "ies" : "y"}`,
+  ];
+  if (failed > 0) {
+    lines.push(
+      `⚠️ Skipped **${failed}** — bot lacks permission there`,
+    );
+    if (failedNames.length > 0) {
+      lines.push(
+        `\`${failedNames.join("`, `")}${failed > 10 ? `\` + ${failed - 10} more` : "`"}`,
+      );
+    }
+  }
+
+  const doneEmbed = new EmbedBuilder()
+    .setColor(failed > 0 ? 0xffaa00 : 0x00ffff)
+    .setTitle(failed > 0 ? "Done (partial)" : "Done")
+    .setDescription(lines.join("\n"))
+    .setFooter({ text: `@${unverifiedRole.name} · View Channel → Denied on all channels & categories` })
+    .setTimestamp();
+
+  await progressMsg.edit({ embeds: [doneEmbed] });
 }
