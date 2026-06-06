@@ -184,6 +184,19 @@ import {
   loopData, executeLoop,
   stopData, executeStop,
 } from "./music/commands.js";
+import { upsertMessageActivity, upsertVoiceActivity } from "./activity/db.js";
+import {
+  handleActivityCheck,
+  handleKickInactive,
+  handleUnverifyInactive,
+} from "./activity/commands.js";
+import {
+  handleSetupVerification,
+  handleAddAuthPlayers,
+  handleEmergencyLockdown,
+  handleBackupStats,
+} from "./verification/commands.js";
+import { handleHelp67 } from "./help67.js";
 
 const token = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN;
 if (!token) {
@@ -200,6 +213,7 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildVoiceStates,
   ],
 });
 
@@ -697,6 +711,38 @@ client.on(Events.MessageCreate, async (message: Message) => {
     return;
   }
 
+  // Activity + Verification + Admin prefix commands (?activitycheck, ?kickinactive, etc.)
+  const cmd = content.toLowerCase().split(/\s+/)[0];
+  switch (cmd) {
+    case "?activitycheck":
+      handleActivityCheck(message).catch((err) => console.error("[ACTIVITY] Unhandled error:", err));
+      return;
+    case "?kickinactive":
+      handleKickInactive(message).catch((err) => console.error("[ACTIVITY] Unhandled error:", err));
+      return;
+    case "?unverifyinactive":
+      handleUnverifyInactive(message).catch((err) => console.error("[ACTIVITY] Unhandled error:", err));
+      return;
+    case "?setupverification":
+      handleSetupVerification(message).catch((err) => console.error("[VERIFICATION] Unhandled error:", err));
+      return;
+    case "?addauthplayers":
+      handleAddAuthPlayers(message).catch((err) => console.error("[VERIFICATION] Unhandled error:", err));
+      return;
+    case "?emergency_lockdown":
+      handleEmergencyLockdown(message).catch((err) => console.error("[VERIFICATION] Unhandled error:", err));
+      return;
+    case "?backupstats":
+      handleBackupStats(message).catch((err) => console.error("[VERIFICATION] Unhandled error:", err));
+      return;
+    case "?help67":
+      handleHelp67(message).catch((err) => console.error("[HELP67] Unhandled error:", err));
+      return;
+  }
+
+  // Silent activity tracking for all non-bot messages
+  upsertMessageActivity(message.author.id).catch(() => {});
+
   if (content === "!ping") {
     await message.reply("Pong!");
   } else if (content === "!hello") {
@@ -729,6 +775,28 @@ client.on(Events.MessageCreate, async (message: Message) => {
       "`/tournament` — *(Admin)* Launch a TSB tournament\n" +
       "`/closetournamey` — *(Admin)* Close a TSB tournament"
     );
+  }
+});
+
+// Auto-assign "unverified" role when a new member joins
+client.on(Events.GuildMemberAdd, async (member) => {
+  const unverifiedRole = member.guild.roles.cache.find(
+    (r) => r.name.toLowerCase() === "unverified",
+  );
+  if (!unverifiedRole) return;
+  try {
+    await member.roles.add(unverifiedRole, "New member — pending verification");
+    console.log(`[VERIFICATION] Assigned unverified role to ${member.user.tag}`);
+  } catch (err) {
+    console.error(`[VERIFICATION] Failed to assign unverified role to ${member.user.tag}:`, err);
+  }
+});
+
+// Track voice activity silently
+client.on(Events.VoiceStateUpdate, (_oldState, newState) => {
+  if (!newState.member || newState.member.user.bot) return;
+  if (newState.channelId !== null) {
+    upsertVoiceActivity(newState.member.id).catch(() => {});
   }
 });
 

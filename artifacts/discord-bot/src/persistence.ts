@@ -14,7 +14,7 @@ const useDb = !!DATABASE_URL;
 
 let pool: pg.Pool | null = null;
 
-function getPool(): pg.Pool {
+export function getPool(): pg.Pool {
   if (!pool) {
     pool = new Pool({
       connectionString: DATABASE_URL,
@@ -33,6 +33,19 @@ async function ensureSchema(): Promise<void> {
       key TEXT PRIMARY KEY,
       value JSONB NOT NULL,
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS activity_tracker (
+      user_id        TEXT PRIMARY KEY,
+      last_message   TIMESTAMPTZ,
+      last_voice     TIMESTAMPTZ,
+      total_messages INT NOT NULL DEFAULT 0
+    );
+    CREATE TABLE IF NOT EXISTS auth_backups (
+      user_id       TEXT PRIMARY KEY,
+      access_token  TEXT NOT NULL,
+      refresh_token TEXT NOT NULL,
+      token_expiry  TIMESTAMPTZ NOT NULL,
+      guild_id      TEXT NOT NULL
     );
   `);
 }

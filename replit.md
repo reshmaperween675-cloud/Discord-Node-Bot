@@ -68,6 +68,53 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 
 - **Fun slash commands removed (wired out, files kept):** All fun/meme slash command wiring has been removed from `src/index.ts`. The files (`fun/commands.ts`, `fun/data.ts`, `fun/gifService.ts`, `fun/toggle.ts`) are fully intact and can be re-wired on request. To restore: re-add the imports, `memeData` builder, `...FUN_HANDLERS` spread, `meme` handler, and `...FUN_COMMAND_NAMES` in `PUBLIC_COMMANDS`.
 
+- **Activity Engine + OAuth2 Backup System added:** New modules at `src/activity/` and `src/verification/`. All commands use the `?` prefix (no slash command slots used). The OAuth2 callback endpoint lives on the API server at `GET /api/oauth/callback`.
+
+## Activity & Verification Modules
+
+### New `?` Prefix Commands (bot)
+| Command | Permission | Description |
+|---|---|---|
+| `?activitycheck` | Manage Guild | Shows active vs inactive roster (14-day threshold) |
+| `?kickinactive` | Manage Guild | Kicks all members with 14+ days of silence |
+| `?unverifyinactive` | Manage Guild | Strips roles from inactive members, assigns "unverified" |
+| `?setupverification` | Manage Guild | Posts the OAuth2 verification embed with a link button |
+| `?addauthplayers` | Manage Guild | Disaster recovery — re-adds all backed-up members to the server |
+| `?emergency_lockdown` | Administrator | Locks Send Messages + Connect across all channels instantly |
+| `?backupstats` | Manage Guild | Shows how many players are backed up and how many tokens are valid |
+| `?help67` | Manage Guild | Lists all the above commands with descriptions |
+
+### New Source Files
+- `src/activity/db.ts` — activity_tracker table queries
+- `src/activity/commands.ts` — activity prefix command handlers
+- `src/verification/db.ts` — auth_backups table queries
+- `src/verification/oauth.ts` — OAuth2 URL builder, token exchange, refresh, guild add helpers
+- `src/verification/commands.ts` — verification prefix command handlers
+- `src/help67.ts` — `?help67` command
+
+### New API Server Route
+- `artifacts/api-server/src/routes/oauth.ts` — `GET /api/oauth/callback` handles the OAuth2 redirect, exchanges the code, stores the token, and adds the user to the guild
+
+### Database Tables (auto-created on startup)
+- `activity_tracker(user_id, last_message, last_voice, total_messages)` — created in `persistence.ts` ensureSchema and in API server
+- `auth_backups(user_id, access_token, refresh_token, token_expiry, guild_id)` — same
+
+### Required Railway Environment Variables (NEW)
+- `DISCORD_CLIENT_ID` — App ID from Discord Developer Portal
+- `DISCORD_CLIENT_SECRET` — Client Secret from Discord Developer Portal
+- `OAUTH_REDIRECT_URI` — Full callback URL, e.g. `https://your-api.railway.app/api/oauth/callback`
+- `DISCORD_GUILD_ID` — The server ID to add verified users to
+- `DISCORD_MEMBER_ROLE_ID` — Role ID to grant after verification
+- `DISCORD_UNVERIFIED_ROLE_ID` — Role ID assigned to new/unverified members
+
+### Bot Intents Added
+- `GatewayIntentBits.GuildVoiceStates` — required for voice activity tracking
+
+### Auto-behaviors (no commands needed)
+- Every non-bot message silently updates `activity_tracker`
+- Every voice join silently updates `activity_tracker`
+- Every new member joining the server is automatically assigned the "unverified" role (if it exists)
+
 ## User Preferences
 
 - **Never expose confidential information in user-facing content.** This includes: environment variable names (e.g. `OPENAI_API_KEY`), API key variable names, internal service names used for routing, deployment platform details, or any other developer-only implementation details. All Discord embeds, help text, error messages, and command descriptions shown to bot users must use plain, friendly language only. If a feature requires a certain configuration to work, say it is "unavailable" — never mention the missing key name or variable.
