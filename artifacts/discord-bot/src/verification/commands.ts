@@ -53,7 +53,7 @@ export async function handleSetupVerification(message: Message): Promise<void> {
       .setLabel("Verify")
       .setStyle(ButtonStyle.Link)
       .setURL(oauthUrl)
-      .setEmoji("🔗"),
+      .setEmoji("verification"),
   );
 
   await (message.channel as TextChannel).send({ embeds: [embed], components: [row] });

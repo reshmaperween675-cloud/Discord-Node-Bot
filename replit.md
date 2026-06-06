@@ -113,7 +113,10 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 ### Auto-behaviors (no commands needed)
 - Every non-bot message silently updates `activity_tracker`
 - Every voice join silently updates `activity_tracker`
-- Every new member joining the server is automatically assigned the "unverified" role (if it exists)
+
+### Notes
+- Auto-assign "unverified" on member join was removed — handled by another bot
+- The `?setupverification` button uses the custom `:verification:` application emoji
 
 ## User Preferences
 

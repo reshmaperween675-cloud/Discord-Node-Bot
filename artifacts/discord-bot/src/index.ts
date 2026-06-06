@@ -778,20 +778,6 @@ client.on(Events.MessageCreate, async (message: Message) => {
   }
 });
 
-// Auto-assign "unverified" role when a new member joins
-client.on(Events.GuildMemberAdd, async (member) => {
-  const unverifiedRole = member.guild.roles.cache.find(
-    (r) => r.name.toLowerCase() === "unverified",
-  );
-  if (!unverifiedRole) return;
-  try {
-    await member.roles.add(unverifiedRole, "New member — pending verification");
-    console.log(`[VERIFICATION] Assigned unverified role to ${member.user.tag}`);
-  } catch (err) {
-    console.error(`[VERIFICATION] Failed to assign unverified role to ${member.user.tag}:`, err);
-  }
-});
-
 // Track voice activity silently
 client.on(Events.VoiceStateUpdate, (_oldState, newState) => {
   if (!newState.member || newState.member.user.bot) return;
