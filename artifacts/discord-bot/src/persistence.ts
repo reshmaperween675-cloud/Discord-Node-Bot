@@ -41,11 +41,12 @@ async function ensureSchema(): Promise<void> {
       total_messages INT NOT NULL DEFAULT 0
     );
     CREATE TABLE IF NOT EXISTS auth_backups (
-      user_id       TEXT PRIMARY KEY,
+      user_id       TEXT NOT NULL,
       access_token  TEXT NOT NULL,
       refresh_token TEXT NOT NULL,
       token_expiry  TIMESTAMPTZ NOT NULL,
-      guild_id      TEXT NOT NULL
+      guild_id      TEXT NOT NULL,
+      PRIMARY KEY (user_id, guild_id)
     );
   `);
 }

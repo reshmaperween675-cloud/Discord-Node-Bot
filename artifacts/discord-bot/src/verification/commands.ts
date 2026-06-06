@@ -28,7 +28,7 @@ function isAdmin(member: GuildMember): boolean {
 export async function handleSetupVerification(message: Message): Promise<void> {
   if (!message.guild || !message.member || !isAdmin(message.member)) return;
 
-  const oauthUrl = buildOAuthUrl();
+  const oauthUrl = buildOAuthUrl(message.guild.id);
   if (!process.env.DISCORD_CLIENT_ID || !process.env.OAUTH_REDIRECT_URI) {
     await message.reply({
       content:
@@ -65,7 +65,7 @@ export async function handleAddAuthPlayers(message: Message): Promise<void> {
   await (message.channel as TextChannel).sendTyping();
 
   const guildId = message.guild.id;
-  const rows = await getAllAuthBackups();
+  const rows = await getAllAuthBackups(guildId);
 
   if (rows.length === 0) {
     await message.reply({
@@ -109,6 +109,7 @@ export async function handleAddAuthPlayers(message: Message): Promise<void> {
       refreshed++;
       await updateAuthTokens(
         row.user_id,
+        guildId,
         newTokens.access_token,
         newTokens.refresh_token,
         newTokens.expires_in,
@@ -193,8 +194,9 @@ export async function handleEmergencyLockdown(message: Message): Promise<void> {
 export async function handleBackupStats(message: Message): Promise<void> {
   if (!message.guild || !message.member || !isAdmin(message.member)) return;
 
-  const count = await getAuthBackupCount();
-  const rows = await getAllAuthBackups();
+  const guildId = message.guild.id;
+  const count = await getAuthBackupCount(guildId);
+  const rows = await getAllAuthBackups(guildId);
   const now = new Date();
   const valid = rows.filter((r) => new Date(r.token_expiry) > now).length;
   const expired = rows.length - valid;

@@ -20,17 +20,17 @@ export async function upsertAuthBackup(
   await getPool().query(
     `INSERT INTO auth_backups (user_id, access_token, refresh_token, token_expiry, guild_id)
      VALUES ($1, $2, $3, $4, $5)
-     ON CONFLICT (user_id) DO UPDATE
+     ON CONFLICT (user_id, guild_id) DO UPDATE
      SET access_token  = EXCLUDED.access_token,
          refresh_token = EXCLUDED.refresh_token,
-         token_expiry  = EXCLUDED.token_expiry,
-         guild_id      = EXCLUDED.guild_id`,
+         token_expiry  = EXCLUDED.token_expiry`,
     [userId, accessToken, refreshToken, expiry.toISOString(), guildId],
   );
 }
 
 export async function updateAuthTokens(
   userId: string,
+  guildId: string,
   accessToken: string,
   refreshToken: string,
   expiresIn: number,
@@ -39,27 +39,30 @@ export async function updateAuthTokens(
   const expiry = new Date(Date.now() + expiresIn * 1000);
   await getPool().query(
     `UPDATE auth_backups
-     SET access_token  = $2,
-         refresh_token = $3,
-         token_expiry  = $4
-     WHERE user_id = $1`,
-    [userId, accessToken, refreshToken, expiry.toISOString()],
+     SET access_token  = $3,
+         refresh_token = $4,
+         token_expiry  = $5
+     WHERE user_id = $1 AND guild_id = $2`,
+    [userId, guildId, accessToken, refreshToken, expiry.toISOString()],
   );
 }
 
-export async function getAllAuthBackups(): Promise<AuthBackupRow[]> {
+export async function getAllAuthBackups(guildId: string): Promise<AuthBackupRow[]> {
   if (!process.env.DATABASE_URL) return [];
   const res = await getPool().query<AuthBackupRow>(
     `SELECT user_id, access_token, refresh_token, token_expiry, guild_id
-     FROM auth_backups`,
+     FROM auth_backups
+     WHERE guild_id = $1`,
+    [guildId],
   );
   return res.rows;
 }
 
-export async function getAuthBackupCount(): Promise<number> {
+export async function getAuthBackupCount(guildId: string): Promise<number> {
   if (!process.env.DATABASE_URL) return 0;
   const res = await getPool().query<{ count: string }>(
-    `SELECT COUNT(*)::TEXT AS count FROM auth_backups`,
+    `SELECT COUNT(*)::TEXT AS count FROM auth_backups WHERE guild_id = $1`,
+    [guildId],
   );
   return parseInt(res.rows[0]?.count ?? "0", 10);
 }

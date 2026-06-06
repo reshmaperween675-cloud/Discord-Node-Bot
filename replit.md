@@ -103,9 +103,8 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - `DISCORD_CLIENT_ID` — App ID from Discord Developer Portal
 - `DISCORD_CLIENT_SECRET` — Client Secret from Discord Developer Portal
 - `OAUTH_REDIRECT_URI` — Full callback URL, e.g. `https://your-api.railway.app/api/oauth/callback`
-- `DISCORD_GUILD_ID` — The server ID to add verified users to
-- `DISCORD_MEMBER_ROLE_ID` — Role ID to grant after verification
-- `DISCORD_UNVERIFIED_ROLE_ID` — Role ID assigned to new/unverified members
+
+No guild-specific env vars needed — the system is fully multi-guild. The guild ID is passed via OAuth2 `state` parameter when `?setupverification` is run, and role lookup is done by name (`unverified`, `Clan Members`/`member`) at runtime per server.
 
 ### Bot Intents Added
 - `GatewayIntentBits.GuildVoiceStates` — required for voice activity tracking
@@ -117,6 +116,8 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 ### Notes
 - Auto-assign "unverified" on member join was removed — handled by another bot
 - The `?setupverification` button uses the custom `:verification:` application emoji
+- System is fully multi-guild: each server's backup is isolated by `guild_id`, roles found by name per-server
+- `auth_backups` primary key is `(user_id, guild_id)` — a user can be backed up across multiple servers independently
 
 ## User Preferences
 

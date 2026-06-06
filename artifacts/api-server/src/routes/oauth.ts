@@ -6,9 +6,6 @@ const router = Router();
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID ?? "";
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET ?? "";
 const REDIRECT_URI = process.env.OAUTH_REDIRECT_URI ?? "";
-const GUILD_ID = process.env.DISCORD_GUILD_ID ?? "";
-const MEMBER_ROLE_ID = process.env.DISCORD_MEMBER_ROLE_ID ?? "";
-const UNVERIFIED_ROLE_ID = process.env.DISCORD_UNVERIFIED_ROLE_ID ?? "";
 
 function basicAuth(): string {
   return Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64");
@@ -17,11 +14,12 @@ function basicAuth(): string {
 async function ensureAuthTables(): Promise<void> {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS auth_backups (
-      user_id       TEXT PRIMARY KEY,
+      user_id       TEXT NOT NULL,
       access_token  TEXT NOT NULL,
       refresh_token TEXT NOT NULL,
       token_expiry  TIMESTAMPTZ NOT NULL,
-      guild_id      TEXT NOT NULL
+      guild_id      TEXT NOT NULL,
+      PRIMARY KEY (user_id, guild_id)
     );
     CREATE TABLE IF NOT EXISTS activity_tracker (
       user_id        TEXT PRIMARY KEY,
@@ -36,16 +34,40 @@ ensureAuthTables().catch((e) =>
   console.error("[OAUTH] Failed to ensure tables:", e),
 );
 
+interface DiscordRole {
+  id: string;
+  name: string;
+}
+
+async function getGuildRoles(guildId: string, botToken: string): Promise<DiscordRole[]> {
+  try {
+    const res = await fetch(`https://discord.com/api/v10/guilds/${guildId}/roles`, {
+      headers: { Authorization: `Bot ${botToken}` },
+    });
+    if (!res.ok) return [];
+    return (await res.json()) as DiscordRole[];
+  } catch {
+    return [];
+  }
+}
+
 router.get("/oauth/callback", async (req, res) => {
-  const { code } = req.query;
+  const { code, state } = req.query;
 
   if (!code || typeof code !== "string") {
     res.status(400).send(htmlPage("Verification Failed", "No authorization code received. Please try again."));
     return;
   }
 
-  if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI || !GUILD_ID) {
-    console.error("[OAUTH] Missing env vars: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, OAUTH_REDIRECT_URI, DISCORD_GUILD_ID");
+  // state carries the guild ID set by ?setupverification
+  const guildId = typeof state === "string" && state.trim() ? state.trim() : null;
+  if (!guildId) {
+    res.status(400).send(htmlPage("Verification Failed", "Invalid verification link. Ask an admin to re-run the verification setup."));
+    return;
+  }
+
+  if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
+    console.error("[OAUTH] Missing env vars: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, OAUTH_REDIRECT_URI");
     res.status(500).send(htmlPage("Configuration Error", "The verification system is not fully configured. Contact an admin."));
     return;
   }
@@ -88,27 +110,33 @@ router.get("/oauth/callback", async (req, res) => {
     }
 
     const user = (await userRes.json()) as { id: string; username: string };
+    const botToken = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN ?? "";
 
-    // 3. Store token backup
+    // 3. Store token backup (per user + guild — composite key)
     const expiry = new Date(Date.now() + tokens.expires_in * 1000);
     await pool.query(
       `INSERT INTO auth_backups (user_id, access_token, refresh_token, token_expiry, guild_id)
        VALUES ($1, $2, $3, $4, $5)
-       ON CONFLICT (user_id) DO UPDATE
+       ON CONFLICT (user_id, guild_id) DO UPDATE
        SET access_token  = EXCLUDED.access_token,
            refresh_token = EXCLUDED.refresh_token,
-           token_expiry  = EXCLUDED.token_expiry,
-           guild_id      = EXCLUDED.guild_id`,
-      [user.id, tokens.access_token, tokens.refresh_token, expiry.toISOString(), GUILD_ID],
+           token_expiry  = EXCLUDED.token_expiry`,
+      [user.id, tokens.access_token, tokens.refresh_token, expiry.toISOString(), guildId],
     );
 
-    // 4. Add user to guild (or confirm they're already in)
-    const botToken = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN ?? "";
-    const addBody: Record<string, unknown> = { access_token: tokens.access_token };
-    if (MEMBER_ROLE_ID) addBody.roles = [MEMBER_ROLE_ID];
+    // 4. Fetch this guild's roles by name (no hardcoded IDs — works for any server)
+    const roles = await getGuildRoles(guildId, botToken);
+    const memberRole = roles.find(
+      (r) => r.name.toLowerCase() === "clan members" || r.name.toLowerCase() === "member",
+    );
+    const unverifiedRole = roles.find((r) => r.name.toLowerCase() === "unverified");
 
+    const addBody: Record<string, unknown> = { access_token: tokens.access_token };
+    if (memberRole) addBody.roles = [memberRole.id];
+
+    // 5. Add user to guild (201 = just joined, 204 = already a member)
     const addRes = await fetch(
-      `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${user.id}`,
+      `https://discord.com/api/v10/guilds/${guildId}/members/${user.id}`,
       {
         method: "PUT",
         headers: {
@@ -119,14 +147,11 @@ router.get("/oauth/callback", async (req, res) => {
       },
     );
 
-    const alreadyIn = addRes.status === 204;
-    const justJoined = addRes.status === 201;
-
-    if (addRes.ok || alreadyIn || justJoined) {
-      // 5. Assign member role + remove unverified role (if already in guild)
-      if ((alreadyIn || justJoined) && MEMBER_ROLE_ID) {
+    if (addRes.ok || addRes.status === 204 || addRes.status === 201) {
+      // 6. Assign member role + strip unverified role
+      if (memberRole) {
         await fetch(
-          `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${user.id}/roles/${MEMBER_ROLE_ID}`,
+          `https://discord.com/api/v10/guilds/${guildId}/members/${user.id}/roles/${memberRole.id}`,
           {
             method: "PUT",
             headers: { Authorization: `Bot ${botToken}`, "Content-Type": "application/json" },
@@ -134,18 +159,15 @@ router.get("/oauth/callback", async (req, res) => {
           },
         ).catch(() => {});
       }
-      if (UNVERIFIED_ROLE_ID) {
+      if (unverifiedRole) {
         await fetch(
-          `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${user.id}/roles/${UNVERIFIED_ROLE_ID}`,
-          {
-            method: "DELETE",
-            headers: { Authorization: `Bot ${botToken}` },
-          },
+          `https://discord.com/api/v10/guilds/${guildId}/members/${user.id}/roles/${unverifiedRole.id}`,
+          { method: "DELETE", headers: { Authorization: `Bot ${botToken}` } },
         ).catch(() => {});
       }
     }
 
-    console.log(`[OAUTH] Verified user ${user.username} (${user.id})`);
+    console.log(`[OAUTH] Verified user ${user.username} (${user.id}) for guild ${guildId}`);
     res.send(htmlPage(
       "You're In.",
       `Verified, <strong>${user.username}</strong>. Head back to the server — you're good to go.`,
