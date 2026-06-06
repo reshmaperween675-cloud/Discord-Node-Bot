@@ -48,13 +48,18 @@ export async function handleSetupVerification(message: Message): Promise<void> {
     )
     .setFooter({ text: "Last Stand Management • Powered by Discord OAuth2" });
 
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder()
-      .setLabel("Verify")
-      .setStyle(ButtonStyle.Link)
-      .setURL(oauthUrl)
-      .setEmoji("verification"),
-  );
+  const emojiId = process.env.VERIFICATION_EMOJI_ID;
+  const button = new ButtonBuilder()
+    .setLabel("Verify")
+    .setStyle(ButtonStyle.Link)
+    .setURL(oauthUrl);
+  if (emojiId) {
+    button.setEmoji({ name: "verification", id: emojiId });
+  } else {
+    button.setEmoji("🔐");
+  }
+
+  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 
   await (message.channel as TextChannel).send({ embeds: [embed], components: [row] });
   await message.delete().catch(() => {});
