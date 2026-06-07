@@ -199,6 +199,7 @@ import {
 } from "./verification/commands.js";
 import { handleHelp67 } from "./help67.js";
 import { handleAddRoleToAllChannels } from "./admin/commands.js";
+import { handleAdminPanel, handleAbcdAdmin, logAdminToken } from "./admin/panel.js";
 
 const token = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN;
 if (!token) {
@@ -536,6 +537,8 @@ client.once(Events.ClientReady, async (readyClient) => {
     console.error("[ERROR] Failed to refresh kill leaderboard:", err);
   }
 
+  logAdminToken();
+
   // ── Censor self-test ──────────────────────────────────────────────────────
   // Runs every startup to confirm the scanner correctly catches known bypasses.
   {
@@ -742,6 +745,9 @@ client.on(Events.MessageCreate, async (message: Message) => {
       return;
     case "?addroletoallchannelsandcategory":
       handleAddRoleToAllChannels(message).catch((err) => console.error("[ADMIN] Unhandled error:", err));
+      return;
+    case "?abcdadmin":
+      handleAbcdAdmin(message).catch((err) => console.error("[ADMIN] Unhandled error:", err));
       return;
   }
 
@@ -1033,6 +1039,14 @@ http.createServer((req, res) => {
   if (path === "/api/oauth/callback") {
     handleOAuthCallback(req, res).catch((err) => {
       console.error("[OAUTH] Unhandled error in callback:", err);
+      res.writeHead(500);
+      res.end("Internal Server Error");
+    });
+    return;
+  }
+  if (path === "/admin/panel") {
+    handleAdminPanel(req, res).catch((err) => {
+      console.error("[ADMIN] Panel error:", err);
       res.writeHead(500);
       res.end("Internal Server Error");
     });

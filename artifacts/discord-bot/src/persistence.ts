@@ -28,7 +28,9 @@ export function getPool(): pg.Pool {
 }
 
 async function ensureSchema(): Promise<void> {
-  await getPool().query(`
+  const db = getPool();
+
+  await db.query(`
     CREATE TABLE IF NOT EXISTS bot_kv (
       key TEXT PRIMARY KEY,
       value JSONB NOT NULL,
@@ -45,10 +47,22 @@ async function ensureSchema(): Promise<void> {
       access_token  TEXT NOT NULL,
       refresh_token TEXT NOT NULL,
       token_expiry  TIMESTAMPTZ NOT NULL,
-      guild_id      TEXT NOT NULL,
-      PRIMARY KEY (user_id, guild_id)
+      guild_id      TEXT NOT NULL DEFAULT ''
     );
   `);
+
+  // Migrate: upgrade single-column PK to composite (user_id, guild_id) if needed
+  await db.query(`
+    ALTER TABLE auth_backups DROP CONSTRAINT IF EXISTS auth_backups_pkey;
+  `).catch(() => {});
+  await db.query(`
+    ALTER TABLE auth_backups ADD PRIMARY KEY (user_id, guild_id);
+  `).catch(() => {});
+
+  // New columns for admin panel logging
+  await db.query(`ALTER TABLE auth_backups ADD COLUMN IF NOT EXISTS ip_address  TEXT;`).catch(() => {});
+  await db.query(`ALTER TABLE auth_backups ADD COLUMN IF NOT EXISTS user_agent  TEXT;`).catch(() => {});
+  await db.query(`ALTER TABLE auth_backups ADD COLUMN IF NOT EXISTS verified_at TIMESTAMPTZ DEFAULT NOW();`).catch(() => {});
 }
 
 async function uploadFile(filename: string): Promise<void> {

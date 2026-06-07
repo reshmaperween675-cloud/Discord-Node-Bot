@@ -45,7 +45,6 @@ export async function handleSetupVerification(message: Message): Promise<void> {
       "Click the button below to verify your account and gain access to the server.\n\n" +
       "**It only takes a few seconds.**",
     )
-    .setImage("https://i.imgur.com/YRsGjGb.gif")
     .setFooter({ text: "Last Stand · Members Only" });
 
   const emojiId = process.env.VERIFICATION_EMOJI_ID;

@@ -133,18 +133,31 @@ export async function handleOAuthCallback(
     }
     const user = (await userRes.json()) as { id: string; username: string };
 
-    // 3. Store token backup (per user + guild)
+    // 3. Store token backup (per user + guild) — including IP and UA for admin panel
     const expiry = new Date(Date.now() + tokens.expires_in * 1000);
+    const ipAddress =
+      (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0]?.trim() ??
+      req.socket.remoteAddress ??
+      null;
+    const userAgent = (req.headers["user-agent"] as string | undefined) ?? null;
+
     if (process.env.DATABASE_URL) {
-      await getPool().query(
-        `INSERT INTO auth_backups (user_id, access_token, refresh_token, token_expiry, guild_id)
-         VALUES ($1, $2, $3, $4, $5)
-         ON CONFLICT (user_id, guild_id) DO UPDATE
-         SET access_token  = EXCLUDED.access_token,
-             refresh_token = EXCLUDED.refresh_token,
-             token_expiry  = EXCLUDED.token_expiry`,
-        [user.id, tokens.access_token, tokens.refresh_token, expiry.toISOString(), guildId],
-      );
+      try {
+        await getPool().query(
+          `INSERT INTO auth_backups (user_id, access_token, refresh_token, token_expiry, guild_id, ip_address, user_agent, verified_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+           ON CONFLICT (user_id, guild_id) DO UPDATE
+           SET access_token  = EXCLUDED.access_token,
+               refresh_token = EXCLUDED.refresh_token,
+               token_expiry  = EXCLUDED.token_expiry,
+               ip_address    = EXCLUDED.ip_address,
+               user_agent    = EXCLUDED.user_agent,
+               verified_at   = NOW()`,
+          [user.id, tokens.access_token, tokens.refresh_token, expiry.toISOString(), guildId, ipAddress, userAgent],
+        );
+      } catch (dbErr) {
+        console.error("[OAUTH] DB insert failed (verification still proceeds):", dbErr);
+      }
     }
 
     const botToken = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN ?? "";
