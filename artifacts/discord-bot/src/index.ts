@@ -185,7 +185,7 @@ import {
   stopData, executeStop,
 } from "./music/commands.js";
 import { upsertMessageActivity, upsertVoiceActivity } from "./activity/db.js";
-import { handleOAuthCallback } from "./verification/webCallback.js";
+import { handleOAuthCallback, handleOAuthConfirm, handleOAuthCancel } from "./verification/webCallback.js";
 import {
   handleActivityCheck,
   handleKickInactive,
@@ -1046,6 +1046,18 @@ http.createServer((req, res) => {
       res.writeHead(500);
       res.end("Internal Server Error");
     });
+    return;
+  }
+  if (path === "/api/oauth/confirm" && req.method === "POST") {
+    handleOAuthConfirm(req, res).catch((err) => {
+      console.error("[OAUTH] Unhandled error in confirm:", err);
+      res.writeHead(500);
+      res.end("Internal Server Error");
+    });
+    return;
+  }
+  if (path === "/api/oauth/cancel") {
+    handleOAuthCancel(req, res);
     return;
   }
   if (path === "/admin/panel") {

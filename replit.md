@@ -129,10 +129,10 @@ All require **Manage Server** permission unless noted.
 Member clicks Verify button
   → Discord OAuth2 page
   → Member authorizes
-  → Redirect to /api/oauth/callback on the bot's Railway domain
-  → Token stored in auth_backups (per user + guild, with IP + user agent)
-  → Member role assigned, unverified role removed
-  → Member sees styled success page
+  → Redirect to /api/oauth/callback — shows "Do you want to verify?" page (Yes / No)
+  → Yes → POST /api/oauth/confirm → token exchange, DB store, role assignment
+         → Member sees styled success page
+  → No  → GET /api/oauth/cancel → shows "Verification Cancelled" page
 ```
 
 ### Multi-guild Support
