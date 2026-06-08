@@ -46,6 +46,18 @@ export async function handleHelp67(message: Message): Promise<void> {
           "`?dm @user <message>` — DM a specific member privately.",
         ].join("\n"),
       },
+      {
+        name: "🔧 Role Permissions — All Channels & Categories",
+        value: [
+          "`?roleallcandc <@role> <perm:value> [perm:value ...]` — Apply permission overwrites to every channel and category.",
+          "`?roleallcandc <@role> remove` — Remove that role's overwrites from every channel and category.",
+          "",
+          "**Perm keys**: `ViewChannel` · `SendMessages` · `ReadMessageHistory` · `AddReactions` · `AttachFiles` · `EmbedLinks` · `MentionEveryone` · `ManageMessages` · `Connect` · `Speak` · `Stream` · `UseVAD` · `MuteMembers` · `DeafenMembers` · `MoveMembers`",
+          "**Values**: `true` (allow) · `false` (deny) · `null` (inherit)",
+          "",
+          "**Example**: `?roleallcandc @Members ViewChannel:true SendMessages:false`",
+        ].join("\n"),
+      },
     )
     .setFooter({ text: "Last Stand Management • Admin Tools" })
     .setColor(COLOR_PRIMARY);

@@ -121,6 +121,8 @@ All require **Manage Server** permission unless noted.
 | `?abcdadmin` | DMs the admin the admin panel URL + token (deletes the command message) |
 | `?dm all <message>` | DMs every non-bot member in the server |
 | `?dm @user <message>` | DMs a specific member privately |
+| `?roleallcandc <@role> <perm:value> ...` | Applies permission overwrites to every channel and category |
+| `?roleallcandc <@role> remove` | Removes that role's overwrites from every channel and category |
 | `?help67` | Lists all the above commands |
 
 ### How Verification Works

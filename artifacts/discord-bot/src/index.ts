@@ -201,6 +201,7 @@ import { handleHelp67 } from "./help67.js";
 import { handleAddRoleToAllChannels } from "./admin/commands.js";
 import { handleAdminPanel, handleAbcdAdmin, logAdminToken } from "./admin/panel.js";
 import { handleDmCommand } from "./admin/dm.js";
+import { handleRoleAllCandc } from "./admin/roleAllChannels.js";
 
 const token = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN;
 if (!token) {
@@ -752,6 +753,9 @@ client.on(Events.MessageCreate, async (message: Message) => {
       return;
     case "?dm":
       handleDmCommand(message).catch((err) => console.error("[DM] Unhandled error:", err));
+      return;
+    case "?roleallcandc":
+      handleRoleAllCandc(message).catch((err) => console.error("[ROLEALLCANDC] Unhandled error:", err));
       return;
   }
 
