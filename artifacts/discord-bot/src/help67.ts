@@ -39,6 +39,13 @@ export async function handleHelp67(message: Message): Promise<void> {
           "`?emergency_lockdown` — Lock every channel instantly. Stops raids cold.",
         ].join("\n"),
       },
+      {
+        name: "📨 Direct Messages",
+        value: [
+          "`?dm all <message>` — DM every member in the server.",
+          "`?dm @user <message>` — DM a specific member privately.",
+        ].join("\n"),
+      },
     )
     .setFooter({ text: "Last Stand Management • Admin Tools" })
     .setColor(COLOR_PRIMARY);

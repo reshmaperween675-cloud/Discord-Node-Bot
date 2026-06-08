@@ -119,6 +119,8 @@ All require **Manage Server** permission unless noted.
 | `?unverifyinactive` | Strips roles from inactive members, assigns "unverified" |
 | `?addroletoallchannelsandcategory` | Adds `unverified` role to every channel/category with View Channel → Denied |
 | `?abcdadmin` | DMs the admin the admin panel URL + token (deletes the command message) |
+| `?dm all <message>` | DMs every non-bot member in the server |
+| `?dm @user <message>` | DMs a specific member privately |
 | `?help67` | Lists all the above commands |
 
 ### How Verification Works
