@@ -1,7 +1,6 @@
 import { EmbedBuilder, Message, PermissionFlagsBits } from "discord.js";
 
 const COLOR_PRIMARY = 0x2f3136;
-const COLOR_ACCENT = 0x00ffff;
 const COLOR_ERROR = 0xff4444;
 
 export async function handleDmCommand(message: Message): Promise<void> {
@@ -45,20 +44,13 @@ export async function handleDmCommand(message: Message): Promise<void> {
       return;
     }
 
-    const embed = new EmbedBuilder()
-      .setColor(COLOR_ACCENT)
-      .setTitle(`📢 Message from ${message.guild.name}`)
-      .setDescription(text)
-      .setFooter({ text: `Sent by ${message.member.displayName}` })
-      .setTimestamp();
-
     let sent = 0;
     let failed = 0;
 
     for (const [, member] of members) {
       if (member.user.bot) continue;
       try {
-        await member.send({ embeds: [embed] });
+        await member.send({ content: text });
         sent++;
       } catch {
         failed++;
@@ -90,7 +82,7 @@ export async function handleDmCommand(message: Message): Promise<void> {
     return;
   }
 
-  // Text starts after the mention — find where the mention ends in the raw content
+  // Strip "?dm" and the mention from the raw content to get the message text
   const mentionPattern = /^<@!?\d+>\s*/;
   const afterCommand = message.content.trim().replace(/^\S+\s+/, ""); // remove "?dm"
   const text = afterCommand.replace(mentionPattern, "").trim();
@@ -100,22 +92,9 @@ export async function handleDmCommand(message: Message): Promise<void> {
     return;
   }
 
-  const embed = new EmbedBuilder()
-    .setColor(COLOR_ACCENT)
-    .setTitle(`📢 Message from ${message.guild.name}`)
-    .setDescription(text)
-    .setFooter({ text: `Sent by ${message.member.displayName}` })
-    .setTimestamp();
-
   try {
-    await mentionedUser.send({ embeds: [embed] });
-    await message.reply({
-      embeds: [
-        new EmbedBuilder()
-          .setColor(COLOR_PRIMARY)
-          .setDescription(`✅ DM sent to **${mentionedUser.username}**.`),
-      ],
-    });
+    await mentionedUser.send({ content: text });
+    await message.reply({ content: `✅ DM sent to **${mentionedUser.username}**.` });
   } catch {
     await message.reply({
       embeds: [
