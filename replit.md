@@ -132,8 +132,9 @@ Member clicks Verify button
   → Discord OAuth2 page
   → Member authorizes
   → Redirect to /api/oauth/callback — shows "Do you want to verify?" page (Yes / No)
-  → Yes → POST /api/oauth/confirm → token exchange, DB store, role assignment
-         → Member sees styled success page
+  → Yes → POST /api/oauth/confirm → token exchange → check auth_backups
+         → Already in DB → shows "Already verified" page (no changes made)
+         → Not in DB → DB store, role assignment → Member sees styled success page
   → No  → GET /api/oauth/cancel → shows "Verification Cancelled" page
 ```
 
