@@ -2,10 +2,10 @@ import { Message, EmbedBuilder } from "discord.js";
 
 // ── Category map ───────────────────────────────────────────────────────────
 const CATEGORIES = {
-  neko:   { purrbot: "neko",   waifupics: "neko",   nekoslife: "lewd",   hmtai: "neko"   },
-  hentai: { purrbot: "hentai", waifupics: "hentai", nekoslife: "hentai", hmtai: "hentai" },
-  waifu:  { purrbot: null,     waifupics: "waifu",  nekoslife: null,     hmtai: "waifu"  },
-  random: { purrbot: "hentai", waifupics: "hentai", nekoslife: "random_hentai_gif", hmtai: "hentai" },
+  neko:   { purrbot: "neko",   waifupics: "neko",   nekoslife: "lewd",              hmtai: "neko",   waifuim: null      },
+  hentai: { purrbot: "hentai", waifupics: "hentai", nekoslife: "hentai",            hmtai: "hentai", waifuim: "hentai"  },
+  waifu:  { purrbot: null,     waifupics: "waifu",  nekoslife: null,                hmtai: "waifu",  waifuim: "ero"     },
+  random: { purrbot: "hentai", waifupics: "hentai", nekoslife: "random_hentai_gif", hmtai: "hentai", waifuim: "hentai"  },
 } as const;
 
 type Category = keyof typeof CATEGORIES;
@@ -32,8 +32,9 @@ async function fromPurrbot(cat: string): Promise<string | null> {
 
 async function fromWaifuPics(cat: string): Promise<string | null> {
   try {
+    // Append random nonce to avoid cached responses
     const res = await fetch(`https://api.waifu.pics/nsfw/${cat}`, {
-      headers: { "User-Agent": "DiscordBot/1.0" },
+      headers: { "User-Agent": "DiscordBot/1.0", "Cache-Control": "no-cache" },
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
@@ -66,39 +67,48 @@ async function fromHmtai(cat: string): Promise<string | null> {
   } catch { return null; }
 }
 
-async function fromNekosXyz(cat: string): Promise<string | null> {
+// waifu.im — well-maintained API with a large randomised pool
+async function fromWaifuIm(tag: string): Promise<string | null> {
   try {
-    const res = await fetch(`https://api.nekosapi.com/v3/images/random?rating=explicit&limit=1`, {
-      headers: { "User-Agent": "DiscordBot/1.0" },
-      signal: AbortSignal.timeout(8000),
-    });
+    const res = await fetch(
+      `https://api.waifu.im/search/?included_tags=${tag}&is_nsfw=true`,
+      {
+        headers: {
+          "User-Agent": "DiscordBot/1.0",
+          "Accept": "application/json",
+        },
+        signal: AbortSignal.timeout(8000),
+      },
+    );
     if (!res.ok) return null;
-    const data = await res.json() as { items?: Array<{ image_url?: string }> };
-    return data.items?.[0]?.image_url ?? null;
+    const data = await res.json() as { images?: Array<{ url?: string }> };
+    const images = data.images;
+    if (!images || images.length === 0) return null;
+    return images[0]?.url ?? null;
   } catch { return null; }
 }
 
-// ── Race: resolves as soon as ANY source returns a URL ────────────────────
+// ── Race: resolves the moment ANY source returns a URL ─────────────────────
 
 function raceToFirst(fns: Array<() => Promise<string | null>>): Promise<string | null> {
   return new Promise((resolve) => {
     if (fns.length === 0) { resolve(null); return; }
     let remaining = fns.length;
     for (const fn of fns) {
-      fn().then((url) => {
-        if (url) {
-          resolve(url);        // first winner resolves immediately
-        } else {
+      fn()
+        .then((url) => {
+          if (url) {
+            resolve(url);
+          } else if (--remaining === 0) {
+            resolve(null);
+          }
+        })
+        .catch(() => {
           if (--remaining === 0) resolve(null);
-        }
-      }).catch(() => {
-        if (--remaining === 0) resolve(null);
-      });
+        });
     }
   });
 }
-
-// ── Build fetcher list for a category and race them ───────────────────────
 
 function buildFetchers(category: Category): Array<() => Promise<string | null>> {
   const map = CATEGORIES[category];
@@ -107,17 +117,14 @@ function buildFetchers(category: Category): Array<() => Promise<string | null>> 
   if (map.waifupics) fns.push(() => fromWaifuPics(map.waifupics!));
   if (map.nekoslife) fns.push(() => fromNekosLife(map.nekoslife!));
   if (map.hmtai)     fns.push(() => fromHmtai(map.hmtai!));
-  // nekosapi works for any category as a last-resort fallback
-  fns.push(() => fromNekosXyz(category));
+  if (map.waifuim)   fns.push(() => fromWaifuIm(map.waifuim!));
   return fns;
 }
 
 async function fetchNsfwUrl(category: Category): Promise<string | null> {
-  // First attempt: race all sources
   const url = await raceToFirst(buildFetchers(category));
   if (url) return url;
-
-  // One retry: race them again (covers transient failures)
+  // Retry once
   return raceToFirst(buildFetchers(category));
 }
 
