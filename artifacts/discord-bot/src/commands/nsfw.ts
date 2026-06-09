@@ -6,10 +6,8 @@ const CATEGORIES = {
   neko:    { purrbot: "neko",    waifupics: "neko",    nekoslife: "lewd"              },
   hentai:  { purrbot: "hentai",  waifupics: "hentai",  nekoslife: "hentai"            },
   blowjob: { purrbot: "blowjob", waifupics: "blowjob", nekoslife: "blowjob"           },
-  anal:    { purrbot: "anal",    waifupics: "anal",    nekoslife: null                },
-  solo:    { purrbot: "solo",    waifupics: null,      nekoslife: null                },
   waifu:   { purrbot: null,      waifupics: "waifu",   nekoslife: null                },
-  random:  { purrbot: null,      waifupics: null,      nekoslife: "random_hentai_gif" },
+  random:  { purrbot: "hentai",  waifupics: "hentai",  nekoslife: "random_hentai_gif" },
 } as const;
 
 type Category = keyof typeof CATEGORIES;
@@ -24,8 +22,8 @@ function pick<T>(arr: readonly T[]): T {
 async function fromPurrbot(cat: string): Promise<string | null> {
   try {
     const res = await fetch(`https://api.purrbot.site/v2/img/nsfw/${cat}/gif`, {
-      headers: { "User-Agent": "LS-Bot/1.0" },
-      signal: AbortSignal.timeout(6000),
+      headers: { "User-Agent": "DiscordBot/1.0" },
+      signal: AbortSignal.timeout(7000),
     });
     if (!res.ok) return null;
     const data = await res.json() as { link?: string; error?: boolean };
@@ -37,8 +35,8 @@ async function fromPurrbot(cat: string): Promise<string | null> {
 async function fromWaifuPics(cat: string): Promise<string | null> {
   try {
     const res = await fetch(`https://api.waifu.pics/nsfw/${cat}`, {
-      headers: { "User-Agent": "LS-Bot/1.0" },
-      signal: AbortSignal.timeout(6000),
+      headers: { "User-Agent": "DiscordBot/1.0" },
+      signal: AbortSignal.timeout(7000),
     });
     if (!res.ok) return null;
     const data = await res.json() as { url?: string };
@@ -49,8 +47,8 @@ async function fromWaifuPics(cat: string): Promise<string | null> {
 async function fromNekosLife(cat: string): Promise<string | null> {
   try {
     const res = await fetch(`https://nekos.life/api/v2/img/${cat}`, {
-      headers: { "User-Agent": "LS-Bot/1.0" },
-      signal: AbortSignal.timeout(6000),
+      headers: { "User-Agent": "DiscordBot/1.0" },
+      signal: AbortSignal.timeout(7000),
     });
     if (!res.ok) return null;
     const data = await res.json() as { url?: string };
@@ -58,35 +56,74 @@ async function fromNekosLife(cat: string): Promise<string | null> {
   } catch { return null; }
 }
 
-// ── Fetch with category-aware fallback chain ───────────────────────────────
+// ── Race all supported sources in parallel, return first winner ────────────
 
 async function fetchNsfwUrl(category: Category): Promise<string | null> {
   const map = CATEGORIES[category];
 
-  // Build list of [fetcher, apiCat] pairs that support this category, then shuffle
-  const sources: Array<() => Promise<string | null>> = [];
-  if (map.purrbot)   sources.push(() => fromPurrbot(map.purrbot!));
-  if (map.waifupics) sources.push(() => fromWaifuPics(map.waifupics!));
-  if (map.nekoslife) sources.push(() => fromNekosLife(map.nekoslife!));
-  sources.sort(() => Math.random() - 0.5);
+  // Fire all supported sources simultaneously — first non-null wins
+  const promises: Promise<string | null>[] = [];
+  if (map.purrbot)   promises.push(fromPurrbot(map.purrbot));
+  if (map.waifupics) promises.push(fromWaifuPics(map.waifupics));
+  if (map.nekoslife) promises.push(fromNekosLife(map.nekoslife));
 
-  for (const fn of sources) {
-    const url = await fn();
-    if (url) return url;
+  if (promises.length === 0) return null;
+
+  // Keep resolving promises until one returns a URL, or all return null
+  const results = await Promise.allSettled(promises);
+  for (const r of results) {
+    if (r.status === "fulfilled" && r.value) return r.value;
   }
+
+  // One retry pass in case of transient failures
+  const retry = await Promise.allSettled(promises.map((_, i) => {
+    const map2 = CATEGORIES[category];
+    if (i === 0 && map2.purrbot)   return fromPurrbot(map2.purrbot);
+    if (i === 1 && map2.waifupics) return fromWaifuPics(map2.waifupics);
+    if (i === 2 && map2.nekoslife) return fromNekosLife(map2.nekoslife);
+    return Promise.resolve(null);
+  }));
+  for (const r of retry) {
+    if (r.status === "fulfilled" && r.value) return r.value;
+  }
+
   return null;
 }
 
 // ── Command handler ────────────────────────────────────────────────────────
 
+const HELP_EMBED = new EmbedBuilder()
+  .setColor(0xff0055)
+  .setTitle("🔞 NSFW Command Help")
+  .addFields(
+    {
+      name: "Usage",
+      value: [
+        "`?nsfw` — random category",
+        "`?nsfw <category>` — specific category",
+        "`?nsfw help` — show this menu",
+      ].join("\n"),
+    },
+    {
+      name: "Categories",
+      value: VALID_CATS.map((c) => `\`${c}\``).join(" · "),
+    },
+  )
+  .setFooter({ text: "?nfsw also works as an alias" });
+
 export async function handleNsfwCommand(message: Message): Promise<void> {
   const parts = message.content.trim().split(/\s+/);
   const input = parts[1]?.toLowerCase();
 
-  // Validate category if provided
+  // Help subcommand
+  if (input === "help") {
+    await message.reply({ embeds: [HELP_EMBED] });
+    return;
+  }
+
+  // Resolve category
   let category: Category;
   if (!input) {
-    // No category — pick a random one (excluding "random" meta-entry)
     const pickable = VALID_CATS.filter((c) => c !== "random");
     category = pick(pickable);
   } else if ((VALID_CATS as string[]).includes(input)) {
@@ -98,8 +135,8 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
           .setColor(0xff4444)
           .setTitle("❌ Unknown category")
           .setDescription(
-            `**Valid categories:** ${VALID_CATS.map((c) => `\`${c}\``).join(" · ")}\n\n` +
-            `**Usage:** \`?nsfw\` — random · \`?nsfw <category>\` — specific`,
+            `**Valid:** ${VALID_CATS.map((c) => `\`${c}\``).join(" · ")}\n` +
+            `**Usage:** \`?nsfw <category>\` · \`?nsfw help\` for full info`,
           ),
       ],
     });
