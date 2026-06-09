@@ -3,19 +3,21 @@ import { Message, EmbedBuilder } from "discord.js";
 // Exclusion tags appended to every query — strictly straight only
 const EXCL = "-yaoi -yuri -transgender -futanari -trap -crossdressing";
 
-// ── Category map (xbooru tags) ─────────────────────────────────────────────
+// ── Category map ──────────────────────────────────────────────────────────
+// booru: xbooru/tbib/hypnohub tag string
+// redgifs: search query string
 const CATEGORIES = {
-  neko:       `animated cat_girl rating:explicit ${EXCL}`,
-  hentai:     `animated rating:explicit ${EXCL}`,
-  waifu:      `animated 1girl rating:explicit ${EXCL}`,
-  milf:       `animated milf rating:explicit ${EXCL}`,
-  ahegao:     `animated ahegao rating:explicit ${EXCL}`,
-  maid:       `animated maid rating:explicit ${EXCL}`,
-  elf:        `animated elf rating:explicit ${EXCL}`,
-  schoolgirl: `animated school_uniform rating:explicit ${EXCL}`,
-  gangbang:   `animated gangbang rating:explicit ${EXCL}`,
-  creampie:   `animated creampie rating:explicit ${EXCL}`,
-  random:     `animated rating:explicit ${EXCL}`,
+  neko:       { booru: `animated cat_girl rating:explicit ${EXCL}`,        redgifs: "neko hentai"        },
+  hentai:     { booru: `animated rating:explicit ${EXCL}`,                 redgifs: "hentai animated"    },
+  waifu:      { booru: `animated 1girl rating:explicit ${EXCL}`,           redgifs: "waifu hentai"       },
+  milf:       { booru: `animated milf rating:explicit ${EXCL}`,            redgifs: "milf hentai"        },
+  ahegao:     { booru: `animated ahegao rating:explicit ${EXCL}`,          redgifs: "ahegao hentai"      },
+  maid:       { booru: `animated maid rating:explicit ${EXCL}`,            redgifs: "maid hentai"        },
+  elf:        { booru: `animated elf rating:explicit ${EXCL}`,             redgifs: "elf hentai"         },
+  schoolgirl: { booru: `animated school_uniform rating:explicit ${EXCL}`,  redgifs: "schoolgirl hentai"  },
+  gangbang:   { booru: `animated gangbang rating:explicit ${EXCL}`,        redgifs: "gangbang hentai"    },
+  creampie:   { booru: `animated creampie rating:explicit ${EXCL}`,        redgifs: "creampie hentai"    },
+  random:     { booru: `animated rating:explicit ${EXCL}`,                 redgifs: "hentai"             },
 } as const;
 
 type Category = keyof typeof CATEGORIES;
@@ -69,7 +71,6 @@ async function fromTbib(tags: string, wantVideo: boolean): Promise<string | null
     if (!res.ok) return null;
     const raw = await res.json() as BooruThibPost[] | { post?: BooruThibPost[] };
     const items = Array.isArray(raw) ? raw : (raw.post ?? []);
-    // Build file_url from directory + image fields
     const posts: BooruPost[] = items
       .filter((p) => p.directory != null && p.image)
       .map((p) => ({ file_url: `https://img.tbib.org/images/${p.directory}/${p.image}` }));
@@ -92,7 +93,56 @@ async function fromHypnohub(tags: string, wantVideo: boolean): Promise<string | 
   } catch { return null; }
 }
 
-// ── Race all 3 sources — first URL wins ───────────────────────────────────
+// ── Redgifs — guest token (auto-fetched, no registration needed) ───────────
+let redgifsToken: string | null = null;
+let redgifsTokenExpiry = 0;
+
+async function getRedgifsToken(): Promise<string | null> {
+  if (redgifsToken && Date.now() < redgifsTokenExpiry) return redgifsToken;
+  try {
+    const res = await fetch("https://api.redgifs.com/v2/auth/temporary", {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)" },
+      signal: AbortSignal.timeout(8_000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json() as { token?: string };
+    if (!data.token) return null;
+    redgifsToken = data.token;
+    redgifsTokenExpiry = Date.now() + 23 * 60 * 60 * 1000; // 23 h
+    return redgifsToken;
+  } catch { return null; }
+}
+
+async function fromRedgifs(query: string, wantVideo: boolean): Promise<string | null> {
+  try {
+    const token = await getRedgifsToken();
+    if (!token) return null;
+    const start = Math.floor(Math.random() * 200); // randomise result page
+    const res = await fetch(
+      `https://api.redgifs.com/v2/gifs/search?search_text=${encodeURIComponent(query)}&order=trending&count=80&start=${start}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)",
+        },
+        signal: AbortSignal.timeout(10_000),
+      },
+    );
+    if (res.status === 401) { redgifsToken = null; return null; } // token expired — reset
+    if (!res.ok) return null;
+    const data = await res.json() as { gifs?: Array<{ urls?: { hd?: string; sd?: string } }> };
+    const gifs = data.gifs ?? [];
+    if (gifs.length === 0) return null;
+    const gif = pick(gifs);
+    const url = gif.urls?.hd ?? gif.urls?.sd ?? null;
+    if (!url) return null;
+    // Redgifs always returns mp4 — only use if wantVideo or caller doesn't mind
+    if (!wantVideo && !isImage(url)) return null;
+    return url;
+  } catch { return null; }
+}
+
+// ── Race all 4 sources — first URL wins ───────────────────────────────────
 function raceToFirst(fns: Array<() => Promise<string | null>>): Promise<string | null> {
   return new Promise((resolve) => {
     let remaining = fns.length;
@@ -107,16 +157,16 @@ function raceToFirst(fns: Array<() => Promise<string | null>>): Promise<string |
 }
 
 async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<string | null> {
-  const tags = CATEGORIES[category];
+  const map = CATEGORIES[category];
   const fns = [
-    () => fromXbooru(tags, wantVideo),
-    () => fromTbib(tags, wantVideo),
-    () => fromHypnohub(tags, wantVideo),
+    () => fromXbooru(map.booru, wantVideo),
+    () => fromTbib(map.booru, wantVideo),
+    () => fromHypnohub(map.booru, wantVideo),
+    () => fromRedgifs(map.redgifs, wantVideo),
   ];
   const url = await raceToFirst(fns);
   if (url) return url;
-  // One full retry
-  return raceToFirst(fns);
+  return raceToFirst(fns); // one retry
 }
 
 // ── Help embed ────────────────────────────────────────────────────────────
