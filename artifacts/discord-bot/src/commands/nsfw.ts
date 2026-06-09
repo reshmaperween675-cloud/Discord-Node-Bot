@@ -1,7 +1,7 @@
 import { Message, EmbedBuilder } from "discord.js";
 
-// Exclusion tags appended to every query — strictly straight only
-const EXCL = "-yaoi -yuri -transgender -futanari -trap -crossdressing";
+// Exclusion tags appended to every query — strictly straight, no furry
+const EXCL = "-yaoi -yuri -transgender -futanari -trap -crossdressing -furry -anthro -kemono";
 
 // ── Category map ──────────────────────────────────────────────────────────
 // booru: xbooru/tbib/hypnohub tag string
