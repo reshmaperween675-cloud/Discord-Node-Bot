@@ -1,12 +1,11 @@
 import { Message, EmbedBuilder } from "discord.js";
 
 // ── Category map ───────────────────────────────────────────────────────────
-// User-facing name → per-source API category (null = source doesn't support it)
 const CATEGORIES = {
-  neko:    { purrbot: "neko",    waifupics: "neko",    nekoslife: "lewd"              },
-  hentai:  { purrbot: "hentai",  waifupics: "hentai",  nekoslife: "hentai"            },
-  waifu:   { purrbot: null,      waifupics: "waifu",   nekoslife: null                },
-  random:  { purrbot: "hentai",  waifupics: "hentai",  nekoslife: "random_hentai_gif" },
+  neko:   { purrbot: "neko",   waifupics: "neko",   nekoslife: "lewd",   hmtai: "neko"   },
+  hentai: { purrbot: "hentai", waifupics: "hentai", nekoslife: "hentai", hmtai: "hentai" },
+  waifu:  { purrbot: null,     waifupics: "waifu",  nekoslife: null,     hmtai: "waifu"  },
+  random: { purrbot: "hentai", waifupics: "hentai", nekoslife: "random_hentai_gif", hmtai: "hentai" },
 } as const;
 
 type Category = keyof typeof CATEGORIES;
@@ -22,7 +21,7 @@ async function fromPurrbot(cat: string): Promise<string | null> {
   try {
     const res = await fetch(`https://api.purrbot.site/v2/img/nsfw/${cat}/gif`, {
       headers: { "User-Agent": "DiscordBot/1.0" },
-      signal: AbortSignal.timeout(7000),
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
     const data = await res.json() as { link?: string; error?: boolean };
@@ -35,7 +34,7 @@ async function fromWaifuPics(cat: string): Promise<string | null> {
   try {
     const res = await fetch(`https://api.waifu.pics/nsfw/${cat}`, {
       headers: { "User-Agent": "DiscordBot/1.0" },
-      signal: AbortSignal.timeout(7000),
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
     const data = await res.json() as { url?: string };
@@ -47,7 +46,7 @@ async function fromNekosLife(cat: string): Promise<string | null> {
   try {
     const res = await fetch(`https://nekos.life/api/v2/img/${cat}`, {
       headers: { "User-Agent": "DiscordBot/1.0" },
-      signal: AbortSignal.timeout(7000),
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
     const data = await res.json() as { url?: string };
@@ -55,41 +54,74 @@ async function fromNekosLife(cat: string): Promise<string | null> {
   } catch { return null; }
 }
 
-// ── Race all supported sources in parallel, return first winner ────────────
-
-async function fetchNsfwUrl(category: Category): Promise<string | null> {
-  const map = CATEGORIES[category];
-
-  // Fire all supported sources simultaneously — first non-null wins
-  const promises: Promise<string | null>[] = [];
-  if (map.purrbot)   promises.push(fromPurrbot(map.purrbot));
-  if (map.waifupics) promises.push(fromWaifuPics(map.waifupics));
-  if (map.nekoslife) promises.push(fromNekosLife(map.nekoslife));
-
-  if (promises.length === 0) return null;
-
-  // Keep resolving promises until one returns a URL, or all return null
-  const results = await Promise.allSettled(promises);
-  for (const r of results) {
-    if (r.status === "fulfilled" && r.value) return r.value;
-  }
-
-  // One retry pass in case of transient failures
-  const retry = await Promise.allSettled(promises.map((_, i) => {
-    const map2 = CATEGORIES[category];
-    if (i === 0 && map2.purrbot)   return fromPurrbot(map2.purrbot);
-    if (i === 1 && map2.waifupics) return fromWaifuPics(map2.waifupics);
-    if (i === 2 && map2.nekoslife) return fromNekosLife(map2.nekoslife);
-    return Promise.resolve(null);
-  }));
-  for (const r of retry) {
-    if (r.status === "fulfilled" && r.value) return r.value;
-  }
-
-  return null;
+async function fromHmtai(cat: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://hmtai.hatsunia.cfd/nsfw/${cat}`, {
+      headers: { "User-Agent": "DiscordBot/1.0" },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json() as { url?: string };
+    return data.url ?? null;
+  } catch { return null; }
 }
 
-// ── Command handler ────────────────────────────────────────────────────────
+async function fromNekosXyz(cat: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://api.nekosapi.com/v3/images/random?rating=explicit&limit=1`, {
+      headers: { "User-Agent": "DiscordBot/1.0" },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json() as { items?: Array<{ image_url?: string }> };
+    return data.items?.[0]?.image_url ?? null;
+  } catch { return null; }
+}
+
+// ── Race: resolves as soon as ANY source returns a URL ────────────────────
+
+function raceToFirst(fns: Array<() => Promise<string | null>>): Promise<string | null> {
+  return new Promise((resolve) => {
+    if (fns.length === 0) { resolve(null); return; }
+    let remaining = fns.length;
+    for (const fn of fns) {
+      fn().then((url) => {
+        if (url) {
+          resolve(url);        // first winner resolves immediately
+        } else {
+          if (--remaining === 0) resolve(null);
+        }
+      }).catch(() => {
+        if (--remaining === 0) resolve(null);
+      });
+    }
+  });
+}
+
+// ── Build fetcher list for a category and race them ───────────────────────
+
+function buildFetchers(category: Category): Array<() => Promise<string | null>> {
+  const map = CATEGORIES[category];
+  const fns: Array<() => Promise<string | null>> = [];
+  if (map.purrbot)   fns.push(() => fromPurrbot(map.purrbot!));
+  if (map.waifupics) fns.push(() => fromWaifuPics(map.waifupics!));
+  if (map.nekoslife) fns.push(() => fromNekosLife(map.nekoslife!));
+  if (map.hmtai)     fns.push(() => fromHmtai(map.hmtai!));
+  // nekosapi works for any category as a last-resort fallback
+  fns.push(() => fromNekosXyz(category));
+  return fns;
+}
+
+async function fetchNsfwUrl(category: Category): Promise<string | null> {
+  // First attempt: race all sources
+  const url = await raceToFirst(buildFetchers(category));
+  if (url) return url;
+
+  // One retry: race them again (covers transient failures)
+  return raceToFirst(buildFetchers(category));
+}
+
+// ── Help embed ────────────────────────────────────────────────────────────
 
 const HELP_EMBED = new EmbedBuilder()
   .setColor(0xff0055)
@@ -110,17 +142,17 @@ const HELP_EMBED = new EmbedBuilder()
   )
   .setFooter({ text: "?nfsw also works as an alias" });
 
+// ── Command handler ────────────────────────────────────────────────────────
+
 export async function handleNsfwCommand(message: Message): Promise<void> {
   const parts = message.content.trim().split(/\s+/);
   const input = parts[1]?.toLowerCase();
 
-  // Help subcommand
   if (input === "help") {
     await message.reply({ embeds: [HELP_EMBED] });
     return;
   }
 
-  // Resolve category
   let category: Category;
   if (!input) {
     const pickable = VALID_CATS.filter((c) => c !== "random");
@@ -135,7 +167,7 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
           .setTitle("❌ Unknown category")
           .setDescription(
             `**Valid:** ${VALID_CATS.map((c) => `\`${c}\``).join(" · ")}\n` +
-            `**Usage:** \`?nsfw <category>\` · \`?nsfw help\` for full info`,
+            `Use \`?nsfw help\` for full info.`,
           ),
       ],
     });
@@ -145,14 +177,16 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
   const url = await fetchNsfwUrl(category);
 
   if (!url) {
-    await message.reply("❌ Couldn't fetch a gif right now. Try again in a moment.");
+    await message.reply("❌ All image sources are currently down. Try again shortly.");
     return;
   }
 
-  const embed = new EmbedBuilder()
-    .setColor(0xff0055)
-    .setImage(url)
-    .setFooter({ text: `🔞 ${category}` });
-
-  await message.reply({ embeds: [embed] });
+  await message.reply({
+    embeds: [
+      new EmbedBuilder()
+        .setColor(0xff0055)
+        .setImage(url)
+        .setFooter({ text: `🔞 ${category}` }),
+    ],
+  });
 }
