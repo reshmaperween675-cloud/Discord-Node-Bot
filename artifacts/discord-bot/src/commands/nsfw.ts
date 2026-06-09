@@ -5,7 +5,6 @@ import { Message, EmbedBuilder } from "discord.js";
 const CATEGORIES = {
   neko:    { purrbot: "neko",    waifupics: "neko",    nekoslife: "lewd"              },
   hentai:  { purrbot: "hentai",  waifupics: "hentai",  nekoslife: "hentai"            },
-  blowjob: { purrbot: "blowjob", waifupics: "blowjob", nekoslife: "blowjob"           },
   waifu:   { purrbot: null,      waifupics: "waifu",   nekoslife: null                },
   random:  { purrbot: "hentai",  waifupics: "hentai",  nekoslife: "random_hentai_gif" },
 } as const;
