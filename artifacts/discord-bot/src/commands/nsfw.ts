@@ -37,60 +37,75 @@ type BooruPost = { file_url?: string };
 type BooruThibPost = { directory?: number; image?: string };
 
 function selectUrl(posts: BooruPost[], wantVideo: boolean): string | null {
-  const typed = wantVideo
-    ? posts.filter((p) => p.file_url && isVideo(p.file_url))
-    : posts.filter((p) => p.file_url && isImage(p.file_url));
-  const pool = typed.length > 0 ? typed : posts.filter((p) => p.file_url);
+  // Strictly filter by wanted type — never mix; a video URL in setImage() = blank embed
+  const pool = posts.filter((p) =>
+    p.file_url && (wantVideo ? isVideo(p.file_url) : isImage(p.file_url)),
+  );
   if (pool.length === 0) return null;
   return pick(pool).file_url ?? null;
 }
 
+// ── Generic booru fetcher (shared logic) ──────────────────────────────────
+async function fetchBooru(
+  baseUrl: string,
+  tags: string,
+  wantVideo: boolean,
+  maxPid: number,
+  buildUrl?: (item: BooruThibPost) => string,
+): Promise<string | null> {
+  // Try a random page first; on empty result fall back to page 0 (always has data)
+  for (const pid of [Math.floor(Math.random() * maxPid), 0]) {
+    try {
+      const res = await fetch(
+        `${baseUrl}&limit=50&pid=${pid}&tags=${encodeURIComponent(tags)}`,
+        { headers: { "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)" }, signal: AbortSignal.timeout(10_000) },
+      );
+      if (!res.ok) return null;
+
+      let posts: BooruPost[];
+      if (buildUrl) {
+        // tbib: directory + image fields
+        const raw = await res.json() as BooruThibPost[] | { post?: BooruThibPost[] };
+        const items = Array.isArray(raw) ? raw : (raw.post ?? []);
+        posts = items
+          .filter((p) => p.directory != null && p.image)
+          .map((p) => ({ file_url: buildUrl(p) }));
+      } else {
+        const data = await res.json() as BooruPost[] | { post?: BooruPost[] };
+        posts = Array.isArray(data) ? data : (data.post ?? []);
+      }
+
+      const url = selectUrl(posts, wantVideo);
+      if (url) return url;
+      // no results on this page → loop to pid 0 fallback
+    } catch { return null; }
+  }
+  return null;
+}
+
 // ── xbooru — confirmed HTTP 200 from server IPs ───────────────────────────
-async function fromXbooru(tags: string, wantVideo: boolean): Promise<string | null> {
-  try {
-    const pid = Math.floor(Math.random() * 150);
-    const res = await fetch(
-      `https://xbooru.com/index.php?page=dapi&s=post&q=index&json=1&limit=50&pid=${pid}&tags=${encodeURIComponent(tags)}`,
-      { headers: { "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)" }, signal: AbortSignal.timeout(10_000) },
-    );
-    if (!res.ok) return null;
-    const data = await res.json() as BooruPost[] | { post?: BooruPost[] };
-    const posts = Array.isArray(data) ? data : (data.post ?? []);
-    return selectUrl(posts, wantVideo);
-  } catch { return null; }
+function fromXbooru(tags: string, wantVideo: boolean): Promise<string | null> {
+  return fetchBooru(
+    "https://xbooru.com/index.php?page=dapi&s=post&q=index&json=1",
+    tags, wantVideo, 30,
+  );
 }
 
 // ── tbib — confirmed HTTP 200, URL = img.tbib.org/images/{dir}/{img} ──────
-async function fromTbib(tags: string, wantVideo: boolean): Promise<string | null> {
-  try {
-    const pid = Math.floor(Math.random() * 150);
-    const res = await fetch(
-      `https://tbib.org/index.php?page=dapi&s=post&q=index&json=1&limit=50&pid=${pid}&tags=${encodeURIComponent(tags)}`,
-      { headers: { "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)" }, signal: AbortSignal.timeout(10_000) },
-    );
-    if (!res.ok) return null;
-    const raw = await res.json() as BooruThibPost[] | { post?: BooruThibPost[] };
-    const items = Array.isArray(raw) ? raw : (raw.post ?? []);
-    const posts: BooruPost[] = items
-      .filter((p) => p.directory != null && p.image)
-      .map((p) => ({ file_url: `https://img.tbib.org/images/${p.directory}/${p.image}` }));
-    return selectUrl(posts, wantVideo);
-  } catch { return null; }
+function fromTbib(tags: string, wantVideo: boolean): Promise<string | null> {
+  return fetchBooru(
+    "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1",
+    tags, wantVideo, 30,
+    (p) => `https://img.tbib.org/images/${p.directory}/${p.image}`,
+  );
 }
 
 // ── hypnohub — confirmed HTTP 200, uses file_url ──────────────────────────
-async function fromHypnohub(tags: string, wantVideo: boolean): Promise<string | null> {
-  try {
-    const pid = Math.floor(Math.random() * 100);
-    const res = await fetch(
-      `https://hypnohub.net/index.php?page=dapi&s=post&q=index&json=1&limit=50&pid=${pid}&tags=${encodeURIComponent(tags)}`,
-      { headers: { "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)" }, signal: AbortSignal.timeout(10_000) },
-    );
-    if (!res.ok) return null;
-    const data = await res.json() as BooruPost[] | { post?: BooruPost[] };
-    const posts = Array.isArray(data) ? data : (data.post ?? []);
-    return selectUrl(posts, wantVideo);
-  } catch { return null; }
+function fromHypnohub(tags: string, wantVideo: boolean): Promise<string | null> {
+  return fetchBooru(
+    "https://hypnohub.net/index.php?page=dapi&s=post&q=index&json=1",
+    tags, wantVideo, 20,
+  );
 }
 
 // ── Redgifs — guest token (auto-fetched, no registration needed) ───────────
