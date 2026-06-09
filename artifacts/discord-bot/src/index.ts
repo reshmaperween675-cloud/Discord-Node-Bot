@@ -712,8 +712,8 @@ client.on(Events.MessageCreate, async (message: Message) => {
     return;
   }
 
-  // ?nsfw — random NSFW gif (NSFW channels only)
-  if (content.toLowerCase() === "?nsfw") {
+  // ?nsfw / ?nfsw — random NSFW gif (NSFW channels only)
+  if (content.toLowerCase() === "?nsfw" || content.toLowerCase() === "?nfsw") {
     handleNsfwCommand(message).catch((err) => console.error("[NSFW] Unhandled error:", err));
     return;
   }
