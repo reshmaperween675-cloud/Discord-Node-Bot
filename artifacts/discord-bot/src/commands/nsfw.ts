@@ -1,4 +1,4 @@
-import { Message, EmbedBuilder, TextChannel } from "discord.js";
+import { Message, EmbedBuilder } from "discord.js";
 
 const CATEGORIES = ["waifu", "neko", "trap", "blowjob", "anal"] as const;
 
@@ -18,13 +18,6 @@ async function fetchNsfwGif(category: string): Promise<string | null> {
 }
 
 export async function handleNsfwCommand(message: Message): Promise<void> {
-  const channel = message.channel as TextChannel;
-
-  if (!("nsfw" in channel) || !channel.nsfw) {
-    await message.reply("🔞 This command can only be used in NSFW channels.");
-    return;
-  }
-
   const category = pick(CATEGORIES);
   const url = await fetchNsfwGif(category);
 
