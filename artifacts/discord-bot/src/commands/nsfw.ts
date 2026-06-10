@@ -1,4 +1,5 @@
-import { Message, EmbedBuilder, AttachmentBuilder } from "discord.js";
+import { Message, EmbedBuilder, AttachmentBuilder, PermissionFlagsBits, GuildMember } from "discord.js";
+import { getPool } from "../persistence.js";
 
 // Exclusion tags — strictly straight, 2D anime, no furry, no weird/extreme content
 const EXCL =
@@ -182,6 +183,29 @@ async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<str
   return raceToFirst(fns); // one retry
 }
 
+// ── Per-guild NSFW toggle (stored in bot_kv) ──────────────────────────────
+// Default: enabled (true). Key: nsfw:<guildId>, value: {"enabled": bool}
+
+async function getNsfwEnabled(guildId: string): Promise<boolean> {
+  try {
+    const res = await getPool().query<{ value: { enabled: boolean } }>(
+      "SELECT value FROM bot_kv WHERE key = $1",
+      [`nsfw:${guildId}`],
+    );
+    if (res.rows.length === 0) return true; // default on
+    return res.rows[0].value?.enabled !== false;
+  } catch { return true; }
+}
+
+async function setNsfwEnabled(guildId: string, enabled: boolean): Promise<void> {
+  await getPool().query(
+    `INSERT INTO bot_kv (key, value, updated_at)
+     VALUES ($1, $2::jsonb, NOW())
+     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()`,
+    [`nsfw:${guildId}`, JSON.stringify({ enabled })],
+  );
+}
+
 // ── Help embed ────────────────────────────────────────────────────────────
 
 const HELP_EMBED = new EmbedBuilder()
@@ -215,6 +239,53 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
   const parts = message.content.trim().split(/\s+/);
   const arg1 = parts[1]?.toLowerCase();
   const arg2 = parts[2]?.toLowerCase();
+
+  const guildId = message.guildId;
+  const member = message.member as GuildMember | null;
+  const isAdmin = member?.permissions.has(PermissionFlagsBits.ManageGuild) ?? false;
+
+  // ── ?nsfw on / ?nsfw off — admin only ─────────────────────────────────
+  if (arg1 === "on" || arg1 === "off") {
+    if (!isAdmin) {
+      await message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0xff4444)
+            .setDescription("❌ You need **Manage Server** permission to toggle NSFW access."),
+        ],
+      });
+      return;
+    }
+    const enabling = arg1 === "on";
+    if (guildId) await setNsfwEnabled(guildId, enabling);
+    await message.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(enabling ? 0x00ff99 : 0xffaa00)
+          .setDescription(
+            enabling
+              ? "✅ NSFW commands are now **on** — anyone can use `?nsfw`."
+              : "🔒 NSFW commands are now **off** — only admins can use `?nsfw`.",
+          ),
+      ],
+    });
+    return;
+  }
+
+  // ── Access gate: if NSFW is off, non-admins are blocked ───────────────
+  if (guildId) {
+    const enabled = await getNsfwEnabled(guildId);
+    if (!enabled && !isAdmin) {
+      await message.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0xff4444)
+            .setDescription("🔒 NSFW commands are currently disabled on this server."),
+        ],
+      });
+      return;
+    }
+  }
 
   if (arg1 === "help") {
     await message.reply({ embeds: [HELP_EMBED] });
