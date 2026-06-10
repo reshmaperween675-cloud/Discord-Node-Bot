@@ -267,10 +267,10 @@ function buildFns(
     ];
   }
   return [
+    () => fromGelbooru(booruTags, false),
     () => fromXbooru(booruTags, false),
     () => fromTbib(booruTags, false),
     () => fromRule34xxx(booruTags, false),
-    () => fromGelbooru(booruTags, false),
     () => fromKonachan(mbTags, false),
     () => fromYandere(mbTags, false),
     () => fromRedgifs(rgQuery, false),
