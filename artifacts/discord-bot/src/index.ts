@@ -20,6 +20,7 @@ import { handleMewoCommand } from "./mewo/router.js";
 import { data as setupPanelData, execute as setupPanelExecute } from "./commands/setupChallengePanel.js";
 import { handleEndCommand } from "./commands/endRaid.js";
 import { handleNsfwCommand } from "./commands/nsfw.js";
+import { handleCaptionCommand } from "./commands/caption.js";
 import { handleCreateTicket } from "./tickets/ticketFlow.js";
 import { handleCloseTicket, handleDeleteTicket } from "./tickets/ticketControls.js";
 import {
@@ -715,6 +716,16 @@ client.on(Events.MessageCreate, async (message: Message) => {
   // ?nsfw / ?nfsw — random or category NSFW gif
   if (content.toLowerCase().startsWith("?nsfw") || content.toLowerCase().startsWith("?nfsw")) {
     handleNsfwCommand(message).catch((err) => console.error("[NSFW] Unhandled error:", err));
+    return;
+  }
+
+  // ?caption / ?c / ?troll — add bold meme caption to an image
+  if (
+    content.toLowerCase().startsWith("?caption") ||
+    content.toLowerCase().startsWith("?troll") ||
+    /^\?c\s/i.test(content)
+  ) {
+    handleCaptionCommand(message).catch((err) => console.error("[CAPTION] Unhandled error:", err));
     return;
   }
 
