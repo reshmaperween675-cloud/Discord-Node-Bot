@@ -1,28 +1,29 @@
 import { Message, EmbedBuilder, AttachmentBuilder } from "discord.js";
 
-// Exclusion tags — strictly straight, human, no furry, no weird/extreme content
+// Exclusion tags — strictly straight, 2D anime, no furry, no weird/extreme content
 const EXCL =
   "-yaoi -yuri -transgender -futanari -trap -crossdressing " +
   "-furry -anthro -kemono " +
   "-tentacles -tentacle -monster -alien -creature -insect -bug -plant -slime -beast -dragon " +
   "-rape -non-consensual -forced " +
-  "-guro -scat -vore -ryona -inflation -gore -blood -death -torture -necrophilia";
+  "-guro -scat -vore -ryona -inflation -gore -blood -death -torture -necrophilia " +
+  "-3d -3dcg -realistic -photorealistic -live_action -real_person";
 
 // ── Category map ──────────────────────────────────────────────────────────
 // booru: xbooru/tbib/hypnohub tag string
 // redgifs: search query string
 const CATEGORIES = {
-  neko:       { booru: `animated cat_girl rating:explicit ${EXCL}`,        redgifs: "neko hentai"        },
-  hentai:     { booru: `animated rating:explicit ${EXCL}`,                 redgifs: "hentai animated"    },
-  waifu:      { booru: `animated 1girl rating:explicit ${EXCL}`,           redgifs: "waifu hentai"       },
-  milf:       { booru: `animated milf rating:explicit ${EXCL}`,            redgifs: "milf hentai"        },
-  ahegao:     { booru: `animated ahegao rating:explicit ${EXCL}`,          redgifs: "ahegao hentai"      },
-  maid:       { booru: `animated maid rating:explicit ${EXCL}`,            redgifs: "maid hentai"        },
-  elf:        { booru: `animated elf rating:explicit ${EXCL}`,             redgifs: "elf hentai"         },
-  schoolgirl: { booru: `animated school_uniform rating:explicit ${EXCL}`,  redgifs: "schoolgirl hentai"  },
-  gangbang:   { booru: `animated gangbang rating:explicit ${EXCL}`,        redgifs: "gangbang hentai"    },
-  creampie:   { booru: `animated creampie rating:explicit ${EXCL}`,        redgifs: "creampie hentai"    },
-  random:     { booru: `animated rating:explicit ${EXCL}`,                 redgifs: "hentai"             },
+  neko:       { booru: `animated cat_girl rating:explicit ${EXCL}`,        redgifs: "anime neko hentai"        },
+  hentai:     { booru: `animated rating:explicit ${EXCL}`,                 redgifs: "anime hentai 2d"          },
+  waifu:      { booru: `animated 1girl rating:explicit ${EXCL}`,           redgifs: "anime waifu hentai"       },
+  milf:       { booru: `animated milf rating:explicit ${EXCL}`,            redgifs: "anime milf hentai"        },
+  ahegao:     { booru: `animated ahegao rating:explicit ${EXCL}`,          redgifs: "ahegao anime hentai"      },
+  maid:       { booru: `animated maid rating:explicit ${EXCL}`,            redgifs: "anime maid hentai"        },
+  elf:        { booru: `animated elf rating:explicit ${EXCL}`,             redgifs: "anime elf hentai"         },
+  schoolgirl: { booru: `animated school_uniform rating:explicit ${EXCL}`,  redgifs: "anime schoolgirl hentai"  },
+  gangbang:   { booru: `animated gangbang rating:explicit ${EXCL}`,        redgifs: "anime gangbang hentai"    },
+  creampie:   { booru: `animated creampie rating:explicit ${EXCL}`,        redgifs: "anime creampie hentai"    },
+  random:     { booru: `animated rating:explicit ${EXCL}`,                 redgifs: "anime hentai"             },
 } as const;
 
 type Category = keyof typeof CATEGORIES;
