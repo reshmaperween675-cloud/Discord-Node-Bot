@@ -1,9 +1,11 @@
 import { Message, EmbedBuilder, AttachmentBuilder } from "discord.js";
 
-// Exclusion tags — strictly straight, human, no furry, no extreme content
+// Exclusion tags — strictly straight, human, no furry, no weird/extreme content
 const EXCL =
   "-yaoi -yuri -transgender -futanari -trap -crossdressing " +
   "-furry -anthro -kemono " +
+  "-tentacles -tentacle -monster -alien -creature -insect -bug -plant -slime -beast -dragon " +
+  "-rape -non-consensual -forced " +
   "-guro -scat -vore -ryona -inflation -gore -blood -death -torture -necrophilia";
 
 // ── Category map ──────────────────────────────────────────────────────────
