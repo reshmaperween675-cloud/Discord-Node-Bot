@@ -405,28 +405,13 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
         if (buffer.byteLength > 0 && buffer.byteLength < 25 * 1024 * 1024) {
           const ext = url.split(".").pop()?.split("?")[0] ?? "gif";
           const file = new AttachmentBuilder(buffer, { name: `nsfw.${ext}` });
-          await message.reply({
-            files: [file],
-            embeds: [
-              new EmbedBuilder()
-                .setColor(0xff0055)
-                .setImage(`attachment://nsfw.${ext}`)
-                .setFooter({ text: `🔞 ${category}` }),
-            ],
-          });
+          await message.reply({ files: [file] });
           return;
         }
       }
     }
   } catch { /* fall through to direct URL */ }
 
-  // Fallback: direct URL (works when CDN doesn't hotlink-protect)
-  await message.reply({
-    embeds: [
-      new EmbedBuilder()
-        .setColor(0xff0055)
-        .setImage(url)
-        .setFooter({ text: `🔞 ${category}` }),
-    ],
-  });
+  // Fallback: direct URL as plain text (Discord auto-previews images)
+  await message.reply({ content: url });
 }
