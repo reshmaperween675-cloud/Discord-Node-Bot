@@ -41,6 +41,23 @@ const VALID_CATS = Object.keys(CATEGORIES) as Category[];
 const VIDEO_EXTS = [".mp4", ".webm"];
 const IMAGE_EXTS = [".gif", ".png", ".jpg", ".jpeg", ".webp"];
 
+// ── Seen-URL deduplication ─────────────────────────────────────────────────
+// Tracks the last 300 URLs returned across all categories so repeats are avoided.
+// Uses a Set for O(1) lookup + a queue for eviction order.
+const SEEN_MAX = 300;
+const seenSet   = new Set<string>();
+const seenQueue: string[] = [];
+
+function markSeen(url: string): void {
+  if (seenSet.has(url)) return;
+  seenSet.add(url);
+  seenQueue.push(url);
+  if (seenQueue.length > SEEN_MAX) {
+    const evicted = seenQueue.shift()!;
+    seenSet.delete(evicted);
+  }
+}
+
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -53,10 +70,13 @@ type BooruThibPost = { directory?: number; image?: string };
 
 function selectUrl(posts: BooruPost[], wantVideo: boolean): string | null {
   // Strictly filter by wanted type — never mix; a video URL in setImage() = blank embed
-  const pool = posts.filter((p) =>
+  const valid = posts.filter((p) =>
     p.file_url && (wantVideo ? isVideo(p.file_url) : isImage(p.file_url)),
   );
-  if (pool.length === 0) return null;
+  if (valid.length === 0) return null;
+  // Prefer URLs not yet seen — fall back to any valid if all have been shown
+  const unseen = valid.filter((p) => !seenSet.has(p.file_url!));
+  const pool = unseen.length > 0 ? unseen : valid;
   return pick(pool).file_url ?? null;
 }
 
@@ -119,7 +139,7 @@ function fromTbib(tags: string, wantVideo: boolean): Promise<string | null> {
 function fromRule34xxx(tags: string, wantVideo: boolean): Promise<string | null> {
   return fetchBooru(
     "https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1",
-    tags, wantVideo, 30,
+    tags, wantVideo, 200, // rule34 has a much deeper library — wider page window
   );
 }
 
@@ -228,9 +248,17 @@ async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<str
     () => fromYandere(map.moebooru, wantVideo),
     () => fromRedgifs(map.redgifs, wantVideo),
   ];
-  const url = await raceToFirst(fns);
-  if (url) return url;
-  return raceToFirst(fns); // one retry
+  // Try up to 4 rounds — each round re-races all sources with seenSet filtering active
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const url = await raceToFirst(fns);
+    if (!url) continue;
+    if (!seenSet.has(url)) {
+      markSeen(url);
+      return url;
+    }
+    // URL was seen (race returned before selectUrl could filter it) — retry
+  }
+  return null;
 }
 
 // ── Per-guild NSFW toggle (stored in bot_kv) ──────────────────────────────
