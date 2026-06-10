@@ -139,7 +139,18 @@ function fromTbib(tags: string, wantVideo: boolean): Promise<string | null> {
 function fromRule34xxx(tags: string, wantVideo: boolean): Promise<string | null> {
   return fetchBooru(
     "https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1",
-    tags, wantVideo, 200, // rule34 has a much deeper library — wider page window
+    tags, wantVideo, 200,
+  );
+}
+
+// ── Gelbooru — authenticated with API key + user_id from env ─────────────
+function fromGelbooru(tags: string, wantVideo: boolean): Promise<string | null> {
+  const key    = process.env.GELBOORU_API_KEY;
+  const userId = process.env.GELBOORU_USER_ID;
+  if (!key || !userId) return Promise.resolve(null);
+  return fetchBooru(
+    `https://gelbooru.com/index.php?page=dapi&s=post&q=index&json=1&api_key=${key}&user_id=${userId}`,
+    tags, wantVideo, 200,
   );
 }
 
@@ -259,6 +270,7 @@ function buildFns(
     () => fromXbooru(booruTags, false),
     () => fromTbib(booruTags, false),
     () => fromRule34xxx(booruTags, false),
+    () => fromGelbooru(booruTags, false),
     () => fromKonachan(mbTags, false),
     () => fromYandere(mbTags, false),
     () => fromRedgifs(rgQuery, false),
