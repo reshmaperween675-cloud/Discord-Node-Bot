@@ -137,9 +137,7 @@ export async function handleCaptionCommand(message: Message): Promise<void> {
     const mctx     = measureC.getContext("2d");
     mctx.font = `bold ${FONT_SIZE}px "${boldFontName}"`;
 
-    // Uppercase for that classic meme look
-    const displayText = captionText.toUpperCase();
-    const lines  = wrapText(mctx, displayText, imgW - PAD_X * 2);
+    const lines  = wrapText(mctx, captionText, imgW - PAD_X * 2);
     const barH   = PAD_Y * 2 + lines.length * LINE_H;
 
     // Compose final canvas: caption bar on top, image below
