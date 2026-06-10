@@ -10,20 +10,20 @@ const EXCL =
   "-3d -3dcg -realistic -photorealistic -live_action -real_person";
 
 // ── Category map ──────────────────────────────────────────────────────────
-// booru: xbooru/tbib/hypnohub tag string
+// booru: xbooru/tbib tag string — "hentai" tag required = strictly 2D anime style
 // redgifs: search query string
 const CATEGORIES = {
-  neko:       { booru: `animated cat_girl rating:explicit ${EXCL}`,        redgifs: "anime neko hentai"        },
-  hentai:     { booru: `animated rating:explicit ${EXCL}`,                 redgifs: "anime hentai 2d"          },
-  waifu:      { booru: `animated 1girl rating:explicit ${EXCL}`,           redgifs: "anime waifu hentai"       },
-  milf:       { booru: `animated milf rating:explicit ${EXCL}`,            redgifs: "anime milf hentai"        },
-  ahegao:     { booru: `animated ahegao rating:explicit ${EXCL}`,          redgifs: "ahegao anime hentai"      },
-  maid:       { booru: `animated maid rating:explicit ${EXCL}`,            redgifs: "anime maid hentai"        },
-  elf:        { booru: `animated elf rating:explicit ${EXCL}`,             redgifs: "anime elf hentai"         },
-  schoolgirl: { booru: `animated school_uniform rating:explicit ${EXCL}`,  redgifs: "anime schoolgirl hentai"  },
-  gangbang:   { booru: `animated gangbang rating:explicit ${EXCL}`,        redgifs: "anime gangbang hentai"    },
-  creampie:   { booru: `animated creampie rating:explicit ${EXCL}`,        redgifs: "anime creampie hentai"    },
-  random:     { booru: `animated rating:explicit ${EXCL}`,                 redgifs: "anime hentai"             },
+  neko:       { booru: `animated hentai cat_girl rating:explicit ${EXCL}`,        redgifs: "anime neko hentai"        },
+  hentai:     { booru: `animated hentai rating:explicit ${EXCL}`,                 redgifs: "anime hentai 2d"          },
+  waifu:      { booru: `animated hentai 1girl rating:explicit ${EXCL}`,           redgifs: "anime waifu hentai"       },
+  milf:       { booru: `animated hentai milf rating:explicit ${EXCL}`,            redgifs: "anime milf hentai"        },
+  ahegao:     { booru: `animated hentai ahegao rating:explicit ${EXCL}`,          redgifs: "ahegao anime hentai"      },
+  maid:       { booru: `animated hentai maid rating:explicit ${EXCL}`,            redgifs: "anime maid hentai"        },
+  elf:        { booru: `animated hentai elf rating:explicit ${EXCL}`,             redgifs: "anime elf hentai"         },
+  schoolgirl: { booru: `animated hentai school_uniform rating:explicit ${EXCL}`,  redgifs: "anime schoolgirl hentai"  },
+  gangbang:   { booru: `animated hentai gangbang rating:explicit ${EXCL}`,        redgifs: "anime gangbang hentai"    },
+  creampie:   { booru: `animated hentai creampie rating:explicit ${EXCL}`,        redgifs: "anime creampie hentai"    },
+  random:     { booru: `animated hentai rating:explicit ${EXCL}`,                 redgifs: "anime hentai"             },
 } as const;
 
 type Category = keyof typeof CATEGORIES;
@@ -106,13 +106,6 @@ function fromTbib(tags: string, wantVideo: boolean): Promise<string | null> {
   );
 }
 
-// ── hypnohub — confirmed HTTP 200, uses file_url ──────────────────────────
-function fromHypnohub(tags: string, wantVideo: boolean): Promise<string | null> {
-  return fetchBooru(
-    "https://hypnohub.net/index.php?page=dapi&s=post&q=index&json=1",
-    tags, wantVideo, 20,
-  );
-}
 
 // ── Redgifs — guest token (auto-fetched, no registration needed) ───────────
 let redgifsToken: string | null = null;
@@ -182,7 +175,6 @@ async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<str
   const fns = [
     () => fromXbooru(map.booru, wantVideo),
     () => fromTbib(map.booru, wantVideo),
-    () => fromHypnohub(map.booru, wantVideo),
     () => fromRedgifs(map.redgifs, wantVideo),
   ];
   const url = await raceToFirst(fns);
