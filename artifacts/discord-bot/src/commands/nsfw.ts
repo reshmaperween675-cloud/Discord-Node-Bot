@@ -11,20 +11,28 @@ const EXCL =
   "-3d -3dcg -realistic -photorealistic -live_action -real_person";
 
 // ── Category map ──────────────────────────────────────────────────────────
-// booru: xbooru/tbib tag string — "hentai" tag required = strictly 2D anime style
-// redgifs: search query string
+// booru:    xbooru / tbib / rule34.xxx tag string
+// moebooru: konachan / yande.re tag string (rating:e, simpler vocab, image-only)
+// redgifs:  search query string
+
+// Moebooru exclusions — these sites use a different (smaller) tag vocab
+const EXCL_MB =
+  "-yaoi -yuri -futanari -trap -crossdressing " +
+  "-furry -anthro " +
+  "-guro -scat -vore -gore -ryona";
+
 const CATEGORIES = {
-  neko:       { booru: `animated hentai cat_girl rating:explicit ${EXCL}`,        redgifs: "anime neko hentai"        },
-  hentai:     { booru: `animated hentai rating:explicit ${EXCL}`,                 redgifs: "anime hentai 2d"          },
-  waifu:      { booru: `animated hentai 1girl rating:explicit ${EXCL}`,           redgifs: "anime waifu hentai"       },
-  milf:       { booru: `animated hentai milf rating:explicit ${EXCL}`,            redgifs: "anime milf hentai"        },
-  ahegao:     { booru: `animated hentai ahegao rating:explicit ${EXCL}`,          redgifs: "ahegao anime hentai"      },
-  maid:       { booru: `animated hentai maid rating:explicit ${EXCL}`,            redgifs: "anime maid hentai"        },
-  elf:        { booru: `animated hentai elf rating:explicit ${EXCL}`,             redgifs: "anime elf hentai"         },
-  schoolgirl: { booru: `animated hentai school_uniform rating:explicit ${EXCL}`,  redgifs: "anime schoolgirl hentai"  },
-  gangbang:   { booru: `animated hentai gangbang rating:explicit ${EXCL}`,        redgifs: "anime gangbang hentai"    },
-  creampie:   { booru: `animated hentai creampie rating:explicit ${EXCL}`,        redgifs: "anime creampie hentai"    },
-  random:     { booru: `animated hentai rating:explicit ${EXCL}`,                 redgifs: "anime hentai"             },
+  neko:       { booru: `animated hentai cat_girl rating:explicit ${EXCL}`,        moebooru: `cat_girl rating:e ${EXCL_MB}`,          redgifs: "anime neko hentai"        },
+  hentai:     { booru: `animated hentai rating:explicit ${EXCL}`,                 moebooru: `sex rating:e ${EXCL_MB}`,               redgifs: "anime hentai 2d"          },
+  waifu:      { booru: `animated hentai 1girl rating:explicit ${EXCL}`,           moebooru: `1girl rating:e ${EXCL_MB}`,             redgifs: "anime waifu hentai"       },
+  milf:       { booru: `animated hentai milf rating:explicit ${EXCL}`,            moebooru: `milf rating:e ${EXCL_MB}`,              redgifs: "anime milf hentai"        },
+  ahegao:     { booru: `animated hentai ahegao rating:explicit ${EXCL}`,          moebooru: `ahegao rating:e ${EXCL_MB}`,            redgifs: "ahegao anime hentai"      },
+  maid:       { booru: `animated hentai maid rating:explicit ${EXCL}`,            moebooru: `maid rating:e ${EXCL_MB}`,              redgifs: "anime maid hentai"        },
+  elf:        { booru: `animated hentai elf rating:explicit ${EXCL}`,             moebooru: `elf_ears rating:e ${EXCL_MB}`,          redgifs: "anime elf hentai"         },
+  schoolgirl: { booru: `animated hentai school_uniform rating:explicit ${EXCL}`,  moebooru: `school_uniform rating:e ${EXCL_MB}`,    redgifs: "anime schoolgirl hentai"  },
+  gangbang:   { booru: `animated hentai gangbang rating:explicit ${EXCL}`,        moebooru: `gangbang rating:e ${EXCL_MB}`,          redgifs: "anime gangbang hentai"    },
+  creampie:   { booru: `animated hentai creampie rating:explicit ${EXCL}`,        moebooru: `creampie rating:e ${EXCL_MB}`,          redgifs: "anime creampie hentai"    },
+  random:     { booru: `animated hentai rating:explicit ${EXCL}`,                 moebooru: `rating:e ${EXCL_MB}`,                   redgifs: "anime hentai"             },
 } as const;
 
 type Category = keyof typeof CATEGORIES;
@@ -107,6 +115,45 @@ function fromTbib(tags: string, wantVideo: boolean): Promise<string | null> {
   );
 }
 
+// ── rule34.xxx — separate site from paheal, free JSON API ─────────────────
+function fromRule34xxx(tags: string, wantVideo: boolean): Promise<string | null> {
+  return fetchBooru(
+    "https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1",
+    tags, wantVideo, 30,
+  );
+}
+
+// ── Moebooru fetcher — shared by konachan + yande.re (image-only) ─────────
+async function fetchMoebooru(
+  baseUrl: string,
+  tags: string,
+  wantVideo: boolean,
+): Promise<string | null> {
+  if (wantVideo) return null; // konachan/yande.re are image-only
+  for (const page of [Math.floor(Math.random() * 20) + 1, 1]) {
+    try {
+      const res = await fetch(
+        `${baseUrl}?limit=50&page=${page}&tags=${encodeURIComponent(tags)}`,
+        { headers: { "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)" }, signal: AbortSignal.timeout(10_000) },
+      );
+      if (!res.ok) return null;
+      const posts = await res.json() as BooruPost[];
+      if (!Array.isArray(posts)) return null;
+      const url = selectUrl(posts, false);
+      if (url) return url;
+    } catch { return null; }
+  }
+  return null;
+}
+
+function fromKonachan(tags: string, wantVideo: boolean): Promise<string | null> {
+  return fetchMoebooru("https://konachan.com/post.json", tags, wantVideo);
+}
+
+function fromYandere(tags: string, wantVideo: boolean): Promise<string | null> {
+  return fetchMoebooru("https://yande.re/post.json", tags, wantVideo);
+}
+
 
 // ── Redgifs — guest token (auto-fetched, no registration needed) ───────────
 let redgifsToken: string | null = null;
@@ -176,6 +223,9 @@ async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<str
   const fns = [
     () => fromXbooru(map.booru, wantVideo),
     () => fromTbib(map.booru, wantVideo),
+    () => fromRule34xxx(map.booru, wantVideo),
+    () => fromKonachan(map.moebooru, wantVideo),
+    () => fromYandere(map.moebooru, wantVideo),
     () => fromRedgifs(map.redgifs, wantVideo),
   ];
   const url = await raceToFirst(fns);
