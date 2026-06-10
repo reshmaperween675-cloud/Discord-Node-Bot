@@ -414,67 +414,71 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
   }
 
   let wantVideo = false;
-  let url: string | null;
+  let fetcher: (video: boolean) => Promise<string | null>;
 
   if (!arg1) {
-    // ?nsfw → random image
-    url = await fetchNsfwUrl(pick(VALID_CATS.filter((c) => c !== "random")), false);
+    const cat = pick(VALID_CATS.filter((c) => c !== "random"));
+    fetcher = (v) => fetchNsfwUrl(cat, v);
   } else if (arg1 === "video") {
-    // ?nsfw video → random video
     wantVideo = true;
-    url = await fetchNsfwUrl(pick(VALID_CATS.filter((c) => c !== "random")), true);
+    const cat = pick(VALID_CATS.filter((c) => c !== "random"));
+    fetcher = (v) => fetchNsfwUrl(cat, v);
   } else if ((VALID_CATS as string[]).includes(arg1)) {
-    // ?nsfw <known cat> [video]
     wantVideo = arg2 === "video";
-    url = await fetchNsfwUrl(arg1 as Category, wantVideo);
+    fetcher = (v) => fetchNsfwUrl(arg1 as Category, v);
   } else {
     // Freeform search — grab everything after ?nsfw, strip trailing "video" keyword
     const rawArgs = parts.slice(1);
     wantVideo = rawArgs[rawArgs.length - 1]?.toLowerCase() === "video";
     const termParts = wantVideo ? rawArgs.slice(0, -1) : rawArgs;
     const term = termParts.join(" ").trim().toLowerCase();
-    url = await fetchFreeformUrl(term, wantVideo);
+    fetcher = (v) => fetchFreeformUrl(term, v);
   }
 
-  if (!url) {
-    await message.reply("❌ Couldn't fetch right now. Try again in a moment.");
-    return;
-  }
-
+  // ── Video mode ─────────────────────────────────────────────────────────────
   if (wantVideo) {
+    const url = await fetcher(true);
+    if (!url) { await message.reply("❌ Couldn't fetch right now. Try again in a moment."); return; }
     await message.reply({ content: url });
     return;
   }
 
-  // ── Image mode: download and re-upload to bypass hotlink protection ────────
-  // If booru CDNs block Discord's embed crawler, setImage(url) renders blank.
-  // Downloading on the bot side and attaching lets Discord host it on its own CDN.
-  try {
-    const srcHost = new URL(url).hostname;
-    const imgRes = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Referer": `https://${srcHost}/`,
-        "Accept": "image/gif,image/webp,image/*,*/*",
-      },
-      signal: AbortSignal.timeout(15_000),
-    });
+  // ── Image mode: download and re-upload — retry up to 3 different URLs ──────
+  // Raw URL fallback is NOT used — CDNs like tbib/xbooru/yande.re hotlink-protect
+  // their files so Discord can't embed them. We must download on the bot side.
+  // If a URL fails to download, mark it bad (seenSet) and fetch a fresh one.
+  for (let imgAttempt = 0; imgAttempt < 3; imgAttempt++) {
+    const url = await fetcher(false);
+    if (!url) break;
 
-    if (imgRes.ok) {
-      const contentLength = Number(imgRes.headers.get("content-length") ?? 0);
-      // Discord file limit for bots: 25 MB
-      if (contentLength === 0 || contentLength < 25 * 1024 * 1024) {
-        const buffer = Buffer.from(await imgRes.arrayBuffer());
-        if (buffer.byteLength > 0 && buffer.byteLength < 25 * 1024 * 1024) {
-          const ext = url.split(".").pop()?.split("?")[0] ?? "gif";
-          const file = new AttachmentBuilder(buffer, { name: `nsfw.${ext}` });
-          await message.reply({ files: [file] });
-          return;
+    try {
+      const srcHost = new URL(url).hostname;
+      const imgRes = await fetch(url, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          "Referer": `https://${srcHost}/`,
+          "Accept": "image/gif,image/webp,image/*,*/*",
+        },
+        signal: AbortSignal.timeout(15_000),
+      });
+
+      if (imgRes.ok) {
+        const contentLength = Number(imgRes.headers.get("content-length") ?? 0);
+        if (contentLength === 0 || contentLength < 25 * 1024 * 1024) {
+          const buffer = Buffer.from(await imgRes.arrayBuffer());
+          if (buffer.byteLength > 0 && buffer.byteLength < 25 * 1024 * 1024) {
+            const ext = url.split(".").pop()?.split("?")[0] ?? "gif";
+            const file = new AttachmentBuilder(buffer, { name: `nsfw.${ext}` });
+            await message.reply({ files: [file] });
+            return;
+          }
         }
       }
-    }
-  } catch { /* fall through to direct URL */ }
+    } catch { /* download failed — try a different URL */ }
 
-  // Fallback: direct URL as plain text (Discord auto-previews images)
-  await message.reply({ content: url });
+    // Mark URL as bad so the next fetcher() call won't return it
+    markSeen(url);
+  }
+
+  await message.reply("❌ Couldn't fetch right now. Try again in a moment.");
 }
