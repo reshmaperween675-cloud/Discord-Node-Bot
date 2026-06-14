@@ -255,6 +255,41 @@ function fromGelbooru(tags: string, wantVideo: boolean): Promise<string | null> 
   );
 }
 
+// ── Danbooru — authenticated, best quality source, prioritized first ──────
+// Uses max 2 tags per query (Danbooru free-member limit).
+// Two API keys fire in parallel for higher throughput.
+type DanbooruPost = { file_url?: string; large_file_url?: string; file_ext?: string };
+
+async function fromDanbooru(tag: string, apiKey: string, wantVideo: boolean): Promise<string | null> {
+  const login = process.env.DANBOORU_LOGIN;
+  if (!login || !apiKey) return null;
+  for (const page of [Math.floor(Math.random() * 100) + 1, 1]) {
+    try {
+      const url = `https://danbooru.donmai.us/posts.json?login=${encodeURIComponent(login)}&api_key=${encodeURIComponent(apiKey)}&tags=${encodeURIComponent(tag)}&limit=100&page=${page}`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)" },
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) return null;
+      const posts = await res.json() as DanbooruPost[];
+      if (!Array.isArray(posts) || posts.length === 0) continue;
+      const booruPosts: BooruPost[] = posts
+        .filter((p) => p.file_url)
+        .map((p) => ({ file_url: p.file_url }));
+      const picked = selectUrl(booruPosts, wantVideo);
+      if (picked) return picked;
+    } catch { return null; }
+  }
+  return null;
+}
+
+// Derive a compact 2-tag Danbooru query from a moebooru tag string
+// (strips exclusions and rating tag, takes only the first positive content tag)
+function danbooruTag(moebooru: string): string {
+  const first = moebooru.split(/\s+/).find((t) => !t.startsWith("-") && !t.startsWith("rating:"));
+  return first ? `${first} rating:e` : "rating:e";
+}
+
 // ── Moebooru fetcher — shared by konachan + yande.re (image-only) ─────────
 async function fetchMoebooru(
   baseUrl: string,
@@ -351,12 +386,12 @@ function raceToFirst(fns: Array<() => Promise<string | null>>): Promise<string |
 }
 
 // Build source list depending on image vs video mode.
-// Video mode: Redgifs only — it's a dedicated video platform with reliable anime hentai MP4s.
-//   Three parallel queries (different random offsets) for better variety.
-// Image mode: all 6 booru/image sources.
+// Danbooru (×2 keys) fires first — highest quality + parallel throughput.
+// Video mode: Redgifs only (dedicated video platform).
 function buildFns(
   booruTags: string,
   mbTags: string,
+  dbTag: string,
   rgQuery: string,
   wantVideo: boolean,
 ): Array<() => Promise<string | null>> {
@@ -367,7 +402,11 @@ function buildFns(
       () => fromRedgifs(`hentai ${rgQuery}`, true),
     ];
   }
+  const key1 = process.env.DANBOORU_API_KEY;
+  const key2 = process.env.DANBOORU_API_KEY_2;
   return [
+    ...(key1 ? [() => fromDanbooru(dbTag, key1, false)] : []),
+    ...(key2 ? [() => fromDanbooru(dbTag, key2, false)] : []),
     () => fromGelbooru(booruTags, false),
     () => fromXbooru(booruTags, false),
     () => fromTbib(booruTags, false),
@@ -380,7 +419,8 @@ function buildFns(
 
 async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<string | null> {
   const map = CATEGORIES[category];
-  const fns = buildFns(map.booru, map.moebooru, map.redgifs, wantVideo);
+  const dbTag = danbooruTag(map.moebooru);
+  const fns = buildFns(map.booru, map.moebooru, dbTag, map.redgifs, wantVideo);
   for (let attempt = 0; attempt < 4; attempt++) {
     const url = await raceToFirst(fns);
     if (!url) continue;
@@ -394,9 +434,10 @@ async function fetchFreeformUrl(term: string, wantVideo: boolean): Promise<strin
   const booruTerm = term.replace(/\s+/g, "_");
   const booruTags = `${booruTerm} rating:explicit ${EXCL}`;
   const mbTags    = `${booruTerm} rating:e ${EXCL_MB}`;
+  const dbTag     = `${booruTerm} rating:e`;
   const rgQuery   = `anime ${term} hentai`;
 
-  const fns = buildFns(booruTags, mbTags, rgQuery, wantVideo);
+  const fns = buildFns(booruTags, mbTags, dbTag, rgQuery, wantVideo);
   for (let attempt = 0; attempt < 4; attempt++) {
     const url = await raceToFirst(fns);
     if (!url) continue;

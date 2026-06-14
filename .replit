@@ -40,5 +40,6 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
-DANBOORU_LOGIN = "5NPE8RdFDVpZ9KGoqT5PbALK"
-DANBOORU_API_KEY = "GbvAeFmVbNzvfJvx64pzmp8s"
+DANBOORU_LOGIN = "eonmaster6767"
+DANBOORU_API_KEY = "5NPE8RdFDVpZ9KGoqT5PbALK"
+DANBOORU_API_KEY_2 = "GbvAeFmVbNzvfJvx64pzmp8s"
