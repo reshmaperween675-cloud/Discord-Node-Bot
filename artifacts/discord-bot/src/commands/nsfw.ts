@@ -384,44 +384,35 @@ function raceToFirst(fns: Array<() => Promise<string | null>>): Promise<string |
   });
 }
 
-// Build source list depending on image vs video mode.
-// Danbooru (×2 keys) fires first — highest quality + parallel throughput.
-// Video mode: Redgifs only (dedicated video platform).
+// Build source list — Danbooru (×2 keys) first, then other boorus.
+// Redgifs removed: it mixes real-life content into results.
+// Video mode uses the same booru sources with wantVideo=true (filters for .gif/.mp4/.webm).
 function buildFns(
   booruTags: string,
   mbTags: string,
   dbTag: string,
-  rgQuery: string,
   wantVideo: boolean,
 ): Array<() => Promise<string | null>> {
-  if (wantVideo) {
-    return [
-      () => fromRedgifs(rgQuery, true),
-      () => fromRedgifs(`${rgQuery} animated`, true),
-      () => fromRedgifs(`hentai ${rgQuery}`, true),
-    ];
-  }
   const login1 = process.env.DANBOORU_LOGIN  ?? "";
   const login2 = process.env.DANBOORU_LOGIN_2 ?? "";
   const key1   = process.env.DANBOORU_API_KEY;
   const key2   = process.env.DANBOORU_API_KEY_2;
   return [
-    ...(login1 && key1 ? [() => fromDanbooru(dbTag, login1, key1, false)] : []),
-    ...(login2 && key2 ? [() => fromDanbooru(dbTag, login2, key2, false)] : []),
-    () => fromGelbooru(booruTags, false),
-    () => fromXbooru(booruTags, false),
-    () => fromTbib(booruTags, false),
-    () => fromRule34xxx(booruTags, false),
-    () => fromKonachan(mbTags, false),
-    () => fromYandere(mbTags, false),
-    () => fromRedgifs(rgQuery, false),
+    ...(login1 && key1 ? [() => fromDanbooru(dbTag, login1, key1, wantVideo)] : []),
+    ...(login2 && key2 ? [() => fromDanbooru(dbTag, login2, key2, wantVideo)] : []),
+    () => fromGelbooru(booruTags, wantVideo),
+    () => fromXbooru(booruTags, wantVideo),
+    () => fromTbib(booruTags, wantVideo),
+    () => fromRule34xxx(booruTags, wantVideo),
+    () => fromKonachan(mbTags, wantVideo),
+    () => fromYandere(mbTags, wantVideo),
   ];
 }
 
 async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<string | null> {
   const map = CATEGORIES[category];
   const dbTag = danbooruTag(map.moebooru);
-  const fns = buildFns(map.booru, map.moebooru, dbTag, map.redgifs, wantVideo);
+  const fns = buildFns(map.booru, map.moebooru, dbTag, wantVideo);
   for (let attempt = 0; attempt < 4; attempt++) {
     const url = await raceToFirst(fns);
     if (!url) continue;
@@ -436,9 +427,8 @@ async function fetchFreeformUrl(term: string, wantVideo: boolean): Promise<strin
   const booruTags = `${booruTerm} rating:explicit ${EXCL}`;
   const mbTags    = `${booruTerm} rating:e ${EXCL_MB}`;
   const dbTag     = `${booruTerm} rating:e`;
-  const rgQuery   = `anime ${term} hentai`;
 
-  const fns = buildFns(booruTags, mbTags, dbTag, rgQuery, wantVideo);
+  const fns = buildFns(booruTags, mbTags, dbTag, wantVideo);
   for (let attempt = 0; attempt < 4; attempt++) {
     const url = await raceToFirst(fns);
     if (!url) continue;
