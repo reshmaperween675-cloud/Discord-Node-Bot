@@ -36,3 +36,9 @@ externalPort = 3000
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+DANBOORU_LOGIN = "5NPE8RdFDVpZ9KGoqT5PbALK"
+DANBOORU_API_KEY = "GbvAeFmVbNzvfJvx64pzmp8s"
