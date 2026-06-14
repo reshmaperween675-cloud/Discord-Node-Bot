@@ -291,10 +291,9 @@ async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<str
 // ── Freeform search — any term the user types ─────────────────────────────
 async function fetchFreeformUrl(term: string, wantVideo: boolean): Promise<string | null> {
   const booruTerm = term.replace(/\s+/g, "_");
-  // Freeform: user chose the search term themselves — no EXCL imposed, just explicit filter
-  const booruTags = `${booruTerm} rating:explicit`;
-  const mbTags    = `${booruTerm} rating:e`;
-  const rgQuery   = `${term} hentai`;
+  const booruTags = `${booruTerm} rating:explicit ${EXCL}`;
+  const mbTags    = `${booruTerm} rating:e ${EXCL_MB}`;
+  const rgQuery   = `anime ${term} hentai`;
 
   const fns = buildFns(booruTags, mbTags, rgQuery, wantVideo);
   for (let attempt = 0; attempt < 4; attempt++) {
