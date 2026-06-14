@@ -509,53 +509,52 @@ async function fetchAndDownload(
 }
 
 // ── Bulk send: fetch `count` images/videos, send 5 per message ────────────
+// All fetches start simultaneously. Images are pipelined — the first batch of 5
+// sends as soon as those 5 finish downloading; later batches follow immediately
+// after (they've been downloading in parallel the whole time).
 async function sendBulk(
   message: Message,
   fetcher: (video: boolean) => Promise<string | null>,
   count: number,
   wantVideo: boolean,
 ): Promise<void> {
-  await message.reply(`⏳ Fetching **${count}** ${wantVideo ? "videos" : "images"}…`);
-
   if (wantVideo) {
-    // Videos: collect URLs in parallel, send as plain text (Redgifs auto-embeds)
-    const results = await Promise.allSettled(
-      Array.from({ length: count }, async () => {
-        const url = await fetcher(true);
-        return url;
-      }),
-    );
+    // Start all video URL fetches in parallel
+    const tasks = Array.from({ length: count }, () => fetcher(true));
+    const results = await Promise.allSettled(tasks);
     const urls = results
-      .filter((r): r is PromiseFulfilledResult<string | null> => r.status === "fulfilled" && r.value !== null)
-      .map((r) => r.value!);
+      .filter((r): r is PromiseFulfilledResult<string> => r.status === "fulfilled" && !!r.value)
+      .map((r) => r.value);
 
     if (urls.length === 0) { await message.reply("❌ Couldn't fetch any videos right now."); return; }
-
     for (let i = 0; i < urls.length; i += 5) {
       await message.reply({ content: urls.slice(i, i + 5).join("\n") });
     }
     return;
   }
 
-  // Images: download all in parallel, then send 5 per message as attachments
-  const results = await Promise.allSettled(
-    Array.from({ length: count }, () => fetchAndDownload(fetcher)),
-  );
-  const images = results
-    .filter((r): r is PromiseFulfilledResult<{ buffer: Buffer; ext: string }> =>
-      r.status === "fulfilled" && r.value !== null,
-    )
-    .map((r, i) => ({ ...r.value, idx: i + 1 }));
+  // Images: kick off ALL downloads simultaneously, then pipeline in batches of 5.
+  // Batch N+1 has been downloading while batch N was being sent.
+  const allTasks = Array.from({ length: count }, () => fetchAndDownload(fetcher));
+  let sent = false;
 
-  if (images.length === 0) { await message.reply("❌ Couldn't fetch any images right now."); return; }
+  for (let i = 0; i < allTasks.length; i += 5) {
+    const batchResults = await Promise.allSettled(allTasks.slice(i, i + 5));
+    const images = batchResults
+      .filter((r): r is PromiseFulfilledResult<{ buffer: Buffer; ext: string }> =>
+        r.status === "fulfilled" && r.value !== null)
+      .map((r) => r.value);
 
-  for (let i = 0; i < images.length; i += 5) {
-    const batch = images.slice(i, i + 5);
-    const files = batch.map((img) =>
-      new AttachmentBuilder(img.buffer, { name: `nsfw_${img.idx}.${img.ext}` }),
-    );
-    await message.reply({ files });
+    if (images.length > 0) {
+      const files = images.map((img, j) =>
+        new AttachmentBuilder(img.buffer, { name: `nsfw_${i + j + 1}.${img.ext}` }),
+      );
+      await message.reply({ files });
+      sent = true;
+    }
   }
+
+  if (!sent) await message.reply("❌ Couldn't fetch any images right now.");
 }
 
 // ── Help embed ────────────────────────────────────────────────────────────
