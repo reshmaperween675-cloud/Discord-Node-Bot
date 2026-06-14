@@ -22,17 +22,118 @@ const EXCL_MB =
   "-guro -scat -vore -gore -ryona";
 
 const CATEGORIES = {
-  neko:       { booru: `animated hentai cat_girl rating:explicit ${EXCL}`,        moebooru: `cat_girl rating:e ${EXCL_MB}`,          redgifs: "anime neko hentai"        },
-  hentai:     { booru: `animated hentai rating:explicit ${EXCL}`,                 moebooru: `sex rating:e ${EXCL_MB}`,               redgifs: "anime hentai 2d"          },
-  waifu:      { booru: `animated hentai 1girl rating:explicit ${EXCL}`,           moebooru: `1girl rating:e ${EXCL_MB}`,             redgifs: "anime waifu hentai"       },
-  milf:       { booru: `animated hentai milf rating:explicit ${EXCL}`,            moebooru: `milf rating:e ${EXCL_MB}`,              redgifs: "anime milf hentai"        },
-  ahegao:     { booru: `animated hentai ahegao rating:explicit ${EXCL}`,          moebooru: `ahegao rating:e ${EXCL_MB}`,            redgifs: "ahegao anime hentai"      },
-  maid:       { booru: `animated hentai maid rating:explicit ${EXCL}`,            moebooru: `maid rating:e ${EXCL_MB}`,              redgifs: "anime maid hentai"        },
-  elf:        { booru: `animated hentai elf rating:explicit ${EXCL}`,             moebooru: `elf_ears rating:e ${EXCL_MB}`,          redgifs: "anime elf hentai"         },
-  schoolgirl: { booru: `animated hentai school_uniform rating:explicit ${EXCL}`,  moebooru: `school_uniform rating:e ${EXCL_MB}`,    redgifs: "anime schoolgirl hentai"  },
-  gangbang:   { booru: `animated hentai gangbang rating:explicit ${EXCL}`,        moebooru: `gangbang rating:e ${EXCL_MB}`,          redgifs: "anime gangbang hentai"    },
-  creampie:   { booru: `animated hentai creampie rating:explicit ${EXCL}`,        moebooru: `creampie rating:e ${EXCL_MB}`,          redgifs: "anime creampie hentai"    },
-  random:     { booru: `animated hentai rating:explicit ${EXCL}`,                 moebooru: `rating:e ${EXCL_MB}`,                   redgifs: "anime hentai"             },
+  // ── Originals ──────────────────────────────────────────────────────────────
+  neko:            { booru: `animated hentai cat_girl rating:explicit ${EXCL}`,                   moebooru: `cat_girl rating:e ${EXCL_MB}`,                 redgifs: "anime neko hentai"               },
+  hentai:          { booru: `animated hentai rating:explicit ${EXCL}`,                            moebooru: `sex rating:e ${EXCL_MB}`,                      redgifs: "anime hentai 2d"                 },
+  waifu:           { booru: `animated hentai 1girl rating:explicit ${EXCL}`,                      moebooru: `1girl rating:e ${EXCL_MB}`,                    redgifs: "anime waifu hentai"              },
+  milf:            { booru: `animated hentai milf rating:explicit ${EXCL}`,                       moebooru: `milf rating:e ${EXCL_MB}`,                     redgifs: "anime milf hentai"               },
+  ahegao:          { booru: `animated hentai ahegao rating:explicit ${EXCL}`,                     moebooru: `ahegao rating:e ${EXCL_MB}`,                   redgifs: "ahegao anime hentai"             },
+  maid:            { booru: `animated hentai maid rating:explicit ${EXCL}`,                       moebooru: `maid rating:e ${EXCL_MB}`,                     redgifs: "anime maid hentai"               },
+  elf:             { booru: `animated hentai elf rating:explicit ${EXCL}`,                        moebooru: `elf_ears rating:e ${EXCL_MB}`,                 redgifs: "anime elf hentai"                },
+  schoolgirl:      { booru: `animated hentai school_uniform rating:explicit ${EXCL}`,             moebooru: `school_uniform rating:e ${EXCL_MB}`,           redgifs: "anime schoolgirl hentai"         },
+  gangbang:        { booru: `animated hentai gangbang rating:explicit ${EXCL}`,                   moebooru: `gangbang rating:e ${EXCL_MB}`,                 redgifs: "anime gangbang hentai"           },
+  creampie:        { booru: `animated hentai creampie rating:explicit ${EXCL}`,                   moebooru: `creampie rating:e ${EXCL_MB}`,                 redgifs: "anime creampie hentai"           },
+  random:          { booru: `animated hentai rating:explicit ${EXCL}`,                            moebooru: `rating:e ${EXCL_MB}`,                          redgifs: "anime hentai"                    },
+
+  // ── Sex acts ───────────────────────────────────────────────────────────────
+  blowjob:         { booru: `animated hentai blowjob rating:explicit ${EXCL}`,                    moebooru: `fellatio rating:e ${EXCL_MB}`,                 redgifs: "anime blowjob hentai"            },
+  anal:            { booru: `animated hentai anal rating:explicit ${EXCL}`,                       moebooru: `anal rating:e ${EXCL_MB}`,                     redgifs: "anime anal hentai"               },
+  paizuri:         { booru: `animated hentai paizuri rating:explicit ${EXCL}`,                    moebooru: `paizuri rating:e ${EXCL_MB}`,                  redgifs: "anime paizuri titfuck hentai"    },
+  cumshot:         { booru: `animated hentai cum rating:explicit ${EXCL}`,                        moebooru: `cum rating:e ${EXCL_MB}`,                      redgifs: "anime cumshot hentai"            },
+  riding:          { booru: `animated hentai cowgirl_position rating:explicit ${EXCL}`,           moebooru: `cowgirl_position rating:e ${EXCL_MB}`,         redgifs: "anime riding hentai"             },
+  doggystyle:      { booru: `animated hentai doggystyle rating:explicit ${EXCL}`,                 moebooru: `doggystyle rating:e ${EXCL_MB}`,               redgifs: "anime doggystyle hentai"         },
+  missionary:      { booru: `animated hentai missionary rating:explicit ${EXCL}`,                 moebooru: `missionary rating:e ${EXCL_MB}`,               redgifs: "anime missionary hentai"         },
+  handjob:         { booru: `animated hentai handjob rating:explicit ${EXCL}`,                    moebooru: `handjob rating:e ${EXCL_MB}`,                  redgifs: "anime handjob hentai"            },
+  footjob:         { booru: `animated hentai footjob rating:explicit ${EXCL}`,                    moebooru: `footjob rating:e ${EXCL_MB}`,                  redgifs: "anime footjob hentai"            },
+  threesome:       { booru: `animated hentai threesome rating:explicit ${EXCL}`,                  moebooru: `threesome rating:e ${EXCL_MB}`,                redgifs: "anime threesome hentai"          },
+  facial:          { booru: `animated hentai cum_on_face rating:explicit ${EXCL}`,                moebooru: `cum_on_face rating:e ${EXCL_MB}`,              redgifs: "anime facial hentai"             },
+  deepthroat:      { booru: `animated hentai deepthroat rating:explicit ${EXCL}`,                 moebooru: `deepthroat rating:e ${EXCL_MB}`,               redgifs: "anime deepthroat hentai"         },
+  squirt:          { booru: `animated hentai squirting rating:explicit ${EXCL}`,                  moebooru: `squirting rating:e ${EXCL_MB}`,                redgifs: "anime squirting hentai"          },
+  masturbation:    { booru: `animated hentai masturbation rating:explicit ${EXCL}`,               moebooru: `masturbation rating:e ${EXCL_MB}`,             redgifs: "anime masturbation hentai"       },
+  dildo:           { booru: `animated hentai dildo rating:explicit ${EXCL}`,                      moebooru: `dildo rating:e ${EXCL_MB}`,                    redgifs: "anime dildo hentai"              },
+  vibrator:        { booru: `animated hentai vibrator rating:explicit ${EXCL}`,                   moebooru: `vibrator rating:e ${EXCL_MB}`,                 redgifs: "anime vibrator hentai"           },
+  dp:              { booru: `animated hentai double_penetration rating:explicit ${EXCL}`,         moebooru: `double_penetration rating:e ${EXCL_MB}`,       redgifs: "anime double penetration hentai" },
+  public:          { booru: `animated hentai public_sex rating:explicit ${EXCL}`,                 moebooru: `sex_in_public rating:e ${EXCL_MB}`,            redgifs: "anime public sex hentai"         },
+  cunnilingus:     { booru: `animated hentai cunnilingus rating:explicit ${EXCL}`,                moebooru: `cunnilingus rating:e ${EXCL_MB}`,              redgifs: "anime cunnilingus hentai"        },
+  reverse_cowgirl: { booru: `animated hentai reverse_cowgirl_position rating:explicit ${EXCL}`,   moebooru: `reverse_cowgirl_position rating:e ${EXCL_MB}`, redgifs: "anime reverse cowgirl hentai"    },
+  standing:        { booru: `animated hentai standing_sex rating:explicit ${EXCL}`,               moebooru: `standing_sex rating:e ${EXCL_MB}`,             redgifs: "anime standing sex hentai"       },
+  spanking:        { booru: `animated hentai spanking rating:explicit ${EXCL}`,                   moebooru: `spanking rating:e ${EXCL_MB}`,                 redgifs: "anime spanking hentai"           },
+  fingering:       { booru: `animated hentai fingering rating:explicit ${EXCL}`,                  moebooru: `fingering rating:e ${EXCL_MB}`,                redgifs: "anime fingering hentai"          },
+  thighjob:        { booru: `animated hentai thigh_sex rating:explicit ${EXCL}`,                  moebooru: `thigh_sex rating:e ${EXCL_MB}`,                redgifs: "anime thighjob hentai"           },
+  clothed:         { booru: `animated hentai clothed_sex rating:explicit ${EXCL}`,                moebooru: `clothed_sex rating:e ${EXCL_MB}`,              redgifs: "anime clothed sex hentai"        },
+  sleeping:        { booru: `animated hentai sleeping rating:explicit ${EXCL}`,                   moebooru: `sleeping rating:e ${EXCL_MB}`,                 redgifs: "anime sleeping sex hentai"       },
+  group:           { booru: `animated hentai group_sex rating:explicit ${EXCL}`,                  moebooru: `group_sex rating:e ${EXCL_MB}`,                redgifs: "anime group sex hentai"          },
+  orgy:            { booru: `animated hentai orgy rating:explicit ${EXCL}`,                       moebooru: `orgy rating:e ${EXCL_MB}`,                     redgifs: "anime orgy hentai"               },
+
+  // ── Character types ────────────────────────────────────────────────────────
+  nurse:           { booru: `animated hentai nurse rating:explicit ${EXCL}`,                      moebooru: `nurse rating:e ${EXCL_MB}`,                    redgifs: "anime nurse hentai"              },
+  teacher:         { booru: `animated hentai teacher rating:explicit ${EXCL}`,                    moebooru: `teacher rating:e ${EXCL_MB}`,                  redgifs: "anime teacher hentai"            },
+  ojou:            { booru: `animated hentai ojou-sama rating:explicit ${EXCL}`,                  moebooru: `ojou-sama rating:e ${EXCL_MB}`,                redgifs: "anime ojou hentai"               },
+  demon:           { booru: `animated hentai demon_girl rating:explicit ${EXCL}`,                 moebooru: `demon_girl rating:e ${EXCL_MB}`,               redgifs: "anime demon girl hentai"         },
+  angel:           { booru: `animated hentai angel rating:explicit ${EXCL}`,                      moebooru: `angel rating:e ${EXCL_MB}`,                    redgifs: "anime angel hentai"              },
+  vampire:         { booru: `animated hentai vampire rating:explicit ${EXCL}`,                    moebooru: `vampire rating:e ${EXCL_MB}`,                  redgifs: "anime vampire hentai"            },
+  witch:           { booru: `animated hentai witch rating:explicit ${EXCL}`,                      moebooru: `witch rating:e ${EXCL_MB}`,                    redgifs: "anime witch hentai"              },
+  miko:            { booru: `animated hentai miko rating:explicit ${EXCL}`,                       moebooru: `miko rating:e ${EXCL_MB}`,                     redgifs: "anime shrine maiden hentai"      },
+  bunny:           { booru: `animated hentai bunny_girl rating:explicit ${EXCL}`,                 moebooru: `bunny_girl rating:e ${EXCL_MB}`,               redgifs: "anime bunny girl hentai"         },
+  princess:        { booru: `animated hentai princess rating:explicit ${EXCL}`,                   moebooru: `princess rating:e ${EXCL_MB}`,                 redgifs: "anime princess hentai"           },
+  idol:            { booru: `animated hentai idol rating:explicit ${EXCL}`,                       moebooru: `idol rating:e ${EXCL_MB}`,                     redgifs: "anime idol hentai"               },
+  kunoichi:        { booru: `animated hentai kunoichi rating:explicit ${EXCL}`,                   moebooru: `kunoichi rating:e ${EXCL_MB}`,                 redgifs: "anime kunoichi ninja hentai"     },
+  pirate:          { booru: `animated hentai pirate rating:explicit ${EXCL}`,                     moebooru: `pirate rating:e ${EXCL_MB}`,                   redgifs: "anime pirate hentai"             },
+  cheerleader:     { booru: `animated hentai cheerleader rating:explicit ${EXCL}`,                moebooru: `cheerleader rating:e ${EXCL_MB}`,              redgifs: "anime cheerleader hentai"        },
+  police:          { booru: `animated hentai policewoman rating:explicit ${EXCL}`,                moebooru: `policewoman rating:e ${EXCL_MB}`,              redgifs: "anime police hentai"             },
+  military:        { booru: `animated hentai military_uniform rating:explicit ${EXCL}`,           moebooru: `military_uniform rating:e ${EXCL_MB}`,         redgifs: "anime military girl hentai"      },
+  tomboy:          { booru: `animated hentai tomboy rating:explicit ${EXCL}`,                     moebooru: `tomboy rating:e ${EXCL_MB}`,                   redgifs: "anime tomboy hentai"             },
+  gyaru:           { booru: `animated hentai gyaru rating:explicit ${EXCL}`,                      moebooru: `gyaru rating:e ${EXCL_MB}`,                    redgifs: "anime gyaru hentai"              },
+  foxgirl:         { booru: `animated hentai fox_girl rating:explicit ${EXCL}`,                   moebooru: `fox_girl rating:e ${EXCL_MB}`,                 redgifs: "anime fox girl hentai"           },
+  kemonomimi:      { booru: `animated hentai kemonomimi rating:explicit ${EXCL}`,                 moebooru: `kemonomimi rating:e ${EXCL_MB}`,               redgifs: "anime kemonomimi hentai"         },
+  warrior:         { booru: `animated hentai warrior rating:explicit ${EXCL}`,                    moebooru: `warrior rating:e ${EXCL_MB}`,                  redgifs: "anime warrior hentai"            },
+  knight:          { booru: `animated hentai knight rating:explicit ${EXCL}`,                     moebooru: `knight rating:e ${EXCL_MB}`,                   redgifs: "anime knight hentai"             },
+  twins:           { booru: `animated hentai twins rating:explicit ${EXCL}`,                      moebooru: `twins rating:e ${EXCL_MB}`,                    redgifs: "anime twins hentai"              },
+  yandere:         { booru: `animated hentai yandere rating:explicit ${EXCL}`,                    moebooru: `yandere rating:e ${EXCL_MB}`,                  redgifs: "anime yandere hentai"            },
+  harem:           { booru: `animated hentai harem rating:explicit ${EXCL}`,                      moebooru: `harem rating:e ${EXCL_MB}`,                    redgifs: "anime harem hentai"              },
+
+  // ── Physical / clothing ────────────────────────────────────────────────────
+  stockings:       { booru: `animated hentai thighhighs rating:explicit ${EXCL}`,                 moebooru: `thighhighs rating:e ${EXCL_MB}`,               redgifs: "anime stockings thighhighs hentai" },
+  lingerie:        { booru: `animated hentai lingerie rating:explicit ${EXCL}`,                   moebooru: `lingerie rating:e ${EXCL_MB}`,                 redgifs: "anime lingerie hentai"           },
+  swimsuit:        { booru: `animated hentai swimsuit rating:explicit ${EXCL}`,                   moebooru: `swimsuit rating:e ${EXCL_MB}`,                 redgifs: "anime swimsuit hentai"           },
+  nude:            { booru: `animated hentai nude rating:explicit ${EXCL}`,                       moebooru: `nude rating:e ${EXCL_MB}`,                     redgifs: "anime nude hentai"               },
+  topless:         { booru: `animated hentai topless rating:explicit ${EXCL}`,                    moebooru: `topless rating:e ${EXCL_MB}`,                  redgifs: "anime topless hentai"            },
+  exhibitionism:   { booru: `animated hentai exhibitionism rating:explicit ${EXCL}`,              moebooru: `exhibitionism rating:e ${EXCL_MB}`,            redgifs: "anime exhibitionism hentai"      },
+  latex:           { booru: `animated hentai latex rating:explicit ${EXCL}`,                      moebooru: `latex rating:e ${EXCL_MB}`,                    redgifs: "anime latex hentai"              },
+  glasses:         { booru: `animated hentai glasses rating:explicit ${EXCL}`,                    moebooru: `glasses rating:e ${EXCL_MB}`,                  redgifs: "anime glasses hentai"            },
+  twintails:       { booru: `animated hentai twintails rating:explicit ${EXCL}`,                  moebooru: `twintails rating:e ${EXCL_MB}`,                redgifs: "anime twintails hentai"          },
+  ass:             { booru: `animated hentai ass rating:explicit ${EXCL}`,                        moebooru: `ass rating:e ${EXCL_MB}`,                      redgifs: "anime ass hentai"                },
+  bigboobs:        { booru: `animated hentai large_breasts rating:explicit ${EXCL}`,              moebooru: `large_breasts rating:e ${EXCL_MB}`,            redgifs: "anime big boobs hentai"          },
+  smallboobs:      { booru: `animated hentai small_breasts rating:explicit ${EXCL}`,              moebooru: `small_breasts rating:e ${EXCL_MB}`,            redgifs: "anime small breasts hentai"      },
+  thighs:          { booru: `animated hentai thick_thighs rating:explicit ${EXCL}`,               moebooru: `thick_thighs rating:e ${EXCL_MB}`,             redgifs: "anime thick thighs hentai"       },
+  bikini:          { booru: `animated hentai bikini rating:explicit ${EXCL}`,                     moebooru: `bikini rating:e ${EXCL_MB}`,                   redgifs: "anime bikini hentai"             },
+  apron:           { booru: `animated hentai naked_apron rating:explicit ${EXCL}`,                moebooru: `naked_apron rating:e ${EXCL_MB}`,              redgifs: "anime naked apron hentai"        },
+  bodysuit:        { booru: `animated hentai bodysuit rating:explicit ${EXCL}`,                   moebooru: `bodysuit rating:e ${EXCL_MB}`,                 redgifs: "anime bodysuit hentai"           },
+  pantyhose:       { booru: `animated hentai pantyhose rating:explicit ${EXCL}`,                  moebooru: `pantyhose rating:e ${EXCL_MB}`,                redgifs: "anime pantyhose hentai"          },
+  uniform:         { booru: `animated hentai uniform rating:explicit ${EXCL}`,                    moebooru: `uniform rating:e ${EXCL_MB}`,                  redgifs: "anime uniform hentai"            },
+  cosplay:         { booru: `animated hentai cosplay rating:explicit ${EXCL}`,                    moebooru: `cosplay rating:e ${EXCL_MB}`,                  redgifs: "anime cosplay hentai"            },
+
+  // ── Kink / scenario ────────────────────────────────────────────────────────
+  bondage:         { booru: `animated hentai bondage rating:explicit ${EXCL}`,                    moebooru: `bondage rating:e ${EXCL_MB}`,                  redgifs: "anime bondage hentai"            },
+  bdsm:            { booru: `animated hentai bdsm rating:explicit ${EXCL}`,                       moebooru: `bdsm rating:e ${EXCL_MB}`,                     redgifs: "anime bdsm hentai"               },
+  femdom:          { booru: `animated hentai femdom rating:explicit ${EXCL}`,                     moebooru: `femdom rating:e ${EXCL_MB}`,                   redgifs: "anime femdom hentai"             },
+  collar:          { booru: `animated hentai collar rating:explicit ${EXCL}`,                     moebooru: `collar rating:e ${EXCL_MB}`,                   redgifs: "anime collar hentai"             },
+  blindfold:       { booru: `animated hentai blindfold rating:explicit ${EXCL}`,                  moebooru: `blindfold rating:e ${EXCL_MB}`,                redgifs: "anime blindfold hentai"          },
+  pov:             { booru: `animated hentai pov rating:explicit ${EXCL}`,                        moebooru: `pov rating:e ${EXCL_MB}`,                      redgifs: "anime pov hentai"                },
+  xray:            { booru: `animated hentai x-ray rating:explicit ${EXCL}`,                      moebooru: `x-ray rating:e ${EXCL_MB}`,                    redgifs: "anime xray hentai"               },
+  uncensored:      { booru: `animated hentai uncensored rating:explicit ${EXCL}`,                 moebooru: `uncensored rating:e ${EXCL_MB}`,               redgifs: "anime uncensored hentai"         },
+  impregnation:    { booru: `animated hentai impregnation rating:explicit ${EXCL}`,               moebooru: `impregnation rating:e ${EXCL_MB}`,             redgifs: "anime impregnation hentai"       },
+  pregnant:        { booru: `animated hentai pregnant rating:explicit ${EXCL}`,                   moebooru: `pregnant rating:e ${EXCL_MB}`,                 redgifs: "anime pregnant hentai"           },
+  shibari:         { booru: `animated hentai shibari rating:explicit ${EXCL}`,                    moebooru: `shibari rating:e ${EXCL_MB}`,                  redgifs: "anime shibari rope hentai"       },
+  gloryhole:       { booru: `animated hentai glory_hole rating:explicit ${EXCL}`,                 moebooru: `glory_hole rating:e ${EXCL_MB}`,               redgifs: "anime glory hole hentai"         },
+  breeding:        { booru: `animated hentai breeding rating:explicit ${EXCL}`,                   moebooru: `breeding rating:e ${EXCL_MB}`,                 redgifs: "anime breeding hentai"           },
+
+  // ── Settings ───────────────────────────────────────────────────────────────
+  outdoor:         { booru: `animated hentai outdoors rating:explicit ${EXCL}`,                   moebooru: `outdoors rating:e ${EXCL_MB}`,                 redgifs: "anime outdoor sex hentai"        },
+  beach:           { booru: `animated hentai beach rating:explicit ${EXCL}`,                      moebooru: `beach rating:e ${EXCL_MB}`,                    redgifs: "anime beach hentai"              },
+  classroom:       { booru: `animated hentai classroom rating:explicit ${EXCL}`,                  moebooru: `classroom rating:e ${EXCL_MB}`,                redgifs: "anime classroom hentai"          },
+  office:          { booru: `animated hentai office_sex rating:explicit ${EXCL}`,                 moebooru: `office_sex rating:e ${EXCL_MB}`,               redgifs: "anime office sex hentai"         },
+  bath:            { booru: `animated hentai bathing rating:explicit ${EXCL}`,                    moebooru: `bathing rating:e ${EXCL_MB}`,                  redgifs: "anime bath sex hentai"           },
 } as const;
 
 type Category = keyof typeof CATEGORIES;
@@ -327,6 +428,94 @@ async function setNsfwEnabled(guildId: string, enabled: boolean): Promise<void> 
   );
 }
 
+// ── Download a single image — returns buffer or null ──────────────────────
+async function downloadImage(url: string): Promise<Buffer | null> {
+  try {
+    const srcHost = new URL(url).hostname;
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Referer": `https://${srcHost}/`,
+        "Accept": "image/gif,image/webp,image/*,*/*",
+      },
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!res.ok) return null;
+    const contentLength = Number(res.headers.get("content-length") ?? 0);
+    if (contentLength >= 25 * 1024 * 1024) return null;
+    const buffer = Buffer.from(await res.arrayBuffer());
+    if (buffer.byteLength === 0 || buffer.byteLength >= 25 * 1024 * 1024) return null;
+    return buffer;
+  } catch { return null; }
+}
+
+// ── Fetch one image URL + download it, retrying on bad URLs ───────────────
+async function fetchAndDownload(
+  fetcher: (video: boolean) => Promise<string | null>,
+): Promise<{ buffer: Buffer; ext: string } | null> {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const url = await fetcher(false);
+    if (!url) return null;
+    const buffer = await downloadImage(url);
+    if (buffer) {
+      const ext = url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "gif";
+      return { buffer, ext };
+    }
+    markSeen(url); // mark bad so next call returns a different URL
+  }
+  return null;
+}
+
+// ── Bulk send: fetch `count` images/videos, send 5 per message ────────────
+async function sendBulk(
+  message: Message,
+  fetcher: (video: boolean) => Promise<string | null>,
+  count: number,
+  wantVideo: boolean,
+): Promise<void> {
+  await message.reply(`⏳ Fetching **${count}** ${wantVideo ? "videos" : "images"}…`);
+
+  if (wantVideo) {
+    // Videos: collect URLs in parallel, send as plain text (Redgifs auto-embeds)
+    const results = await Promise.allSettled(
+      Array.from({ length: count }, async () => {
+        const url = await fetcher(true);
+        return url;
+      }),
+    );
+    const urls = results
+      .filter((r): r is PromiseFulfilledResult<string | null> => r.status === "fulfilled" && r.value !== null)
+      .map((r) => r.value!);
+
+    if (urls.length === 0) { await message.reply("❌ Couldn't fetch any videos right now."); return; }
+
+    for (let i = 0; i < urls.length; i += 5) {
+      await message.reply({ content: urls.slice(i, i + 5).join("\n") });
+    }
+    return;
+  }
+
+  // Images: download all in parallel, then send 5 per message as attachments
+  const results = await Promise.allSettled(
+    Array.from({ length: count }, () => fetchAndDownload(fetcher)),
+  );
+  const images = results
+    .filter((r): r is PromiseFulfilledResult<{ buffer: Buffer; ext: string }> =>
+      r.status === "fulfilled" && r.value !== null,
+    )
+    .map((r, i) => ({ ...r.value, idx: i + 1 }));
+
+  if (images.length === 0) { await message.reply("❌ Couldn't fetch any images right now."); return; }
+
+  for (let i = 0; i < images.length; i += 5) {
+    const batch = images.slice(i, i + 5);
+    const files = batch.map((img) =>
+      new AttachmentBuilder(img.buffer, { name: `nsfw_${img.idx}.${img.ext}` }),
+    );
+    await message.reply({ files });
+  }
+}
+
 // ── Help embed ────────────────────────────────────────────────────────────
 
 const HELP_EMBED = new EmbedBuilder()
@@ -334,25 +523,52 @@ const HELP_EMBED = new EmbedBuilder()
   .setTitle("🔞 NSFW Command Help")
   .addFields(
     {
-      name: "Images",
+      name: "Single image / video",
       value: [
         "`?nsfw` — random image",
         "`?nsfw <category>` — category image",
-      ].join("\n"),
-    },
-    {
-      name: "Videos",
-      value: [
         "`?nsfw video` — random video",
         "`?nsfw <category> video` — category video",
       ].join("\n"),
     },
     {
-      name: "Categories",
-      value: VALID_CATS.map((c) => `\`${c}\``).join(" · "),
+      name: "Bulk (up to 20, sent 5 per message)",
+      value: [
+        "`?nsfw <amount>` — e.g. `?nsfw 10`",
+        "`?nsfw <amount> <category>` — e.g. `?nsfw 5 maid`",
+        "`?nsfw <amount> video` — e.g. `?nsfw 10 video`",
+        "`?nsfw <amount> <category> video` — e.g. `?nsfw 5 maid video`",
+      ].join("\n"),
+    },
+    {
+      name: "Other",
+      value: [
+        "`?nsfw list` — show all 100+ categories",
+        "`?nsfw help` — show this message",
+        "`?nsfw on/off` — toggle (admin only)",
+      ].join("\n"),
     },
   )
   .setFooter({ text: "?nfsw also works • Strictly straight content only" });
+
+// ── List embed — paginated by group ───────────────────────────────────────
+function buildListEmbed(): EmbedBuilder {
+  const groups: Record<string, string[]> = {
+    "Sex Acts":       ["blowjob","anal","paizuri","cumshot","riding","doggystyle","missionary","handjob","footjob","threesome","facial","deepthroat","squirt","masturbation","dildo","vibrator","dp","public","cunnilingus","reverse_cowgirl","standing","spanking","fingering","thighjob","clothed","sleeping","group","orgy","gangbang","creampie"],
+    "Characters":     ["neko","waifu","milf","maid","elf","schoolgirl","nurse","teacher","ojou","demon","angel","vampire","witch","miko","bunny","princess","idol","kunoichi","pirate","cheerleader","police","military","tomboy","gyaru","foxgirl","kemonomimi","warrior","knight","twins","yandere","harem"],
+    "Physical/Style": ["stockings","lingerie","swimsuit","nude","topless","exhibitionism","latex","glasses","twintails","ass","bigboobs","smallboobs","thighs","bikini","apron","bodysuit","pantyhose","uniform","cosplay","ahegao"],
+    "Kink/Scenario":  ["bondage","bdsm","femdom","collar","blindfold","pov","xray","uncensored","impregnation","pregnant","shibari","gloryhole","breeding"],
+    "Settings":       ["outdoor","beach","classroom","office","bath","public"],
+    "General":        ["hentai","random"],
+  };
+  const embed = new EmbedBuilder()
+    .setColor(0xff0055)
+    .setTitle(`🔞 All Categories (${VALID_CATS.length} total)`);
+  for (const [group, cats] of Object.entries(groups)) {
+    embed.addFields({ name: group, value: cats.map((c) => `\`${c}\``).join(" ") });
+  }
+  return embed;
+}
 
 // ── Command handler ────────────────────────────────────────────────────────
 
@@ -413,29 +629,50 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
     return;
   }
 
+  if (arg1 === "list") {
+    await message.reply({ embeds: [buildListEmbed()] });
+    return;
+  }
+
+  // ── Bulk mode detection: ?nsfw <number> [category] [video] ────────────────
+  const maybeCount = parseInt(arg1 ?? "", 10);
+  const isBulk = !isNaN(maybeCount) && maybeCount >= 1;
+
+  // In bulk mode, shift args so category/video slots move one position right
+  const bulkCatArg = isBulk ? parts[2]?.toLowerCase() : arg1;
+  const bulkVidArg = isBulk ? parts[3]?.toLowerCase() : arg2;
+  const bulkCount  = isBulk ? Math.min(maybeCount, 20) : 1;
+
   let wantVideo = false;
   let fetcher: (video: boolean) => Promise<string | null>;
 
-  if (!arg1) {
+  if (!bulkCatArg || bulkCatArg === "video") {
+    wantVideo = bulkCatArg === "video" || bulkVidArg === "video";
     const cat = pick(VALID_CATS.filter((c) => c !== "random"));
     fetcher = (v) => fetchNsfwUrl(cat, v);
-  } else if (arg1 === "video") {
-    wantVideo = true;
-    const cat = pick(VALID_CATS.filter((c) => c !== "random"));
-    fetcher = (v) => fetchNsfwUrl(cat, v);
-  } else if ((VALID_CATS as string[]).includes(arg1)) {
-    wantVideo = arg2 === "video";
-    fetcher = (v) => fetchNsfwUrl(arg1 as Category, v);
-  } else {
-    // Freeform search — grab everything after ?nsfw, strip trailing "video" keyword
+  } else if ((VALID_CATS as string[]).includes(bulkCatArg)) {
+    wantVideo = bulkVidArg === "video";
+    fetcher = (v) => fetchNsfwUrl(bulkCatArg as Category, v);
+  } else if (!isBulk) {
+    // Freeform search — only available in single mode
     const rawArgs = parts.slice(1);
     wantVideo = rawArgs[rawArgs.length - 1]?.toLowerCase() === "video";
     const termParts = wantVideo ? rawArgs.slice(0, -1) : rawArgs;
     const term = termParts.join(" ").trim().toLowerCase();
     fetcher = (v) => fetchFreeformUrl(term, v);
+  } else {
+    // Bulk + unknown category — treat as freeform term
+    const term = bulkCatArg;
+    fetcher = (v) => fetchFreeformUrl(term, v);
   }
 
-  // ── Video mode ─────────────────────────────────────────────────────────────
+  // ── Bulk path ──────────────────────────────────────────────────────────────
+  if (isBulk) {
+    await sendBulk(message, fetcher, bulkCount, wantVideo);
+    return;
+  }
+
+  // ── Single video ───────────────────────────────────────────────────────────
   if (wantVideo) {
     const url = await fetcher(true);
     if (!url) { await message.reply("❌ Couldn't fetch right now. Try again in a moment."); return; }
@@ -443,40 +680,16 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
     return;
   }
 
-  // ── Image mode: download and re-upload — retry up to 3 different URLs ──────
-  // Raw URL fallback is NOT used — CDNs like tbib/xbooru/yande.re hotlink-protect
-  // their files so Discord can't embed them. We must download on the bot side.
-  // If a URL fails to download, mark it bad (seenSet) and fetch a fresh one.
+  // ── Single image: download + re-upload, retry up to 3 different URLs ───────
   for (let imgAttempt = 0; imgAttempt < 3; imgAttempt++) {
     const url = await fetcher(false);
     if (!url) break;
-
-    try {
-      const srcHost = new URL(url).hostname;
-      const imgRes = await fetch(url, {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-          "Referer": `https://${srcHost}/`,
-          "Accept": "image/gif,image/webp,image/*,*/*",
-        },
-        signal: AbortSignal.timeout(15_000),
-      });
-
-      if (imgRes.ok) {
-        const contentLength = Number(imgRes.headers.get("content-length") ?? 0);
-        if (contentLength === 0 || contentLength < 25 * 1024 * 1024) {
-          const buffer = Buffer.from(await imgRes.arrayBuffer());
-          if (buffer.byteLength > 0 && buffer.byteLength < 25 * 1024 * 1024) {
-            const ext = url.split(".").pop()?.split("?")[0] ?? "gif";
-            const file = new AttachmentBuilder(buffer, { name: `nsfw.${ext}` });
-            await message.reply({ files: [file] });
-            return;
-          }
-        }
-      }
-    } catch { /* download failed — try a different URL */ }
-
-    // Mark URL as bad so the next fetcher() call won't return it
+    const buffer = await downloadImage(url);
+    if (buffer) {
+      const ext = url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "gif";
+      await message.reply({ files: [new AttachmentBuilder(buffer, { name: `nsfw.${ext}` })] });
+      return;
+    }
     markSeen(url);
   }
 
