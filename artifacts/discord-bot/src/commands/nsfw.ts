@@ -260,8 +260,7 @@ function fromGelbooru(tags: string, wantVideo: boolean): Promise<string | null> 
 // Two API keys fire in parallel for higher throughput.
 type DanbooruPost = { file_url?: string; large_file_url?: string; file_ext?: string };
 
-async function fromDanbooru(tag: string, apiKey: string, wantVideo: boolean): Promise<string | null> {
-  const login = process.env.DANBOORU_LOGIN;
+async function fromDanbooru(tag: string, login: string, apiKey: string, wantVideo: boolean): Promise<string | null> {
   if (!login || !apiKey) return null;
   for (const page of [Math.floor(Math.random() * 100) + 1, 1]) {
     try {
@@ -402,11 +401,13 @@ function buildFns(
       () => fromRedgifs(`hentai ${rgQuery}`, true),
     ];
   }
-  const key1 = process.env.DANBOORU_API_KEY;
-  const key2 = process.env.DANBOORU_API_KEY_2;
+  const login1 = process.env.DANBOORU_LOGIN  ?? "";
+  const login2 = process.env.DANBOORU_LOGIN_2 ?? "";
+  const key1   = process.env.DANBOORU_API_KEY;
+  const key2   = process.env.DANBOORU_API_KEY_2;
   return [
-    ...(key1 ? [() => fromDanbooru(dbTag, key1, false)] : []),
-    ...(key2 ? [() => fromDanbooru(dbTag, key2, false)] : []),
+    ...(login1 && key1 ? [() => fromDanbooru(dbTag, login1, key1, false)] : []),
+    ...(login2 && key2 ? [() => fromDanbooru(dbTag, login2, key2, false)] : []),
     () => fromGelbooru(booruTags, false),
     () => fromXbooru(booruTags, false),
     () => fromTbib(booruTags, false),
