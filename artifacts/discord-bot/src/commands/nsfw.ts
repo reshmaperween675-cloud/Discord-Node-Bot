@@ -165,20 +165,24 @@ function pick<T>(arr: T[]): T {
 function isVideo(url: string) { return VIDEO_EXTS.some((e) => url.toLowerCase().endsWith(e)); }
 function isImage(url: string) { return IMAGE_EXTS.some((e) => url.toLowerCase().endsWith(e)); }
 
-// ── Shared booru response types ────────────────────────────────────────────
-type BooruPost = { file_url?: string };
-type BooruThibPost = { directory?: number; image?: string };
+// ── Shared result + booru response types ─────────────────────────────────
+type NsfwResult = { url: string; post: string };
+type BooruPost = { id?: number; file_url?: string };
+type BooruThibPost = { id?: number; directory?: number; image?: string };
 
-function selectUrl(posts: BooruPost[], wantVideo: boolean): string | null {
-  // Strictly filter by wanted type — never mix; a video URL in setImage() = blank embed
+function selectUrl(
+  posts: BooruPost[],
+  wantVideo: boolean,
+  makePost: (p: BooruPost) => string,
+): NsfwResult | null {
   const valid = posts.filter((p) =>
     p.file_url && (wantVideo ? isVideo(p.file_url) : isImage(p.file_url)),
   );
   if (valid.length === 0) return null;
-  // Prefer URLs not yet seen — fall back to any valid if all have been shown
   const unseen = valid.filter((p) => !seenSet.has(p.file_url!));
   const pool = unseen.length > 0 ? unseen : valid;
-  return pick(pool).file_url ?? null;
+  const chosen = pick(pool);
+  return { url: chosen.file_url!, post: makePost(chosen) };
 }
 
 // ── Generic booru fetcher (shared logic) ──────────────────────────────────
@@ -188,8 +192,11 @@ async function fetchBooru(
   wantVideo: boolean,
   maxPid: number,
   buildUrl?: (item: BooruThibPost) => string,
-): Promise<string | null> {
-  // Try a random page first; on empty result fall back to page 0 (always has data)
+  postBase?: string,
+): Promise<NsfwResult | null> {
+  const makePost = (p: BooruPost) =>
+    postBase && p.id != null ? `${postBase}${p.id}` : (p.file_url ?? "");
+
   for (const pid of [Math.floor(Math.random() * maxPid), 0]) {
     try {
       const res = await fetch(
@@ -200,68 +207,72 @@ async function fetchBooru(
 
       let posts: BooruPost[];
       if (buildUrl) {
-        // tbib: directory + image fields
         const raw = await res.json() as BooruThibPost[] | { post?: BooruThibPost[] };
         const items = Array.isArray(raw) ? raw : (raw.post ?? []);
         posts = items
           .filter((p) => p.directory != null && p.image)
-          .map((p) => ({ file_url: buildUrl(p) }));
+          .map((p) => ({ id: p.id, file_url: buildUrl(p) }));
       } else {
         const data = await res.json() as BooruPost[] | { post?: BooruPost[] };
         posts = Array.isArray(data) ? data : (data.post ?? []);
       }
 
-      const url = selectUrl(posts, wantVideo);
-      if (url) return url;
-      // no results on this page → loop to pid 0 fallback
+      const result = selectUrl(posts, wantVideo, makePost);
+      if (result) return result;
     } catch { return null; }
   }
   return null;
 }
 
-// ── xbooru — confirmed HTTP 200 from server IPs ───────────────────────────
-function fromXbooru(tags: string, wantVideo: boolean): Promise<string | null> {
+// ── xbooru ────────────────────────────────────────────────────────────────
+function fromXbooru(tags: string, wantVideo: boolean): Promise<NsfwResult | null> {
   return fetchBooru(
     "https://xbooru.com/index.php?page=dapi&s=post&q=index&json=1",
-    tags, wantVideo, 30,
+    tags, wantVideo, 30, undefined,
+    "https://xbooru.com/index.php?page=post&s=view&id=",
   );
 }
 
-// ── tbib — confirmed HTTP 200, URL = img.tbib.org/images/{dir}/{img} ──────
-function fromTbib(tags: string, wantVideo: boolean): Promise<string | null> {
+// ── tbib — URL = img.tbib.org/images/{dir}/{img} ──────────────────────────
+function fromTbib(tags: string, wantVideo: boolean): Promise<NsfwResult | null> {
   return fetchBooru(
     "https://tbib.org/index.php?page=dapi&s=post&q=index&json=1",
     tags, wantVideo, 30,
     (p) => `https://img.tbib.org/images/${p.directory}/${p.image}`,
+    "https://tbib.org/index.php?page=post&s=view&id=",
   );
 }
 
-// ── rule34.xxx — separate site from paheal, free JSON API ─────────────────
-function fromRule34xxx(tags: string, wantVideo: boolean): Promise<string | null> {
+// ── rule34.xxx ────────────────────────────────────────────────────────────
+function fromRule34xxx(tags: string, wantVideo: boolean): Promise<NsfwResult | null> {
   return fetchBooru(
     "https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1",
-    tags, wantVideo, 200,
+    tags, wantVideo, 200, undefined,
+    "https://rule34.xxx/index.php?page=post&s=view&id=",
   );
 }
 
 // ── Gelbooru — authenticated with API key + user_id from env ─────────────
-function fromGelbooru(tags: string, wantVideo: boolean): Promise<string | null> {
+function fromGelbooru(tags: string, wantVideo: boolean): Promise<NsfwResult | null> {
   const key    = process.env.GELBOORU_API_KEY;
   const userId = process.env.GELBOORU_USER_ID;
   if (!key || !userId) return Promise.resolve(null);
   return fetchBooru(
     `https://gelbooru.com/index.php?page=dapi&s=post&q=index&json=1&api_key=${key}&user_id=${userId}`,
-    tags, wantVideo, 200,
+    tags, wantVideo, 200, undefined,
+    "https://gelbooru.com/index.php?page=post&s=view&id=",
   );
 }
 
 // ── Danbooru — authenticated, best quality source, prioritized first ──────
 // Uses max 2 tags per query (Danbooru free-member limit).
 // Two API keys fire in parallel for higher throughput.
-type DanbooruPost = { file_url?: string; large_file_url?: string; file_ext?: string };
+type DanbooruPost = { id?: number; file_url?: string; large_file_url?: string; file_ext?: string };
 
-async function fromDanbooru(tag: string, login: string, apiKey: string, wantVideo: boolean): Promise<string | null> {
+async function fromDanbooru(tag: string, login: string, apiKey: string, wantVideo: boolean): Promise<NsfwResult | null> {
   if (!login || !apiKey) return null;
+  const makePost = (p: BooruPost) =>
+    p.id != null ? `https://danbooru.donmai.us/posts/${p.id}` : (p.file_url ?? "");
   for (const page of [Math.floor(Math.random() * 100) + 1, 1]) {
     try {
       const url = `https://danbooru.donmai.us/posts.json?login=${encodeURIComponent(login)}&api_key=${encodeURIComponent(apiKey)}&tags=${encodeURIComponent(tag)}&limit=100&page=${page}`;
@@ -274,9 +285,9 @@ async function fromDanbooru(tag: string, login: string, apiKey: string, wantVide
       if (!Array.isArray(posts) || posts.length === 0) continue;
       const booruPosts: BooruPost[] = posts
         .filter((p) => p.file_url)
-        .map((p) => ({ file_url: p.file_url }));
-      const picked = selectUrl(booruPosts, wantVideo);
-      if (picked) return picked;
+        .map((p) => ({ id: p.id, file_url: p.file_url }));
+      const result = selectUrl(booruPosts, wantVideo, makePost);
+      if (result) return result;
     } catch { return null; }
   }
   return null;
@@ -292,10 +303,13 @@ function danbooruTag(moebooru: string): string {
 // ── Moebooru fetcher — shared by konachan + yande.re (image-only) ─────────
 async function fetchMoebooru(
   baseUrl: string,
+  postShowBase: string,
   tags: string,
   wantVideo: boolean,
-): Promise<string | null> {
-  if (wantVideo) return null; // konachan/yande.re are image-only
+): Promise<NsfwResult | null> {
+  if (wantVideo) return null;
+  const makePost = (p: BooruPost) =>
+    p.id != null ? `${postShowBase}${p.id}` : (p.file_url ?? "");
   for (const page of [Math.floor(Math.random() * 20) + 1, 1]) {
     try {
       const res = await fetch(
@@ -305,79 +319,29 @@ async function fetchMoebooru(
       if (!res.ok) return null;
       const posts = await res.json() as BooruPost[];
       if (!Array.isArray(posts)) return null;
-      const url = selectUrl(posts, false);
-      if (url) return url;
+      const result = selectUrl(posts, false, makePost);
+      if (result) return result;
     } catch { return null; }
   }
   return null;
 }
 
-function fromKonachan(tags: string, wantVideo: boolean): Promise<string | null> {
-  return fetchMoebooru("https://konachan.com/post.json", tags, wantVideo);
+function fromKonachan(tags: string, wantVideo: boolean): Promise<NsfwResult | null> {
+  return fetchMoebooru("https://konachan.com/post.json", "https://konachan.com/post/show/", tags, wantVideo);
 }
 
-function fromYandere(tags: string, wantVideo: boolean): Promise<string | null> {
-  return fetchMoebooru("https://yande.re/post.json", tags, wantVideo);
+function fromYandere(tags: string, wantVideo: boolean): Promise<NsfwResult | null> {
+  return fetchMoebooru("https://yande.re/post.json", "https://yande.re/post/show/", tags, wantVideo);
 }
 
-
-// ── Redgifs — guest token (auto-fetched, no registration needed) ───────────
-let redgifsToken: string | null = null;
-let redgifsTokenExpiry = 0;
-
-async function getRedgifsToken(): Promise<string | null> {
-  if (redgifsToken && Date.now() < redgifsTokenExpiry) return redgifsToken;
-  try {
-    const res = await fetch("https://api.redgifs.com/v2/auth/temporary", {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)" },
-      signal: AbortSignal.timeout(8_000),
-    });
-    if (!res.ok) return null;
-    const data = await res.json() as { token?: string };
-    if (!data.token) return null;
-    redgifsToken = data.token;
-    redgifsTokenExpiry = Date.now() + 23 * 60 * 60 * 1000; // 23 h
-    return redgifsToken;
-  } catch { return null; }
-}
-
-async function fromRedgifs(query: string, wantVideo: boolean): Promise<string | null> {
-  try {
-    const token = await getRedgifsToken();
-    if (!token) return null;
-    const start = Math.floor(Math.random() * 200); // randomise result page
-    const res = await fetch(
-      `https://api.redgifs.com/v2/gifs/search?search_text=${encodeURIComponent(query)}&order=trending&count=80&start=${start}`,
-      {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "User-Agent": "Mozilla/5.0 (compatible; DiscordBot/1.0)",
-        },
-        signal: AbortSignal.timeout(10_000),
-      },
-    );
-    if (res.status === 401) { redgifsToken = null; return null; } // token expired — reset
-    if (!res.ok) return null;
-    const data = await res.json() as { gifs?: Array<{ urls?: { hd?: string; sd?: string } }> };
-    const gifs = data.gifs ?? [];
-    if (gifs.length === 0) return null;
-    const gif = pick(gifs);
-    const url = gif.urls?.hd ?? gif.urls?.sd ?? null;
-    if (!url) return null;
-    // Redgifs always returns mp4 — only use if wantVideo or caller doesn't mind
-    if (!wantVideo && !isImage(url)) return null;
-    return url;
-  } catch { return null; }
-}
-
-// ── Race all 4 sources — first URL wins ───────────────────────────────────
-function raceToFirst(fns: Array<() => Promise<string | null>>): Promise<string | null> {
+// ── Race all sources — first non-null result wins ─────────────────────────
+function raceToFirst(fns: Array<() => Promise<NsfwResult | null>>): Promise<NsfwResult | null> {
   return new Promise((resolve) => {
     let remaining = fns.length;
     let done = false;
     for (const fn of fns) {
-      fn().then((url) => {
-        if (url && !done) { done = true; resolve(url); }
+      fn().then((result) => {
+        if (result && !done) { done = true; resolve(result); }
         else if (--remaining === 0 && !done) resolve(null);
       }).catch(() => { if (--remaining === 0 && !done) resolve(null); });
     }
@@ -392,7 +356,7 @@ function buildFns(
   mbTags: string,
   dbTag: string,
   wantVideo: boolean,
-): Array<() => Promise<string | null>> {
+): Array<() => Promise<NsfwResult | null>> {
   const login1 = process.env.DANBOORU_LOGIN  ?? "";
   const login2 = process.env.DANBOORU_LOGIN_2 ?? "";
   const key1   = process.env.DANBOORU_API_KEY;
@@ -409,20 +373,20 @@ function buildFns(
   ];
 }
 
-async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<string | null> {
+async function fetchNsfwUrl(category: Category, wantVideo: boolean): Promise<NsfwResult | null> {
   const map = CATEGORIES[category];
   const dbTag = danbooruTag(map.moebooru);
   const fns = buildFns(map.booru, map.moebooru, dbTag, wantVideo);
   for (let attempt = 0; attempt < 4; attempt++) {
-    const url = await raceToFirst(fns);
-    if (!url) continue;
-    if (!seenSet.has(url)) { markSeen(url); return url; }
+    const result = await raceToFirst(fns);
+    if (!result) continue;
+    if (!seenSet.has(result.url)) { markSeen(result.url); return result; }
   }
   return null;
 }
 
 // ── Freeform search — any term the user types ─────────────────────────────
-async function fetchFreeformUrl(term: string, wantVideo: boolean): Promise<string | null> {
+async function fetchFreeformUrl(term: string, wantVideo: boolean): Promise<NsfwResult | null> {
   const booruTerm = term.replace(/\s+/g, "_");
   const booruTags = `${booruTerm} rating:explicit ${EXCL}`;
   const mbTags    = `${booruTerm} rating:e ${EXCL_MB}`;
@@ -430,9 +394,9 @@ async function fetchFreeformUrl(term: string, wantVideo: boolean): Promise<strin
 
   const fns = buildFns(booruTags, mbTags, dbTag, wantVideo);
   for (let attempt = 0; attempt < 4; attempt++) {
-    const url = await raceToFirst(fns);
-    if (!url) continue;
-    if (!seenSet.has(url)) { markSeen(url); return url; }
+    const result = await raceToFirst(fns);
+    if (!result) continue;
+    if (!seenSet.has(result.url)) { markSeen(result.url); return result; }
   }
   return null;
 }
@@ -483,17 +447,17 @@ async function downloadImage(url: string): Promise<Buffer | null> {
 
 // ── Fetch one image URL + download it, retrying on bad URLs ───────────────
 async function fetchAndDownload(
-  fetcher: (video: boolean) => Promise<string | null>,
+  fetcher: (video: boolean) => Promise<NsfwResult | null>,
 ): Promise<{ buffer: Buffer; ext: string } | null> {
   for (let attempt = 0; attempt < 3; attempt++) {
-    const url = await fetcher(false);
-    if (!url) return null;
-    const buffer = await downloadImage(url);
+    const result = await fetcher(false);
+    if (!result) return null;
+    const buffer = await downloadImage(result.url);
     if (buffer) {
-      const ext = url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "gif";
+      const ext = result.url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "gif";
       return { buffer, ext };
     }
-    markSeen(url); // mark bad so next call returns a different URL
+    markSeen(result.url);
   }
   return null;
 }
@@ -504,21 +468,23 @@ async function fetchAndDownload(
 // after (they've been downloading in parallel the whole time).
 async function sendBulk(
   message: Message,
-  fetcher: (video: boolean) => Promise<string | null>,
+  fetcher: (video: boolean) => Promise<NsfwResult | null>,
   count: number,
   wantVideo: boolean,
 ): Promise<void> {
   if (wantVideo) {
-    // Start all video URL fetches in parallel
     const tasks = Array.from({ length: count }, () => fetcher(true));
-    const results = await Promise.allSettled(tasks);
-    const urls = results
-      .filter((r): r is PromiseFulfilledResult<string> => r.status === "fulfilled" && !!r.value)
+    const settled = await Promise.allSettled(tasks);
+    const results = settled
+      .filter((r): r is PromiseFulfilledResult<NsfwResult> => r.status === "fulfilled" && !!r.value)
       .map((r) => r.value);
 
-    if (urls.length === 0) { await message.reply("❌ Couldn't fetch any videos right now."); return; }
-    for (let i = 0; i < urls.length; i += 5) {
-      await message.reply({ content: urls.slice(i, i + 5).join("\n") });
+    if (results.length === 0) { await message.reply("❌ Couldn't fetch any videos right now."); return; }
+    for (let i = 0; i < results.length; i += 5) {
+      const lines = results.slice(i, i + 5).map(
+        (r, j) => `[Content ${i + j + 1}](${r.url}) | [Source](<${r.post}>)`,
+      );
+      await message.reply({ content: lines.join("\n") });
     }
     return;
   }
@@ -679,7 +645,7 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
   const bulkCount  = isBulk ? Math.min(maybeCount, 20) : 1;
 
   let wantVideo = false;
-  let fetcher: (video: boolean) => Promise<string | null>;
+  let fetcher: (video: boolean) => Promise<NsfwResult | null>;
 
   if (!bulkCatArg || bulkCatArg === "video") {
     wantVideo = bulkCatArg === "video" || bulkVidArg === "video";
@@ -707,25 +673,25 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
     return;
   }
 
-  // ── Single video ───────────────────────────────────────────────────────────
+  // ── Single video — Lawliet format: [Content 1](url) | [Source](<post>) ────
   if (wantVideo) {
-    const url = await fetcher(true);
-    if (!url) { await message.reply("❌ Couldn't fetch right now. Try again in a moment."); return; }
-    await message.reply({ content: url });
+    const result = await fetcher(true);
+    if (!result) { await message.reply("❌ Couldn't fetch right now. Try again in a moment."); return; }
+    await message.reply({ content: `[Content 1](${result.url}) | [Source](<${result.post}>)` });
     return;
   }
 
   // ── Single image: download + re-upload, retry up to 3 different URLs ───────
   for (let imgAttempt = 0; imgAttempt < 3; imgAttempt++) {
-    const url = await fetcher(false);
-    if (!url) break;
-    const buffer = await downloadImage(url);
+    const result = await fetcher(false);
+    if (!result) break;
+    const buffer = await downloadImage(result.url);
     if (buffer) {
-      const ext = url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "gif";
+      const ext = result.url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "gif";
       await message.reply({ files: [new AttachmentBuilder(buffer, { name: `nsfw.${ext}` })] });
       return;
     }
-    markSeen(url);
+    markSeen(result.url);
   }
 
   await message.reply("❌ Couldn't fetch right now. Try again in a moment.");
