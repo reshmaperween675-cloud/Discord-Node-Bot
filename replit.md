@@ -60,6 +60,12 @@ The bot runs as a single Railway service. **No separate API server deployment ne
 | `VERIFICATION_EMOJI_ID` | (Optional) Numeric ID of the `:verification:` application emoji |
 | `LOWO_ADMIN_PASSWORD` | Password for `/lowoadmin` command |
 | `LOWO_OWNER_ID` | Discord user ID of lowo system owner |
+| `GELBOORU_API_KEY` | Gelbooru API key |
+| `GELBOORU_USER_ID` | Gelbooru user ID |
+| `DANBOORU_LOGIN` | Danbooru account 1 username (`eonmaster6767`) |
+| `DANBOORU_API_KEY` | Danbooru account 1 API key |
+| `DANBOORU_LOGIN_2` | Danbooru account 2 username (`hehehea8qqhq`) |
+| `DANBOORU_API_KEY_2` | Danbooru account 2 API key |
 
 ### Discord Developer Portal Setup
 
@@ -92,7 +98,7 @@ The bot runs an HTTP server on `$PORT` for Railway keep-alive. It handles two ro
 |---|---|---|
 | `activity_tracker` | `user_id, last_message, last_voice, total_messages` | Silent message/voice tracking |
 | `auth_backups` | `user_id, guild_id (composite PK), access_token, refresh_token, token_expiry, ip_address, user_agent, verified_at` | OAuth2 token backup per user per server |
-| `bot_kv` | `key, value, updated_at` | JSON file persistence (leveling data, etc.) |
+| `bot_kv` | `key, value, updated_at` | JSON key-value store (NSFW toggle, leveling data, etc.) |
 
 **Migration note**: `ensureSchema()` runs ALTER TABLE migrations on startup to handle old single-column PK schemas and add new columns. Safe to run repeatedly.
 
@@ -170,7 +176,7 @@ Member clicks Verify button
 | `admin/commands.ts` | Slash commands (setup, prefix, setrole, etc.) + `?addroletoallchannelsandcategory` |
 | `admin/dm.ts` | `?dm all <text>` and `?dm @user <text>` — plain-text DMs |
 | `admin/roleAllChannels.ts` | `?roleallcandc <@role> <perm:value>...` / `remove` — permission overwrites on all channels + categories |
-| `commands/nsfw.ts` | `?nsfw` / `?nfsw` command — 4 sources, race pattern, image + video mode |
+| `commands/nsfw.ts` | `?nsfw` / `?nfsw` — 101 categories, 8 sources, bulk mode, per-guild toggle |
 | `help67.ts` | `?help67` command |
 | `lowo/` | Full OwO-style game system (see Lowo section) |
 | `fun/` | Fun slash commands (wired out, files intact — can be restored) |
@@ -217,40 +223,67 @@ Prefix: `lowo`. Toggle: `/lowoenable` / `/lowodisable`. Storage: `data/lowo.json
 |---|---|
 | `?nsfw` | Random category image |
 | `?nsfw <category>` | Specific category image |
-| `?nsfw video` | Random category video |
-| `?nsfw <category> video` | Specific category video |
+| `?nsfw video` | Random category video/GIF |
+| `?nsfw <category> video` | Specific category video/GIF |
+| `?nsfw <amount>` | Bulk images (up to 20), e.g. `?nsfw 10` |
+| `?nsfw <amount> <category>` | Bulk category images, e.g. `?nsfw 5 maid` |
+| `?nsfw <amount> video` | Bulk videos, e.g. `?nsfw 10 video` |
+| `?nsfw <amount> <category> video` | Bulk category videos, e.g. `?nsfw 5 maid video` |
+| `?nsfw <freeform term>` | Freeform search (single mode only) |
+| `?nsfw list` | Shows all 101 categories grouped by type |
 | `?nsfw help` | Shows help embed |
+| `?nsfw on` / `?nsfw off` | Toggle per-guild (admin only) |
 
-### Categories
+### Categories (101 total — see `?nsfw list` in Discord)
 
-`neko` · `hentai` · `waifu` · `milf` · `ahegao` · `maid` · `elf` · `schoolgirl` · `gangbang` · `creampie` · `random`
+Grouped into: **Sex Acts** · **Characters** · **Physical/Style** · **Kink/Scenario** · **Settings** · **General**
 
-### Content Policy (enforced via exclusion tags on every query)
+Examples: `neko` `hentai` `waifu` `milf` `ahegao` `maid` `elf` `blowjob` `anal` `riding` `doggystyle` `nurse` `teacher` `demon` `foxgirl` `stockings` `bondage` `femdom` `beach` `classroom` `random` … (101 total)
 
-`-yaoi -yuri -transgender -futanari -trap -crossdressing -furry -anthro -kemono`
-Strictly straight, human, non-furry content only.
+### Content Policy (exclusion tags on every query)
 
-### Image Sources (all confirmed HTTP 200 from Railway/server IPs)
+Strictly straight, 2D anime only. Excluded globally:
+`-yaoi -yuri -transgender -futanari -trap -crossdressing -furry -anthro -kemono -tentacles -monster -alien -insect -slime -beast -dragon -rape -non-consensual -forced -guro -scat -vore -ryona -inflation -gore -blood -death -torture -necrophilia -3d -3dcg -realistic -photorealistic -live_action -real_person`
 
-| Source | Type | Notes |
+### Image/Video Sources (priority order)
+
+| Source | Priority | Notes |
 |---|---|---|
-| **xbooru** | GIFs / images | Standard booru JSON API, `file_url` field |
-| **tbib** | GIFs / images | Booru API, URL built from `directory` + `image` fields → `img.tbib.org/images/{dir}/{img}` |
-| **hypnohub** | MP4 videos | Booru JSON API, `file_url` field |
-| **Redgifs** | MP4 videos (HD/SD) | Requires free guest token auto-fetched from `/v2/auth/temporary`, cached 23 h |
+| **Danbooru** (account 1) | 1st | `DANBOORU_LOGIN` + `DANBOORU_API_KEY`; max 2 tags (free member limit) |
+| **Danbooru** (account 2) | 1st (parallel) | `DANBOORU_LOGIN_2` + `DANBOORU_API_KEY_2`; fires simultaneously with account 1 |
+| **Gelbooru** | 2nd | `GELBOORU_API_KEY` + `GELBOORU_USER_ID`; authenticated |
+| **Xbooru** | 3rd | Standard booru JSON API |
+| **Tbib** | 4th | URL built from `directory`+`image` fields → `img.tbib.org/images/{dir}/{img}` |
+| **Rule34.xxx** | 5th | Free JSON API |
+| **Konachan** | 6th | Image-only (skipped for video mode) |
+| **Yandere** | 7th | Image-only (skipped for video mode) |
 
-All 4 sources fire simultaneously — first to respond wins. Auto-retries once on full failure.
+All sources race simultaneously — first non-null result wins. Up to 8 retries to find an unseen URL.
+
+**Removed**: Redgifs (mixed real-life content).
 
 ### Fetch Strategy
 
-- **Image mode**: strictly returns `.gif/.jpg/.png/.webp` only — never `.mp4` (which renders as blank embed)
-- **Video mode**: strictly returns `.mp4/.webm` only — sent as plain text URL for Discord auto-play
-- **Page randomisation**: random `pid` 0–30 (max 1,500 posts deep); if random page is empty, falls back to `pid=0` automatically
-- **Redgifs**: uses `start=0–200` offset for randomisation; image mode disabled (Redgifs is MP4-only)
+- **Image mode**: downloads file buffer → sends as Discord file attachment (embeds inline). Extensions: `.gif .png .jpg .jpeg .webp`
+- **Video mode**: returns `[Content N](url) | [Source](<post_url>)` link format (Lawliet-style). Extensions: `.mp4 .webm .gif`
+- **Bulk mode**: all N fetches start simultaneously; images pipeline in batches of 5 (first 5 send while second 5 are still downloading); videos collect all then send 5 per message
+- **Deduplication**: rolling 300-URL seen-set; up to 8 retries per slot in bulk mode
+- **Page randomisation**: random `pid` across configured range; falls back to `pid=0` if empty
 
-### Blocked Sources (do not re-add without re-testing)
+### Per-guild Toggle
 
-Gelbooru (401), Rule34 JSON API (now requires auth), waifu.im (403), waifu.pics (timeout), purrbot (403), nekos.life (500), hmtai (timeout), realbooru (API offline), aibooru (returns .zip), paheal (tags return 0 results), atfbooru (Cloudflare), danbooru (explicit requires paid account).
+Stored in `bot_kv` table as `nsfw:<guildId>`. Default: enabled. Admins toggle with `?nsfw on/off`.
+
+### Post URLs (for Source links)
+
+Each source returns `{ url, post }`:
+- Danbooru → `https://danbooru.donmai.us/posts/{id}`
+- Gelbooru → `https://gelbooru.com/index.php?page=post&s=view&id={id}`
+- Rule34 → `https://rule34.xxx/index.php?page=post&s=view&id={id}`
+- Xbooru → `https://xbooru.com/index.php?page=post&s=view&id={id}`
+- Tbib → `https://tbib.org/index.php?page=post&s=view&id={id}`
+- Konachan → `https://konachan.com/post/show/{id}`
+- Yandere → `https://yande.re/post/show/{id}`
 
 ---
 
@@ -270,3 +303,4 @@ Gelbooru (401), Rule34 JSON API (now requires auth), waifu.im (403), waifu.pics 
 - **Update `replit.md` after every piece of work.** The next agent depends on this file to understand the project state.
 - Embeds use `0x2F3136` (Dark Charcoal) and `0x00FFFF` (Neon Blue).
 - Typecheck must pass with zero errors before any work is considered done.
+- Bot is deployed on Railway only — never run it on Replit.
