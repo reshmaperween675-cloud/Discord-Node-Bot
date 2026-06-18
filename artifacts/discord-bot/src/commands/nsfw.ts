@@ -474,9 +474,26 @@ async function sendBulk(
   count: number,
   wantVideo: boolean,
 ): Promise<void> {
-  // Kick off ALL downloads simultaneously (images or videos), pipeline in batches of 5.
-  // Sending as file attachments guarantees Discord embeds them inline regardless of CDN.
-  const allTasks = Array.from({ length: count }, () => fetchAndDownload(fetcher, wantVideo));
+  if (wantVideo) {
+    // Videos: fetch all URLs in parallel, send as [Content N](url) | [Source](<post>) links.
+    const tasks = Array.from({ length: count }, () => fetcher(true));
+    const settled = await Promise.allSettled(tasks);
+    const results = settled
+      .filter((r): r is PromiseFulfilledResult<NsfwResult> => r.status === "fulfilled" && !!r.value)
+      .map((r) => r.value);
+
+    if (results.length === 0) { await message.reply("❌ Couldn't fetch any videos right now."); return; }
+    for (let i = 0; i < results.length; i += 5) {
+      const lines = results.slice(i, i + 5).map(
+        (r, j) => `[Content ${i + j + 1}](${r.url}) | [Source](<${r.post}>)`,
+      );
+      await message.reply({ content: lines.join("\n") });
+    }
+    return;
+  }
+
+  // Images: kick off ALL downloads simultaneously, pipeline in batches of 5.
+  const allTasks = Array.from({ length: count }, () => fetchAndDownload(fetcher, false));
   let sent = false;
 
   for (let i = 0; i < allTasks.length; i += 5) {
@@ -495,9 +512,7 @@ async function sendBulk(
     }
   }
 
-  if (!sent) {
-    await message.reply(`❌ Couldn't fetch any ${wantVideo ? "videos" : "images"} right now.`);
-  }
+  if (!sent) await message.reply("❌ Couldn't fetch any images right now.");
 }
 
 // ── Help embed ────────────────────────────────────────────────────────────
@@ -660,11 +675,11 @@ export async function handleNsfwCommand(message: Message): Promise<void> {
     return;
   }
 
-  // ── Single video — download + attach so Discord embeds it natively ─────────
+  // ── Single video — Lawliet-style: [Content 1](url) | [Source](<post>) ──────
   if (wantVideo) {
-    const item = await fetchAndDownload(fetcher, true);
-    if (!item) { await message.reply("❌ Couldn't fetch right now. Try again in a moment."); return; }
-    await message.reply({ files: [new AttachmentBuilder(item.buffer, { name: `nsfw.${item.ext}` })] });
+    const result = await fetcher(true);
+    if (!result) { await message.reply("❌ Couldn't fetch right now. Try again in a moment."); return; }
+    await message.reply({ content: `[Content 1](${result.url}) | [Source](<${result.post}>)` });
     return;
   }
 
