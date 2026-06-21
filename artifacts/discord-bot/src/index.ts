@@ -1083,8 +1083,9 @@ http.createServer((req, res) => {
     });
     return;
   }
-  res.writeHead(200);
-  res.end("OK");
+  // Unknown route — return 404, don't leak that the server exists
+  res.writeHead(404);
+  res.end("Not Found");
 }).listen(KEEP_ALIVE_PORT, () => {
   console.log(`[KEEP-ALIVE] HTTP server running on port ${KEEP_ALIVE_PORT}`);
 });

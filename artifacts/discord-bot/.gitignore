@@ -1,0 +1,5 @@
+node_modules/
+dist/
+
+# Runtime data files — not committed; live only on the Railway deployment
+data/

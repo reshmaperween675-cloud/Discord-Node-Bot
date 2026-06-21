@@ -1,12 +1,10 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import { Message, PermissionFlagsBits, GuildMember, TextChannel } from "discord.js";
 import { getPool } from "../persistence.js";
+import { timingSafeEqual, randomBytes } from "crypto";
 
 function generateToken(): string {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let t = "";
-  for (let i = 0; i < 40; i++) t += chars[Math.floor(Math.random() * chars.length)];
-  return t;
+  return randomBytes(32).toString("hex"); // 64-char cryptographically random token
 }
 
 export const ADMIN_TOKEN: string =
@@ -17,6 +15,32 @@ export function logAdminToken(): void {
     console.log(`[ADMIN] Auto-generated panel token: ${ADMIN_TOKEN}`);
     console.log(`[ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.`);
   }
+}
+
+// ── Brute-force protection — max 10 failed attempts per IP per 15 minutes ─
+const failMap = new Map<string, { count: number; resetAt: number }>();
+const FAIL_LIMIT  = 10;
+const FAIL_WINDOW = 15 * 60 * 1000; // 15 min
+
+function recordFail(ip: string): boolean {
+  const now = Date.now();
+  const rec = failMap.get(ip);
+  if (!rec || now > rec.resetAt) {
+    failMap.set(ip, { count: 1, resetAt: now + FAIL_WINDOW });
+    return false; // not blocked yet
+  }
+  rec.count++;
+  return rec.count > FAIL_LIMIT;
+}
+
+function tokenValid(supplied: string | null): boolean {
+  if (!supplied) return false;
+  try {
+    const a = Buffer.from(supplied.padEnd(ADMIN_TOKEN.length));
+    const b = Buffer.from(ADMIN_TOKEN);
+    if (a.length !== b.length) return false;
+    return timingSafeEqual(a, b); // constant-time — no timing side-channel
+  } catch { return false; }
 }
 
 function esc(str: string): string {
@@ -36,17 +60,24 @@ export async function handleAdminPanel(
   req: IncomingMessage,
   res: ServerResponse,
 ): Promise<void> {
+  const ip    = (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0]?.trim()
+                ?? req.socket.remoteAddress
+                ?? "unknown";
   const url   = new URL(req.url ?? "/", `https://${req.headers.host ?? "localhost"}`);
   const token = url.searchParams.get("token");
 
-  if (token !== ADMIN_TOKEN) {
-    res.writeHead(403, { "Content-Type": "text/html; charset=utf-8" });
+  if (!tokenValid(token)) {
+    const blocked = recordFail(ip);
+    const statusCode = blocked ? 429 : 403;
+    const title   = blocked ? "429 — Too Many Attempts" : "403 — Access Denied";
+    const message = blocked ? "Too many failed attempts. Try again later." : "Invalid or missing token.";
+    res.writeHead(statusCode, { "Content-Type": "text/html; charset=utf-8" });
     res.end(`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>403 — Last Stand</title>
+  <title>${title} — Last Stand</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -60,24 +91,14 @@ export async function handleAdminPanel(
       justify-content: center;
       overflow: hidden;
     }
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: .15;
-      pointer-events: none;
-    }
+    .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: .15; pointer-events: none; }
     .o1 { width: 400px; height: 400px; background: radial-gradient(circle, #ff4444, transparent); top: -100px; left: -100px; }
     .o2 { width: 300px; height: 300px; background: radial-gradient(circle, #7c3aed, transparent); bottom: -80px; right: -80px; }
     .card {
-      position: relative;
-      z-index: 1;
-      background: rgba(255,255,255,.035);
-      backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,68,68,.15);
-      border-radius: 20px;
-      padding: 3rem 2.5rem;
-      text-align: center;
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,.035); backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,68,68,.15); border-radius: 20px;
+      padding: 3rem 2.5rem; text-align: center;
       animation: fadeUp .4s cubic-bezier(.16,1,.3,1) both;
     }
     @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
@@ -87,12 +108,11 @@ export async function handleAdminPanel(
   </style>
 </head>
 <body>
-  <div class="orb o1"></div>
-  <div class="orb o2"></div>
+  <div class="orb o1"></div><div class="orb o2"></div>
   <div class="card">
     <div class="icon">🔒</div>
-    <h1>403 — Access Denied</h1>
-    <p>Invalid or missing token.</p>
+    <h1>${title}</h1>
+    <p>${message}</p>
   </div>
 </body>
 </html>`);
