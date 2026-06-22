@@ -203,6 +203,7 @@ import { handleAddRoleToAllChannels } from "./admin/commands.js";
 import { handleAdminPanel, handleAbcdAdmin, logAdminToken } from "./admin/panel.js";
 import { handleDmCommand } from "./admin/dm.js";
 import { handleRoleAllCandc } from "./admin/roleAllChannels.js";
+import { registerAntiNukeEvents, handleAntiNukeCommand } from "./antinuke/index.js";
 
 const token = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN;
 if (!token) {
@@ -220,6 +221,7 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildModeration, // required for GuildBanAdd event
   ],
 });
 
@@ -465,6 +467,9 @@ const buttonHandlers: Record<string, (i: ButtonInteraction) => Promise<void>> = 
   delete_ticket: handleDeleteTicket,
 };
 
+
+// Register anti-nuke guild event listeners before the bot is ready
+registerAntiNukeEvents(client);
 
 client.once(Events.ClientReady, async (readyClient) => {
   console.log(`[READY] Logged in as ${readyClient.user.tag}`);
@@ -767,6 +772,9 @@ client.on(Events.MessageCreate, async (message: Message) => {
       return;
     case "?roleallcandc":
       handleRoleAllCandc(message).catch((err) => console.error("[ROLEALLCANDC] Unhandled error:", err));
+      return;
+    case "?antinuke":
+      handleAntiNukeCommand(message).catch((err) => console.error("[ANTINUKE] Unhandled error:", err));
       return;
   }
 

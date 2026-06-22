@@ -287,6 +287,78 @@ Each source returns `{ url, post }`:
 
 ---
 
+## Anti-Nuke System (`src/antinuke/`)
+
+Protects against rogue staff mass-deleting channels/roles, banning members, or altering the server. Built entirely in-memory for millisecond response — no DB queries during an active threat.
+
+### How it works
+
+Every monitored Discord event runs through a **sliding time window tracker** (in-memory `Map`). If any executor hits a threshold, the bot immediately:
+1. Strips all roles from the rogue member
+2. Bans them from the server
+3. Sends a styled alert embed to the configured log channel
+4. DMs the server owner
+
+The guild owner and the bot itself are permanently exempt. Whitelisted users are skipped entirely.
+
+### Events monitored + default thresholds
+
+| Event | Trigger | Discord audit log |
+|---|---|---|
+| `channelDelete` | 3 deletes in 10 seconds | `AuditLogEvent.ChannelDelete` |
+| `roleDelete` | 3 deletes in 10 seconds | `AuditLogEvent.RoleDelete` |
+| `ban` | 5 bans in 10 seconds | `AuditLogEvent.MemberBanAdd` |
+| `guildUpdate` | 2 dangerous updates in 5 seconds | `AuditLogEvent.GuildUpdate` |
+| `webhookCreate` | 5 creates in 10 seconds | `AuditLogEvent.WebhookCreate` |
+| `emojiDelete` | 5 deletes in 10 seconds | `AuditLogEvent.EmojiDelete` |
+
+> Discord audit logs have ~1–1.5s population delay. The bot waits `1500ms` before fetching so it always reads the correct executor.
+
+### Storage (bot_kv table)
+
+| Key | Value |
+|---|---|
+| `antinuke_config:<guildId>` | `{ enabled, logChannelId, thresholds }` |
+| `antinuke_whitelist:<guildId>` | `string[]` of trusted user IDs |
+
+Both are cached in-memory after first read — no repeated DB queries during an active nuke.
+
+### Commands (`?antinuke`) — require Manage Server
+
+| Command | Description |
+|---|---|
+| `?antinuke enable` | Activate monitoring for this server |
+| `?antinuke disable` | Deactivate monitoring |
+| `?antinuke log #channel` | Set the alert log channel |
+| `?antinuke whitelist add @user` | Trust a co-owner / senior staff |
+| `?antinuke whitelist remove @user` | Revoke trust |
+| `?antinuke whitelist list` | Show all trusted users |
+| `?antinuke status` | Full status + all thresholds |
+| `?antinuke thresholds` | Show action thresholds |
+
+### Required Discord permissions for the bot
+
+For the quarantine sequence to work, the bot's **highest role must be above every staff role**:
+- **View Audit Log** — to identify the executor
+- **Manage Roles** — to strip roles
+- **Ban Members** — to ban the rogue member
+
+### Source files
+
+| File | Purpose |
+|---|---|
+| `src/antinuke/store.ts` | In-memory sliding window tracker + whitelist + config persistence |
+| `src/antinuke/events.ts` | Discord event handlers (channelDelete, roleDelete, ban, guildUpdate, webhookCreate, emojiDelete) |
+| `src/antinuke/mitigation.ts` | Quarantine sequence: strip roles → ban → embed alert → DM owner |
+| `src/antinuke/commands.ts` | `?antinuke` command handler |
+| `src/antinuke/index.ts` | Exports — `registerAntiNukeEvents` + `handleAntiNukeCommand` |
+
+### Intents required
+
+Added `GatewayIntentBits.GuildModeration` to the client intents — required for `GuildBanAdd` event.
+
+---
+
 ## Security Hardening
 
 ### Why the bot cannot be hacked
