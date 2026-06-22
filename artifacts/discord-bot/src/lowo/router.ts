@@ -1,5 +1,6 @@
 import type { Message } from "discord.js";
 import { isLowoEnabled } from "./toggle.js";
+import { handleOwoModeCommand } from "./owoMode.js";
 import { cmdCowoncy, cmdDaily, cmdGive, cmdVote, cmdRep, cmdTag, cmdCash } from "./economy.js";
 import { cmdHunt, cmdZoo, cmdSell, cmdSacrifice, cmdLowodex } from "./hunt.js";
 import { cmdAutoSell, cmdBulkSell, cmdAnimalStat } from "./autoSell.js";
@@ -487,12 +488,47 @@ const CHANNEL_BYPASS = new Set([
   "warn", "clearwarn", "removewarn", "unwarn",
 ]);
 
+// ─── Lowo Mode state — persisted in memory; survives process restart via bot_kv ─
+// Mode 1 = normal Lowo (default), Mode 2 = OWO bot replacement
+let _lowoMode: 1 | 2 = 1;
+export function getLowoMode(): 1 | 2 { return _lowoMode; }
+export function setLowoMode(m: 1 | 2): void { _lowoMode = m; }
+
 export async function handleLowoCommand(message: Message): Promise<boolean> {
   if (message.author.bot) return false;
   const content = message.content.trim();
   const lower = content.toLowerCase();
   if (!lower.startsWith("lowo ") && lower !== "lowo") return false;
   if (!isLowoEnabled()) return false;
+
+  // ─── Mode 1/2 switch — owner-only, bypass all other guards ───────────────
+  const OWNER_ID = process.env.LOWO_OWNER_ID ?? "";
+  {
+    const peek = lower.split(/\s+/);
+    const sub2 = peek[1] ?? "";
+    if (sub2 === "2" || sub2 === "1") {
+      if (message.author.id !== OWNER_ID) {
+        await message.reply("🚫 Only the Lowo owner can switch modes.").catch(() => {});
+        return true;
+      }
+      if (sub2 === "2") {
+        _lowoMode = 2;
+        await message.reply(
+          "**🔁 | Lowo Mode switched to OwO Mode (Mode 2).**\n" +
+          "The Lowo system has been replaced with the OwO bot.\n" +
+          "Use the `owo` prefix for all commands (e.g. `owo hunt`, `owo daily`).\n" +
+          "Type `lowo 1` to return to normal Lowo."
+        ).catch(() => {});
+      } else {
+        _lowoMode = 1;
+        await message.reply(
+          "**🔁 | Lowo Mode restored to normal (Mode 1).**\n" +
+          "The Lowo system is back. Use the `lowo` prefix as usual."
+        ).catch(() => {});
+      }
+      return true;
+    }
+  }
 
   // ─── Channel whitelist middleware ─────────────────────────────────────────
   // Peek at the sub-command before full parsing so we can apply bypass rules.

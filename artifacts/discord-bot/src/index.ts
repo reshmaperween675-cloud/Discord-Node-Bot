@@ -91,7 +91,9 @@ import {
 } from "./leveling/universalLeaderboard.js";
 import { helpData, executeHelp } from "./commands/help.js";
 import { handlePurgeCommand, purgeConfigData, executePurgeConfig } from "./moderation/purge.js";
-import { handleLowoCommand } from "./lowo/router.js";
+import { handleLowoCommand, getLowoMode } from "./lowo/router.js";
+import { handleOwoModeCommand } from "./lowo/owoMode.js";
+import { handleAssystCommand } from "./commands/assyst.js";
 import { saveOverrides, catalogKeys } from "./lowo/emojis.js";
 import { formatShopCategory } from "./lowo/shop.js";
 import { SHOP_CATEGORIES, type ShopCategory } from "./lowo/data.js";
@@ -696,6 +698,24 @@ client.on(Events.MessageCreate, async (message: Message) => {
       console.error("[PURGE] Unhandled error:", err)
     );
     return;
+  }
+
+  // ?nuke — special command (no auth gate)
+  if (content.toLowerCase() === "?nuke") {
+    message.reply("Kys😂🫵").catch(() => {});
+    return;
+  }
+
+  // Assyst-style commands (?prefix and ,prefix)
+  if ((content.startsWith("?") || content.startsWith(",")) && !content.startsWith("? ") && !content.startsWith(", ")) {
+    const handled = await handleAssystCommand(message).catch((err) => { console.error("[ASSYST]", err); return false; });
+    if (handled) return;
+  }
+
+  // OWO Mode (mode 2) — `owo` prefix, active when owner switched via `lowo 2`
+  if (content.toLowerCase().startsWith("owo") && getLowoMode() === 2 && isLowoEnabled()) {
+    const handled = await handleOwoModeCommand(message).catch((err) => { console.error("[OWO MODE]", err); return false; });
+    if (handled) return;
   }
 
   // lowo OwO-style game system
