@@ -180,16 +180,23 @@ async function runRestore(message: Message, client: Client, offenderId: string):
         const user = await client.users.fetch(ban.userId);
         const dmEmbed = new EmbedBuilder()
           .setColor(COLOR_WIN)
-          .setTitle("✅ You were wrongfully banned")
+          .setTitle(`We sincerely apologise — ${guild.name}`)
           .setThumbnail(guild.iconURL({ size: 256 }))
           .setDescription(
-            `You were banned from **${guild.name}** by a rogue staff member.\n\n` +
-            `The offender has been caught and neutralised by our Anti-Nuke system. ` +
-            `You have been **unbanned** and are welcome back.\n\n` +
+            `Hey **${ban.username}**,\n\n` +
+            `We are truly sorry for the experience you've had. A **rogue staff member** ` +
+            `gained access to administrative tools and attempted to nuke our server — ` +
+            `banning innocent members including you in the process.\n\n` +
+            `This was **not intentional** on the part of the server, and we deeply ` +
+            `apologise that you were caught in the middle of this. The offender has been ` +
+            `identified, stripped of all permissions, and dealt with accordingly.\n\n` +
+            `You have been **fully unbanned** and we would love to have you back. ` +
+            `We've created a private invite link just for you below:\n\n` +
             `**[➡️ Click here to rejoin ${guild.name}](${inviteUrl})**\n` +
-            `*(This invite is single-use and never expires)*`,
+            `*(This link is single-use and never expires — made just for you)*\n\n` +
+            `Once again, we are very sorry for this inconvenience. We hope to see you back soon. 💙`,
           )
-          .setFooter({ text: "Last Stand Anti-Nuke System" })
+          .setFooter({ text: `${guild.name} • Anti-Nuke Protection System` })
           .setTimestamp();
 
         await user.send({ embeds: [dmEmbed] });
