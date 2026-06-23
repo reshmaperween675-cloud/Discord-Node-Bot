@@ -35,33 +35,23 @@ export async function quarantine(
       console.error("[ANTINUKE] Role strip failed:", (e as Error).message);
     }
   } catch {
-    // Member already left or bot can't fetch — still attempt ban below
+    // Member already left or bot can't fetch — role strip skipped
   }
 
-  // ── 3. Ban ───────────────────────────────────────────────────────────────
-  try {
-    await guild.members.ban(executorId, {
-      reason: `Anti-Nuke: automated ban — ${action} threshold exceeded`,
-      deleteMessageSeconds: 0,
-    });
-  } catch (e) {
-    console.error("[ANTINUKE] Ban failed:", (e as Error).message);
-  }
-
-  // ── 4. Build esports-style embed ─────────────────────────────────────────
+  // ── 3. Build esports-style embed ─────────────────────────────────────────
   const embed = new EmbedBuilder()
     .setColor(0xFF0000)
     .setAuthor({ name: "⚡ ANTI-NUKE SYSTEM — THREAT NEUTRALIZED" })
     .setTitle("🚨 Rogue Staff Quarantined")
     .setDescription(
       "A staff member exceeded the action threshold and has been **immediately quarantined**.\n" +
-      "All roles have been stripped and the account has been banned.",
+      "All roles have been stripped.",
     )
     .addFields(
       { name: "👤 Threat Actor",    value: `<@${executorId}>\n\`${tag}\``, inline: true },
       { name: "⚡ Trigger",         value: `\`${action}\``,                inline: true },
       { name: "📋 Details",         value: details,                        inline: false },
-      { name: "🔒 Actions Taken",   value: "• All roles stripped\n• Account banned", inline: false },
+      { name: "🔒 Actions Taken",   value: "• All roles stripped", inline: false },
     )
     .setFooter({ text: `Last Stand Anti-Nuke • ${guild.name}` })
     .setTimestamp();
@@ -83,7 +73,7 @@ export async function quarantine(
   try {
     const owner = await guild.fetchOwner();
     await owner.send({
-      content: `🚨 **Anti-Nuke alert on \`${guild.name}\`!** A rogue staff member has been automatically banned.`,
+      content: `🚨 **Anti-Nuke alert on \`${guild.name}\`!** A rogue staff member has had all their roles stripped.`,
       embeds: [embed],
     });
   } catch (e) {
