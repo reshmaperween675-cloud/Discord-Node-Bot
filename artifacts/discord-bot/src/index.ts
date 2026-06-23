@@ -787,7 +787,7 @@ client.on(Events.MessageCreate, async (message: Message) => {
       handleRoleAllCandc(message).catch((err) => console.error("[ROLEALLCANDC] Unhandled error:", err));
       return;
     case "?antinuke":
-      handleAntiNukeCommand(message).catch((err) => console.error("[ANTINUKE] Unhandled error:", err));
+      handleAntiNukeCommand(message, client).catch((err) => console.error("[ANTINUKE] Unhandled error:", err));
       return;
   }
 

@@ -3,6 +3,7 @@ import { Events, AuditLogEvent } from "discord.js";
 import { getConfig, getWhitelist, recordAction } from "./store.js";
 import type { ActionType } from "./store.js";
 import { quarantine } from "./mitigation.js";
+import { recordChannelSnap, recordRoleSnap, recordBanSnap } from "./snapshot.js";
 
 // Discord audit log takes ~1–2 seconds to populate after an action.
 const AUDIT_DELAY_MS = 1_500;
@@ -50,9 +51,12 @@ export function registerAntiNukeEvents(client: Client): void {
   client.on(Events.ChannelDelete, (channel) => {
     if (channel.isDMBased()) return;
     const guild = channel.guild;
+    const chSnap = channel; // hold reference before async gap
     void (async () => {
       const executorId = await resolveExecutor(guild, AuditLogEvent.ChannelDelete);
       if (!executorId) return;
+      // Snapshot the channel attributed to this executor (data still available on object)
+      recordChannelSnap(guild.id, executorId, chSnap);
       const name = "name" in channel ? String(channel.name) : "unknown";
       await handleAction(client, guild, executorId, "channelDelete", `Deleted channel: **#${name}**`);
     })().catch(err => console.error("[ANTINUKE] channelDelete handler:", err));
@@ -64,6 +68,8 @@ export function registerAntiNukeEvents(client: Client): void {
     void (async () => {
       const executorId = await resolveExecutor(guild, AuditLogEvent.RoleDelete);
       if (!executorId) return;
+      // Snapshot the role
+      recordRoleSnap(guild.id, executorId, role);
       await handleAction(client, guild, executorId, "roleDelete", `Deleted role: **${role.name}**`);
     })().catch(err => console.error("[ANTINUKE] roleDelete handler:", err));
   });
@@ -74,6 +80,8 @@ export function registerAntiNukeEvents(client: Client): void {
     void (async () => {
       const executorId = await resolveExecutor(guild, AuditLogEvent.MemberBanAdd);
       if (!executorId) return;
+      // Snapshot the ban (so we can unban + DM on restore)
+      recordBanSnap(guild.id, executorId, ban);
       const tag = ban.user.tag ?? ban.user.id;
       await handleAction(client, guild, executorId, "ban", `Banned user: **${tag}**`);
     })().catch(err => console.error("[ANTINUKE] guildBanAdd handler:", err));
@@ -82,7 +90,6 @@ export function registerAntiNukeEvents(client: Client): void {
   // ── Guild Update ──────────────────────────────────────────────────────────
   client.on(Events.GuildUpdate, (oldGuild, newGuild) => {
     void (async () => {
-      // Only trigger on dangerous changes
       const changes: string[] = [];
       if (oldGuild.name !== newGuild.name)
         changes.push(`Name: \`${oldGuild.name}\` → \`${newGuild.name}\``);
@@ -90,7 +97,7 @@ export function registerAntiNukeEvents(client: Client): void {
         changes.push(`MFA requirement changed`);
       if (oldGuild.verificationLevel !== newGuild.verificationLevel)
         changes.push(`Verification level changed`);
-      if (changes.length === 0) return; // ignore benign updates (icon, splash, etc.)
+      if (changes.length === 0) return;
 
       const executorId = await resolveExecutor(newGuild, AuditLogEvent.GuildUpdate);
       if (!executorId) return;

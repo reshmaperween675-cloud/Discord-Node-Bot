@@ -1,5 +1,5 @@
-import type { Message } from "discord.js";
-import { EmbedBuilder, PermissionFlagsBits, ChannelType } from "discord.js";
+import type { Message, TextChannel, Client } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits, ChannelType, OverwriteType } from "discord.js";
 import {
   getConfig,
   saveConfig,
@@ -7,10 +7,12 @@ import {
   saveWhitelist,
   DEFAULT_THRESHOLDS,
 } from "./store.js";
+import { getSnap, clearSnap } from "./snapshot.js";
 
 const COLOR_OK  = 0x00FFFF;
 const COLOR_ERR = 0xFF4444;
 const COLOR_INF = 0x2F3136;
+const COLOR_WIN = 0x00FF99;
 
 function requireManageGuild(message: Message): boolean {
   if (!message.member?.permissions.has(PermissionFlagsBits.ManageGuild)) {
@@ -24,14 +26,228 @@ function requireManageGuild(message: Message): boolean {
   return true;
 }
 
-export async function handleAntiNukeCommand(message: Message): Promise<void> {
+// ─── RESTORE ──────────────────────────────────────────────────────────────────
+async function runRestore(message: Message, client: Client, offenderId: string): Promise<void> {
+  const guild = message.guild!;
+
+  // Owner-only gate
+  if (message.author.id !== guild.ownerId) {
+    await message.reply({ embeds: [
+      new EmbedBuilder().setColor(COLOR_ERR)
+        .setDescription("❌ Only the **server owner** can run a restore."),
+    ]});
+    return;
+  }
+
+  const snap = getSnap(guild.id, offenderId);
+  if (!snap) {
+    await message.reply({ embeds: [
+      new EmbedBuilder().setColor(COLOR_ERR)
+        .setDescription(
+          "❌ No snapshot found for that user.\n" +
+          "Snapshots are captured when the anti-nuke fires and cleared after a restore.\n" +
+          "They are also lost if the bot restarts.",
+        ),
+    ]});
+    return;
+  }
+
+  const status = await message.reply({ embeds: [
+    new EmbedBuilder().setColor(0xFFAA00)
+      .setTitle("🔄 Restore in progress…")
+      .setDescription(
+        `Restoring **${snap.roles.length}** role(s), **${snap.channels.length}** channel(s), ` +
+        `and unbanning **${snap.bans.length}** member(s).\nThis may take a moment…`,
+      ),
+  ]});
+
+  // ── Counters ────────────────────────────────────────────────────────────
+  let rolesOk = 0, rolesFail = 0;
+  let chOk = 0, chFail = 0;
+  let unbanOk = 0, unbanFail = 0, dmOk = 0;
+
+  // ── 1. Recreate roles (sorted by position ascending to preserve hierarchy)
+  const roleIdMap = new Map<string, string>(); // oldId → newId
+  const sortedRoles = [...snap.roles].sort((a, b) => a.position - b.position);
+
+  for (const r of sortedRoles) {
+    try {
+      // Attempt to download icon
+      let icon: Buffer | undefined;
+      if (r.iconURL) {
+        try {
+          const ir = await fetch(r.iconURL, { signal: AbortSignal.timeout(5_000) });
+          if (ir.ok) icon = Buffer.from(await ir.arrayBuffer());
+        } catch { /* icon optional */ }
+      }
+
+      const created = await guild.roles.create({
+        name:          r.name,
+        color:         r.color,
+        hoist:         r.hoist,
+        mentionable:   r.mentionable,
+        permissions:   BigInt(r.permissions),
+        ...(icon            ? { icon }            : {}),
+        ...(r.unicodeEmoji  ? { unicodeEmoji: r.unicodeEmoji } : {}),
+        reason: `Anti-Nuke restore — recreating role deleted by <@${offenderId}>`,
+      });
+
+      roleIdMap.set(r.id, created.id);
+      rolesOk++;
+    } catch (e) {
+      console.error(`[RESTORE] Role "${r.name}" failed:`, e);
+      rolesFail++;
+    }
+  }
+
+  // ── 2. Recreate channels ───────────────────────────────────────────────
+  // Categories must be created first so child channels can reference them.
+  const categories = snap.channels.filter(c => c.type === ChannelType.GuildCategory);
+  const others     = snap.channels.filter(c => c.type !== ChannelType.GuildCategory);
+  const allOrdered = [
+    ...categories.sort((a, b) => a.position - b.position),
+    ...others.sort((a, b) => a.position - b.position),
+  ];
+
+  const channelIdMap = new Map<string, string>(); // oldId → newId (for category remapping)
+
+  for (const ch of allOrdered) {
+    try {
+      // Remap overwrite IDs: translate old role IDs to newly created role IDs
+      const permissionOverwrites = ch.overwrites.map((ow) => ({
+        id:    roleIdMap.get(ow.id) ?? ow.id,
+        type:  ow.type as OverwriteType,
+        allow: BigInt(ow.allow),
+        deny:  BigInt(ow.deny),
+      }));
+
+      // Remap parent category to new category ID
+      const parent = ch.parentId ? (channelIdMap.get(ch.parentId) ?? null) : null;
+
+      const opts: Parameters<typeof guild.channels.create>[0] = {
+        name:               ch.name,
+        type:               ch.type as ChannelType.GuildText,
+        position:           ch.position,
+        permissionOverwrites,
+        reason: `Anti-Nuke restore — recreating channel deleted by <@${offenderId}>`,
+        ...(parent                         ? { parent }                         : {}),
+        ...(ch.topic                       ? { topic: ch.topic }               : {}),
+        ...(ch.nsfw                        ? { nsfw: ch.nsfw }                 : {}),
+        ...(ch.rateLimitPerUser            ? { rateLimitPerUser: ch.rateLimitPerUser } : {}),
+        ...(ch.bitrate   !== null          ? { bitrate: ch.bitrate }           : {}),
+        ...(ch.userLimit !== null && ch.userLimit > 0 ? { userLimit: ch.userLimit } : {}),
+      };
+
+      const created = await guild.channels.create(opts);
+      channelIdMap.set(ch.id, created.id);
+      chOk++;
+    } catch (e) {
+      console.error(`[RESTORE] Channel "${ch.name}" failed:`, e);
+      chFail++;
+    }
+  }
+
+  // ── 3. Unban members, create invite, DM each one ────────────────────────
+  // Find a text channel to create invites from
+  const inviteSource = guild.channels.cache.find(
+    (c) => c.type === ChannelType.GuildText && c.viewable,
+  ) as TextChannel | undefined;
+
+  for (const ban of snap.bans) {
+    try {
+      await guild.members.unban(
+        ban.userId,
+        `Anti-Nuke restore — wrongfully banned by <@${offenderId}>`,
+      );
+      unbanOk++;
+
+      // Create a single-use, never-expiring invite
+      let inviteUrl = `https://discord.gg/${guild.id}`; // fallback
+      if (inviteSource) {
+        try {
+          const inv = await inviteSource.createInvite({
+            maxAge:  0,    // never expires
+            maxUses: 1,    // single use
+            unique:  true,
+            reason:  "Anti-Nuke restore invite",
+          });
+          inviteUrl = inv.url;
+        } catch { /* use fallback */ }
+      }
+
+      // DM the unbanned user
+      try {
+        const user = await client.users.fetch(ban.userId);
+        const dmEmbed = new EmbedBuilder()
+          .setColor(COLOR_WIN)
+          .setTitle("✅ You were wrongfully banned")
+          .setThumbnail(guild.iconURL({ size: 256 }))
+          .setDescription(
+            `You were banned from **${guild.name}** by a rogue staff member.\n\n` +
+            `The offender has been caught and neutralised by our Anti-Nuke system. ` +
+            `You have been **unbanned** and are welcome back.\n\n` +
+            `**[➡️ Click here to rejoin ${guild.name}](${inviteUrl})**\n` +
+            `*(This invite is single-use and never expires)*`,
+          )
+          .setFooter({ text: "Last Stand Anti-Nuke System" })
+          .setTimestamp();
+
+        await user.send({ embeds: [dmEmbed] });
+        dmOk++;
+      } catch { /* DMs closed — unban still happened */ }
+
+    } catch (e) {
+      console.error(`[RESTORE] Unban ${ban.userId} failed:`, e);
+      unbanFail++;
+    }
+  }
+
+  // ── 4. Clear snapshot ────────────────────────────────────────────────────
+  clearSnap(guild.id, offenderId);
+
+  // ── 5. Report results ────────────────────────────────────────────────────
+  const resultEmbed = new EmbedBuilder()
+    .setColor(COLOR_WIN)
+    .setTitle("✅ Anti-Nuke Restore Complete")
+    .setDescription(`Offender: <@${offenderId}>`)
+    .addFields(
+      {
+        name: "🎭 Roles",
+        value: `✅ Recreated: **${rolesOk}**${rolesFail > 0 ? `\n❌ Failed: **${rolesFail}** (bot role too low or missing perm)` : ""}`,
+        inline: true,
+      },
+      {
+        name: "📁 Channels",
+        value: `✅ Recreated: **${chOk}**${chFail > 0 ? `\n❌ Failed: **${chFail}**` : ""}`,
+        inline: true,
+      },
+      {
+        name: "🔓 Unbans",
+        value: `✅ Unbanned: **${unbanOk}**\n📬 DM'd: **${dmOk}**${unbanFail > 0 ? `\n❌ Failed: **${unbanFail}**` : ""}`,
+        inline: true,
+      },
+    )
+    .addFields({
+      name: "ℹ️ Note",
+      value:
+        "Channels are recreated with the same permissions. " +
+        "Role positions are approximate — you may need to re-order them manually. " +
+        "If your server has membership screening, rejoining users will still need to complete it.",
+    })
+    .setTimestamp();
+
+  await status.edit({ embeds: [resultEmbed] });
+}
+
+// ─── MAIN COMMAND ROUTER ──────────────────────────────────────────────────────
+
+export async function handleAntiNukeCommand(message: Message, client: Client): Promise<void> {
   if (!message.guild) return;
   if (!requireManageGuild(message)) return;
 
   const parts = message.content.trim().split(/\s+/);
   const sub   = parts[1]?.toLowerCase();
 
-  // ── ?antinuke ─────────────────────────────────────────────────────────────
   if (!sub || sub === "help") {
     await message.reply({ embeds: [buildHelpEmbed()] });
     return;
@@ -92,7 +308,7 @@ export async function handleAntiNukeCommand(message: Message): Promise<void> {
       whitelist.add(target.id);
       await saveWhitelist(guildId, whitelist);
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
-        .setDescription(`✅ <@${target.id}> added to the Anti-Nuke whitelist. Their actions will be ignored.`)] });
+        .setDescription(`✅ <@${target.id}> added to the Anti-Nuke whitelist.`)] });
       return;
     }
 
@@ -171,6 +387,23 @@ export async function handleAntiNukeCommand(message: Message): Promise<void> {
     return;
   }
 
+  // ── ?antinuke restore @user ───────────────────────────────────────────────
+  if (sub === "restore") {
+    const target = message.mentions.users.first();
+    if (!target) {
+      await message.reply({ embeds: [
+        new EmbedBuilder().setColor(COLOR_ERR)
+          .setDescription(
+            "❌ Mention the offender whose damage you want to reverse.\n" +
+            "Example: `?antinuke restore @badguy`",
+          ),
+      ]});
+      return;
+    }
+    await runRestore(message, client, target.id);
+    return;
+  }
+
   await message.reply({ embeds: [buildHelpEmbed()] });
 }
 
@@ -179,25 +412,28 @@ function buildHelpEmbed(): EmbedBuilder {
     .setColor(0x2F3136)
     .setTitle("🛡️ Anti-Nuke — Command Reference")
     .setDescription("Protects the server against rogue staff mass-deleting channels, roles, or banning members.")
-    .addFields({
-      name: "Commands",
-      value: [
-        "`?antinuke enable` — Activate the system",
-        "`?antinuke disable` — Deactivate the system",
-        "`?antinuke log #channel` — Set the alert log channel",
-        "`?antinuke whitelist add @user` — Trust a staff member",
-        "`?antinuke whitelist remove @user` — Revoke trust",
-        "`?antinuke whitelist list` — Show all trusted users",
-        "`?antinuke status` — Full status + thresholds",
-        "`?antinuke thresholds` — Show action thresholds",
-      ].join("\n"),
-    })
-    .addFields({
-      name: "How it works",
-      value:
-        "The bot monitors every channel delete, role delete, ban, and guild update in real time. " +
-        "If any staff member hits the threshold (e.g. 3 channel deletes in 10 seconds), their roles are " +
-        "immediately stripped and they are banned. An alert embed is sent to your log channel and DM'd to the server owner.",
-    })
+    .addFields(
+      {
+        name: "Commands",
+        value: [
+          "`?antinuke enable` — Activate the system",
+          "`?antinuke disable` — Deactivate the system",
+          "`?antinuke log #channel` — Set the alert log channel",
+          "`?antinuke whitelist add @user` — Trust a staff member",
+          "`?antinuke whitelist remove @user` — Revoke trust",
+          "`?antinuke whitelist list` — Show all trusted users",
+          "`?antinuke status` — Full status + thresholds",
+          "`?antinuke restore @user` — ⚠️ Restore everything the offender destroyed (owner only)",
+        ].join("\n"),
+      },
+      {
+        name: "How it works",
+        value:
+          "The bot monitors channel/role deletes, bans, and guild updates. " +
+          "When a staff member crosses a threshold their roles are immediately stripped. " +
+          "Use `?antinuke restore @offender` afterwards to recreate deleted channels & roles, " +
+          "unban wrongfully banned members, and DM each one a private re-join invite.",
+      },
+    )
     .setFooter({ text: "Guild owner + bot are always exempt from anti-nuke checks" });
 }
