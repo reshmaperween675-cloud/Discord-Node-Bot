@@ -20,6 +20,7 @@ import { handleMewoCommand } from "./mewo/router.js";
 import { data as setupPanelData, execute as setupPanelExecute } from "./commands/setupChallengePanel.js";
 import { handleEndCommand } from "./commands/endRaid.js";
 import { handleKillCommand } from "./fun/killCommand.js";
+import { handleCopyCommand, handlePasteCommand } from "./admin/serverCopy.js";
 import { handleNsfwCommand } from "./commands/nsfw.js";
 import { handleCaptionCommand } from "./commands/caption.js";
 import { handleCreateTicket } from "./tickets/ticketFlow.js";
@@ -703,6 +704,16 @@ client.on(Events.MessageCreate, async (message: Message) => {
   // .kill — troll nuke sequence
   if (content.toLowerCase() === ".kill") {
     handleKillCommand(message).catch((err) => console.error("[KILL] Unhandled error:", err));
+    return;
+  }
+
+  // ?copy / ?paste — server backup & restore
+  if (content.toLowerCase() === "?copy") {
+    handleCopyCommand(message, client).catch((err) => console.error("[COPY] Unhandled error:", err));
+    return;
+  }
+  if (content.toLowerCase() === "?paste") {
+    handlePasteCommand(message, client).catch((err) => console.error("[PASTE] Unhandled error:", err));
     return;
   }
 
