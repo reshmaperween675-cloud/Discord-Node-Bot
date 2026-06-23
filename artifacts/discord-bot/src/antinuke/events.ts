@@ -281,21 +281,46 @@ export function registerAntiNukeEvents(client: Client): void {
       const config = await getConfig(guild.id);
       if (!config.enabled) return;
 
-      let deletedWebhook = false;
-      let purgedMessages = 0;
+      let deletedWebhook  = false;
+      let purgedMessages  = 0;
+      let webhookName     = "Unknown";
+      let installedById   = "Unknown";
+      let installedByTag  = "Unknown";
+      let usedByLine      = "*(webhook messages carry no user — sent by external app)*";
 
-      // 1. Delete the offending webhook
+      // 1. Fetch webhook info (owner = who installed it), then delete it
       try {
         if (channel.type === ChannelType.GuildText) {
           const webhooks = await channel.fetchWebhooks();
           const wh = webhooks.get(webhookId);
           if (wh) {
+            webhookName = wh.name;
+
+            // wh.owner is the Discord user who created the webhook
+            if (wh.owner) {
+              installedById  = wh.owner.id;
+              installedByTag = "tag" in wh.owner ? (wh.owner as { tag: string }).tag : wh.owner.id;
+            }
+
+            // Check audit log for WebhookCreate to cross-confirm the creator
+            try {
+              await new Promise<void>(res => setTimeout(res, 500));
+              const logs  = await guild.fetchAuditLogs({ type: AuditLogEvent.WebhookCreate, limit: 10 });
+              const entry = logs.entries.find(
+                e => (e.target as { id?: string } | null)?.id === webhookId,
+              );
+              if (entry?.executor) {
+                installedById  = entry.executor.id;
+                installedByTag = entry.executor.tag ?? entry.executor.id;
+              }
+            } catch { /* audit log optional */ }
+
             await wh.delete("Anti-Nuke: webhook message spam");
             deletedWebhook = true;
           }
         }
       } catch (e) {
-        console.error("[ANTINUKE] Webhook delete failed:", e);
+        console.error("[ANTINUKE] Webhook fetch/delete failed:", e);
       }
 
       // 2. Bulk-delete the spam messages (Discord limit: messages < 14 days old)
@@ -316,7 +341,48 @@ export function registerAntiNukeEvents(client: Client): void {
         console.error("[ANTINUKE] Bulk delete failed:", e);
       }
 
-      // 3. Log the intervention
+      // 3. Timeout + DM the webhook creator (1 hour)
+      let timedOutLine = "Could not resolve creator as a guild member";
+      if (installedById !== "Unknown") {
+        try {
+          const member = await guild.members.fetch(installedById).catch(() => null);
+          if (member && member.id !== guild.ownerId && member.manageable) {
+            const oneHour = 60 * 60 * 1_000;
+            await member.timeout(oneHour, "Anti-Nuke: webhook spam");
+            timedOutLine = `<@${installedById}> timed out for **1 hour**`;
+
+            // DM them
+            try {
+              await member.send("You ain't doing shit 😂");
+            } catch { /* DMs may be closed */ }
+          } else if (member) {
+            timedOutLine = `<@${installedById}> found but not manageable (owner or higher role)`;
+          }
+        } catch (e) {
+          console.error("[ANTINUKE] Timeout failed:", e);
+          timedOutLine = "Timeout failed (missing permissions or member left)";
+        }
+      }
+
+      // 4. Build the "who used" line from the spam messages' author field
+      const webhookAuthorNames = new Set<string>();
+      try {
+        if (channel.type === ChannelType.GuildText) {
+          const fetched = await channel.messages.fetch({ limit: 20 });
+          fetched
+            .filter(m => m.webhookId === webhookId)
+            .forEach(m => {
+              if (m.author.username) webhookAuthorNames.add(m.author.username);
+            });
+        }
+      } catch { /* non-critical */ }
+
+      if (webhookAuthorNames.size > 0) {
+        usedByLine = [...webhookAuthorNames].map(n => `\`${n}\``).join(", ") +
+          " *(webhook display name — set by the external app)*";
+      }
+
+      // 5. Log the intervention
       const embed = new EmbedBuilder()
         .setColor(0xFF0000)
         .setTitle("🚨 Webhook Spam Blocked")
@@ -325,9 +391,14 @@ export function registerAntiNukeEvents(client: Client): void {
           `and has been automatically stopped.`,
         )
         .addFields(
-          { name: "Webhook ID",       value: `\`${webhookId}\``,                        inline: true },
-          { name: "Channel",          value: `<#${channel.id}>`,                         inline: true },
-          { name: "🗑️ Actions Taken", value:
+          { name: "📎 Webhook Name",    value: `\`${webhookName}\``,          inline: true },
+          { name: "📍 Channel",         value: `<#${channel.id}>`,             inline: true },
+          { name: "🔧 Installed By",    value: installedById !== "Unknown"
+            ? `<@${installedById}> (\`${installedByTag}\`)`
+            : "Could not resolve from audit log",                              inline: false },
+          { name: "💬 Used By (display name)", value: usedByLine,             inline: false },
+          { name: "⏱️ Timeout",         value: timedOutLine,                  inline: false },
+          { name: "🗑️ Actions Taken",   value:
             `• Webhook ${deletedWebhook ? "**deleted**" : "delete failed (already gone?)"}\n` +
             `• **${purgedMessages}** spam message(s) bulk-deleted`,
             inline: false },
