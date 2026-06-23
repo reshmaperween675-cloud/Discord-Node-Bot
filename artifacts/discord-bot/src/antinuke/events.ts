@@ -260,6 +260,11 @@ export function registerAntiNukeEvents(client: Client): void {
   // ever triggering webhookCreate. We track message rate per webhookId and
   // kill the webhook + bulk-delete spam if it exceeds the limit.
   client.on(Events.MessageCreate, (message) => {
+    // Debug: log every webhook message so Railway logs show the count building up
+    if (message.webhookId && message.guild) {
+      console.log(`[ANTINUKE/WEBHOOK-SPAM] webhookId=${message.webhookId} guild=${message.guild.id} count=${(webhookMsgTimestamps.get(message.webhookId) ?? []).length + 1}`);
+    }
+
     if (!message.webhookId || !message.guild) return;
     const webhookId = message.webhookId;
     const now       = Date.now();
@@ -269,7 +274,12 @@ export function registerAntiNukeEvents(client: Client): void {
     times.push(now);
     webhookMsgTimestamps.set(webhookId, times);
 
-    if (times.length < WEBHOOK_MSG_LIMIT) return;
+    if (times.length < WEBHOOK_MSG_LIMIT) {
+      console.log(`[ANTINUKE/WEBHOOK-SPAM] below threshold (${times.length}/${WEBHOOK_MSG_LIMIT}) for webhookId=${webhookId}`);
+      return;
+    }
+
+    console.log(`[ANTINUKE/WEBHOOK-SPAM] THRESHOLD HIT for webhookId=${webhookId} in guild=${message.guild.id} — triggering action`);
 
     // Clear immediately to prevent multiple simultaneous triggers
     webhookMsgTimestamps.delete(webhookId);
@@ -279,7 +289,10 @@ export function registerAntiNukeEvents(client: Client): void {
 
     void (async () => {
       const config = await getConfig(guild.id);
-      if (!config.enabled) return;
+      if (!config.enabled) {
+        console.log(`[ANTINUKE/WEBHOOK-SPAM] antinuke DISABLED for guild=${guild.id} — no action taken. Run ?antinuke enable`);
+        return;
+      }
 
       let deletedWebhook  = false;
       let purgedMessages  = 0;

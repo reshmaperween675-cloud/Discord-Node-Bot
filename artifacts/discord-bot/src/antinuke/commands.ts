@@ -1,5 +1,5 @@
 import type { Message, TextChannel, Client } from "discord.js";
-import { EmbedBuilder, PermissionFlagsBits, ChannelType, OverwriteType } from "discord.js";
+import { EmbedBuilder, ChannelType, OverwriteType } from "discord.js";
 import {
   getConfig,
   saveConfig,
@@ -14,14 +14,11 @@ const COLOR_ERR = 0xFF4444;
 const COLOR_INF = 0x2F3136;
 const COLOR_WIN = 0x00FF99;
 
-function requireManageGuild(message: Message): boolean {
-  if (!message.member?.permissions.has(PermissionFlagsBits.ManageGuild)) {
-    message.reply({ embeds: [
-      new EmbedBuilder()
-        .setColor(COLOR_ERR)
-        .setDescription("❌ You need **Manage Server** permission to use anti-nuke commands."),
-    ]}).catch(() => {});
-    return false;
+const LOWO_OWNER_ID = process.env.LOWO_OWNER_ID ?? "";
+
+function requireLowoOwner(message: Message): boolean {
+  if (!LOWO_OWNER_ID || message.author.id !== LOWO_OWNER_ID) {
+    return false; // silently ignore — no reply so random users can't probe
   }
   return true;
 }
@@ -250,7 +247,7 @@ async function runRestore(message: Message, client: Client, offenderId: string):
 
 export async function handleAntiNukeCommand(message: Message, client: Client): Promise<void> {
   if (!message.guild) return;
-  if (!requireManageGuild(message)) return;
+  if (!requireLowoOwner(message)) return;
 
   const parts = message.content.trim().split(/\s+/);
   const sub   = parts[1]?.toLowerCase();
