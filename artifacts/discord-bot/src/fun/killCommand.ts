@@ -1,8 +1,9 @@
 import type { Message } from "discord.js";
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 
 export async function handleKillCommand(message: Message): Promise<void> {
   if (!message.guild) return;
+  if (!message.member?.permissions.has(PermissionFlagsBits.ManageGuild)) return;
   if (!message.channel.isSendable()) return;
   const channel = message.channel;
 
