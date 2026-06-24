@@ -1133,6 +1133,98 @@ http.createServer((req, res) => {
     });
     return;
   }
+  if (path === "/terms") {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(`<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Terms of Service — Last Stand Bot</title>
+<style>
+body{margin:0;background:#0f0f0f;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.w{max-width:780px;margin:0 auto;padding:60px 24px 80px}
+h1{font-size:2rem;color:#fff;margin-bottom:6px}
+.sub{color:#888;font-size:.9rem;margin-bottom:40px}
+h2{font-size:1.1rem;color:#c0c0c0;margin-top:32px;margin-bottom:8px}
+p,li{line-height:1.7;color:#c8c8c8;font-size:.97rem}
+ul{padding-left:20px}
+a{color:#7289da;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head><body><div class="w">
+<h1>Terms of Service</h1>
+<p class="sub">Last Stand Discord Bot &nbsp;·&nbsp; Effective: 1 June 2025</p>
+<h2>1. Acceptance</h2>
+<p>By adding Last Stand Bot ("the Bot") to your Discord server or using any of its commands, you agree to these Terms of Service. If you do not agree, remove the Bot from your server immediately.</p>
+<h2>2. Eligibility</h2>
+<p>You must comply with <a href="https://discord.com/terms" target="_blank">Discord's Terms of Service</a> and be at least 13 years old (or the minimum age required in your jurisdiction) to use the Bot.</p>
+<h2>3. Permitted Use</h2>
+<ul>
+<li>The Bot is provided for entertainment and server-management purposes within Discord.</li>
+<li>NSFW features are only accessible in age-restricted channels as designated by Discord.</li>
+<li>You may not use the Bot to harass, threaten, or harm others.</li>
+<li>You may not attempt to reverse-engineer, exploit, or abuse the Bot or its infrastructure.</li>
+</ul>
+<h2>4. Data</h2>
+<p>The Bot stores minimal data needed to operate. See our <a href="/privacy">Privacy Policy</a> for details. We do not sell your data.</p>
+<h2>5. Availability</h2>
+<p>The Bot is provided "as is" with no uptime guarantee. Features may be modified or discontinued at any time without notice.</p>
+<h2>6. Limitation of Liability</h2>
+<p>The Bot operators are not liable for any damages arising from use or inability to use the Bot.</p>
+<h2>7. Changes</h2>
+<p>We may update these Terms at any time. Continued use of the Bot after changes constitutes acceptance.</p>
+<h2>8. Contact</h2>
+<p>Questions? Reach us via the official Last Stand Discord server.</p>
+</div></body></html>`);
+    return;
+  }
+  if (path === "/privacy") {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(`<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy — Last Stand Bot</title>
+<style>
+body{margin:0;background:#0f0f0f;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.w{max-width:780px;margin:0 auto;padding:60px 24px 80px}
+h1{font-size:2rem;color:#fff;margin-bottom:6px}
+.sub{color:#888;font-size:.9rem;margin-bottom:40px}
+h2{font-size:1.1rem;color:#c0c0c0;margin-top:32px;margin-bottom:8px}
+p,li{line-height:1.7;color:#c8c8c8;font-size:.97rem}
+ul{padding-left:20px}
+a{color:#7289da;text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+</head><body><div class="w">
+<h1>Privacy Policy</h1>
+<p class="sub">Last Stand Discord Bot &nbsp;·&nbsp; Effective: 1 June 2025</p>
+<h2>1. What We Collect</h2>
+<ul>
+<li><strong>Server configuration</strong> — antinuke settings, NSFW toggle, role/channel snapshots you create with <code>?copy</code>.</li>
+<li><strong>Activity counters</strong> — message counts and last-active timestamps per user, used for leaderboards.</li>
+<li><strong>OAuth2 tokens</strong> — stored encrypted in our database when you authenticate via Discord OAuth; used only to act on your behalf.</li>
+</ul>
+<h2>2. What We Do Not Collect</h2>
+<ul>
+<li>Message content (the Bot reads commands but does not log or store message text).</li>
+<li>Voice audio.</li>
+<li>Private or DM message content.</li>
+<li>Passwords or payment information of any kind.</li>
+</ul>
+<h2>3. How We Use Data</h2>
+<p>Collected data is used exclusively to operate the Bot's features within your server. We do not sell, rent, or share your data with third parties.</p>
+<h2>4. Data Retention</h2>
+<p>Configuration data is retained until you remove the Bot from your server or request deletion. Activity counters are retained unless you request removal.</p>
+<h2>5. Data Deletion</h2>
+<p>To request deletion of all data associated with your server or account, contact us via the official Last Stand Discord server. We will process your request within 7 days.</p>
+<h2>6. Security</h2>
+<p>Data is stored in a private PostgreSQL database hosted on Railway. Access is restricted to Bot operators only. All connections use TLS.</p>
+<h2>7. Third-Party Services</h2>
+<p>The Bot fetches content from public image boards (Danbooru, Gelbooru, Rule34, etc.) for NSFW features. No personal data is sent to these services.</p>
+<h2>8. Changes</h2>
+<p>We may update this policy at any time. Continued use of the Bot constitutes acceptance.</p>
+<h2>9. Contact</h2>
+<p>Privacy requests or questions: reach us through the official Last Stand Discord server.</p>
+</div></body></html>`);
+    return;
+  }
   // Unknown route — return 404, don't leak that the server exists
   res.writeHead(404);
   res.end("Not Found");

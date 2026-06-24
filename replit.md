@@ -73,6 +73,17 @@ The bot runs as a single Railway service. **No separate API server deployment ne
 2. Add: `https://your-domain.railway.app/api/oauth/callback`
 3. Save Changes
 
+### Legal Pages (Terms of Service & Privacy Policy)
+
+Both pages are served by the bot's own HTTP server (always live on Railway). Paste these into the Discord Developer Portal → **General Information**:
+
+| Field | URL |
+|---|---|
+| **Terms of Service** | `https://your-domain.railway.app/terms` |
+| **Privacy Policy** | `https://your-domain.railway.app/privacy` |
+
+Replace `your-domain.railway.app` with your actual Railway public domain. The pages are dark-themed, mobile-friendly HTML — no extra deployment needed.
+
 ### Server Role Requirements (per Discord server)
 
 - Role named **`unverified`** (lowercase) — assigned to unverified/new members
