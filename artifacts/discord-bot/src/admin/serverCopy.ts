@@ -588,3 +588,161 @@ export async function handlePasteCommand(message: Message, client: Client): Prom
       .setTitle("❌ Restore Failed").setDescription(`${(err as Error).message}`)]});
   }
 }
+
+// ── ?copy e — snapshot non-animated emojis from this server ──────────────────
+
+const EMOJI_SNAPSHOT_KEY = (guildId: string) => `emoji_snapshot:${guildId}`;
+
+interface EmojiOnlySnapshot {
+  takenAt: number;
+  guildId: string;
+  guildName: string;
+  emojis: EmojiSnap[];
+}
+
+async function saveEmojiSnapshot(guildId: string, snap: EmojiOnlySnapshot): Promise<void> {
+  await getPool().query(
+    `INSERT INTO bot_kv (key, value, updated_at) VALUES ($1, $2::jsonb, NOW())
+     ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, updated_at = NOW()`,
+    [EMOJI_SNAPSHOT_KEY(guildId), JSON.stringify(snap)],
+  );
+}
+
+async function loadEmojiSnapshot(guildId: string): Promise<EmojiOnlySnapshot | null> {
+  const res = await getPool().query<{ value: EmojiOnlySnapshot }>(
+    "SELECT value FROM bot_kv WHERE key = $1",
+    [EMOJI_SNAPSHOT_KEY(guildId)],
+  );
+  return res.rows[0]?.value ?? null;
+}
+
+export async function handleCopyEmojisCommand(message: Message, _client: Client): Promise<void> {
+  if (!message.guild) return;
+  if (!message.member?.permissions.has(PermissionFlagsBits.Administrator)) {
+    await message.reply({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+      .setDescription("❌ You need **Administrator** to use `?copy e`.")]});
+    return;
+  }
+
+  const status = await message.reply({ embeds: [new EmbedBuilder().setColor(0xFFAA00)
+    .setTitle("⏳ Copying Emojis")
+    .setDescription("Reading all non-animated emojis…")]});
+
+  try {
+    const guild = message.guild;
+    await guild.emojis.fetch();
+
+    const emojis: EmojiSnap[] = guild.emojis.cache
+      .filter(e => !e.animated && !e.managed)
+      .map(e => ({
+        id: e.id,
+        name: e.name ?? "unknown",
+        imageURL: e.imageURL({ size: 128, extension: "png" }),
+        animated: false,
+        managed: false,
+        roleIds: [...e.roles.cache.keys()],
+      }));
+
+    const snap: EmojiOnlySnapshot = {
+      takenAt: Date.now(),
+      guildId: guild.id,
+      guildName: guild.name,
+      emojis,
+    };
+
+    await saveEmojiSnapshot(guild.id, snap);
+
+    await status.edit({ embeds: [new EmbedBuilder()
+      .setColor(0x00FFFF)
+      .setTitle("✅ Emoji Snapshot Saved")
+      .setDescription(
+        `Captured **${emojis.length}** non-animated emoji${emojis.length === 1 ? "" : "s"} from **${guild.name}**.\n\n` +
+        `To paste them into another server, use:\n\`?paste e ${guild.id}\``,
+      )
+      .setFooter({ text: "Stored in DB — survives bot restarts" })]});
+
+  } catch (err) {
+    console.error("[COPY E]", err);
+    await status.edit({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+      .setTitle("❌ Copy Failed").setDescription(`${(err as Error).message}`)]});
+  }
+}
+
+// ── ?paste e <sourceGuildId> — paste emojis with no duplicates ───────────────
+
+export async function handlePasteEmojisCommand(message: Message, _client: Client, args: string[]): Promise<void> {
+  if (!message.guild) return;
+  if (!message.member?.permissions.has(PermissionFlagsBits.Administrator)) {
+    await message.reply({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+      .setDescription("❌ You need **Administrator** to use `?paste e`.")]});
+    return;
+  }
+
+  const sourceGuildId = args[0]?.trim();
+  if (!sourceGuildId || !/^\d{17,20}$/.test(sourceGuildId)) {
+    await message.reply({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+      .setTitle("❌ Missing Server ID")
+      .setDescription("Usage: `?paste e <server id of server you ran ?copy e in>`\nExample: `?paste e 123456789012345678`")]});
+    return;
+  }
+
+  const status = await message.reply({ embeds: [new EmbedBuilder().setColor(0xFFAA00)
+    .setTitle("⏳ Pasting Emojis")
+    .setDescription(`Loading emoji snapshot from server \`${sourceGuildId}\`…`)]});
+
+  try {
+    const guild = message.guild;
+    const snap  = await loadEmojiSnapshot(sourceGuildId);
+
+    if (!snap) {
+      await status.edit({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+        .setTitle("❌ No Snapshot Found")
+        .setDescription(`No emoji snapshot found for server ID \`${sourceGuildId}\`.\nRun \`?copy e\` in that server first.`)]});
+      return;
+    }
+
+    await guild.emojis.fetch();
+    const existingNames = new Set(guild.emojis.cache.map(e => e.name?.toLowerCase() ?? ""));
+
+    let created = 0, skipped = 0;
+    const errors: string[] = [];
+
+    for (const emoji of snap.emojis) {
+      if (existingNames.has(emoji.name.toLowerCase())) {
+        skipped++;
+        continue;
+      }
+      try {
+        const image = await downloadBuffer(emoji.imageURL);
+        await guild.emojis.create({ attachment: image, name: emoji.name, reason: `?paste e from ${snap.guildName}` });
+        existingNames.add(emoji.name.toLowerCase());
+        created++;
+        await sleep(DELAY);
+      } catch (e) {
+        errors.push(`:${emoji.name}: — ${(e as Error).message}`);
+      }
+    }
+
+    const embed = new EmbedBuilder()
+      .setColor(errors.length === 0 ? 0x00FFFF : 0xFFAA00)
+      .setTitle(errors.length === 0 ? "✅ Emojis Pasted" : "⚠️ Emojis Pasted (with errors)")
+      .setDescription(`Source: **${snap.guildName}** · Snapshot from <t:${Math.floor(snap.takenAt / 1000)}:f>`)
+      .addFields(
+        { name: "✅ Created",       value: `**${created}**`,  inline: true },
+        { name: "⏭️ Already Exist", value: `**${skipped}**`,  inline: true },
+        { name: "❌ Failed",        value: `**${errors.length}**`, inline: true },
+      );
+
+    if (errors.length > 0) {
+      const errText = errors.slice(0, 8).join("\n") + (errors.length > 8 ? `\n…and ${errors.length - 8} more` : "");
+      embed.addFields({ name: "Errors", value: `\`\`\`\n${errText}\n\`\`\``, inline: false });
+    }
+
+    await status.edit({ embeds: [embed] });
+
+  } catch (err) {
+    console.error("[PASTE E]", err);
+    await status.edit({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+      .setTitle("❌ Paste Failed").setDescription(`${(err as Error).message}`)]});
+  }
+}

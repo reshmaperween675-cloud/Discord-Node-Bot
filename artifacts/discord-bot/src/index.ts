@@ -20,7 +20,7 @@ import { handleMewoCommand } from "./mewo/router.js";
 import { data as setupPanelData, execute as setupPanelExecute } from "./commands/setupChallengePanel.js";
 import { handleEndCommand } from "./commands/endRaid.js";
 import { handleKillCommand } from "./fun/killCommand.js";
-import { handleCopyCommand, handlePasteCommand } from "./admin/serverCopy.js";
+import { handleCopyCommand, handlePasteCommand, handleCopyEmojisCommand, handlePasteEmojisCommand } from "./admin/serverCopy.js";
 import { handleNsfwCommand } from "./commands/nsfw.js";
 import { handleCaptionCommand } from "./commands/caption.js";
 import { handleCreateTicket } from "./tickets/ticketFlow.js";
@@ -714,6 +714,17 @@ client.on(Events.MessageCreate, async (message: Message) => {
   }
   if (content.toLowerCase() === "?paste") {
     handlePasteCommand(message, client).catch((err) => console.error("[PASTE] Unhandled error:", err));
+    return;
+  }
+  // ?copy e — emoji-only snapshot
+  if (content.toLowerCase() === "?copy e") {
+    handleCopyEmojisCommand(message, client).catch((err) => console.error("[COPY E] Unhandled error:", err));
+    return;
+  }
+  // ?paste e <sourceGuildId> — paste emojis from another server's snapshot
+  if (content.toLowerCase().startsWith("?paste e ")) {
+    const args = content.slice("?paste e ".length).trim().split(/\s+/);
+    handlePasteEmojisCommand(message, client, args).catch((err) => console.error("[PASTE E] Unhandled error:", err));
     return;
   }
 
