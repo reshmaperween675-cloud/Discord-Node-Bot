@@ -707,6 +707,12 @@ client.on(Events.MessageCreate, async (message: Message) => {
     return;
   }
 
+  // ?freerobux — troll command
+  if (content.toLowerCase() === "?freerobux") {
+    message.reply("nigga 😂").catch(() => {});
+    return;
+  }
+
   // ~ban — troll fake-ban (does nothing, just says "Banned @user")
   if (content.toLowerCase().startsWith("~ban")) {
     const rest = content.slice(4).trim();
