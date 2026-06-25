@@ -23,6 +23,7 @@ import { handleKillCommand } from "./fun/killCommand.js";
 import { handleCopyCommand, handlePasteCommand, handleCopyEmojisCommand, handlePasteEmojisCommand } from "./admin/serverCopy.js";
 import { handleNsfwCommand } from "./commands/nsfw.js";
 import { handleCaptionCommand } from "./commands/caption.js";
+import { handleModuleCommand, runCustomModules } from "./commands/moduleManager.js";
 import { handleCreateTicket } from "./tickets/ticketFlow.js";
 import { handleCloseTicket, handleDeleteTicket } from "./tickets/ticketControls.js";
 import {
@@ -790,6 +791,12 @@ client.on(Events.MessageCreate, async (message: Message) => {
     return;
   }
 
+  // ?m — custom module manager (admin only)
+  if (content.toLowerCase().startsWith("?m ") || content.toLowerCase() === "?m") {
+    handleModuleCommand(message).catch((err) => console.error("[MODULE] Unhandled error:", err));
+    return;
+  }
+
   // Activity + Verification + Admin prefix commands (?activitycheck, ?kickinactive, etc.)
   const cmd = content.toLowerCase().split(/\s+/)[0];
   switch (cmd) {
@@ -833,6 +840,10 @@ client.on(Events.MessageCreate, async (message: Message) => {
       handleAntiNukeCommand(message, client).catch((err) => console.error("[ANTINUKE] Unhandled error:", err));
       return;
   }
+
+  // Custom modules — check per-guild triggers created via ?m create
+  const handledByModule = await runCustomModules(message).catch(() => false);
+  if (handledByModule) return;
 
   // Silent activity tracking for all non-bot messages
   upsertMessageActivity(message.author.id).catch(() => {});
