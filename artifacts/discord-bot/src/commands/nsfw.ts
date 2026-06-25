@@ -592,6 +592,19 @@ function buildListEmbed(): EmbedBuilder {
 // ── Command handler ────────────────────────────────────────────────────────
 
 export async function handleNsfwCommand(message: Message): Promise<void> {
+  // Gate: must be in an age-restricted channel
+  const ch = message.channel;
+  if (!("nsfw" in ch) || !(ch as { nsfw: boolean }).nsfw) {
+    await message.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(0xff4444)
+          .setDescription("🔞 This command can only be used in an **age-restricted (NSFW)** channel."),
+      ],
+    }).catch(() => {});
+    return;
+  }
+
   const parts = message.content.trim().split(/\s+/);
   const arg1 = parts[1]?.toLowerCase();
   const arg2 = parts[2]?.toLowerCase();
