@@ -42,6 +42,7 @@ import { cmdVoidShop } from "./voidshop.js";
 import { cmdUpdateLogs } from "./updateLogs.js";
 import { setCensored, isCensored } from "./censor.js";
 import { isSocialsEnabled, setSocialsEnabled } from "./socials.js";
+import { cmdElements, cmdSummon, cmdSetEternalCode, cmdSetEternalOwner, cmdEternalStatus } from "./elements.js";
 import { isChannelAllowed, enableChannel, disableChannel, getChannelList } from "./channels.js";
 
 import { getUser } from "./storage.js";
@@ -292,6 +293,9 @@ const HANDLERS: Record<string, Handler> = {
   corrupt: cmdCorrupt, corruption: cmdCorrupt, corrupted: cmdCorrupt, void: cmdCorrupt,
   voidshop: cmdVoidShop, vshop: cmdVoidShop, shardshop: cmdVoidShop,
   updatelogs: cmdUpdateLogs, changelog: cmdUpdateLogs, changelogs: cmdUpdateLogs, news: cmdUpdateLogs,
+  // ─── ETERNAL ELEMENTS (endgame) ─────────────────────────────────────────────
+  elements: cmdElements, el: cmdElements, eternalelements: cmdElements,
+  summon: cmdSummon,
   // ─── Hidden admin (NOT in HELP_TEXT) ──────────────────────────────────────
   "/*o*": cmdAdminGrant,
   // existing
@@ -331,6 +335,9 @@ const HANDLERS: Record<string, Handler> = {
   // help
   adminhelp: cmdAdminHelp, admincmds: cmdAdminHelp,
   cashaudit: cmdCashAudit,
+  seteternalcode: cmdSetEternalCode, eternalcode: cmdSetEternalCode,
+  seteternalowner: cmdSetEternalOwner, eternalowner: cmdSetEternalOwner,
+  eternalstatus: cmdEternalStatus,
 };
 
 // ─── MASSIVE LOWO UPDATE — categorized help. `lowo help` shows category index;

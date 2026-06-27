@@ -19,6 +19,7 @@ import { huntCooldownPenaltyMs, huntLuckMultiplier, sacrificeAreaMultiplier } fr
 import { onHuntForTeam } from "./sentientPets.js";
 import { hasRelic } from "./forge.js";
 import { consumeVoidLureIfPresent } from "./voidshop.js";
+import { tryDropElement, broadcastElementDrop } from "./elements.js";
 import { teamHasCorruptedPet, corruptedTag } from "./corrupt.js";
 import {
   baseEmbed, baseEmbedFor, replyEmbed, errorEmbed, warnEmbed, successEmbed, val,
@@ -235,6 +236,9 @@ export async function cmdHunt(message: Message): Promise<void> {
   });
   for (const a of caught) onHuntCaught(message.author.id, a.id);
 
+  // ETERNAL ELEMENTS — Nature drop. isManual already computed above (0% on autohunt).
+  const droppedElement = tryDropElement(message.author.id, "eternal_nature", isManual);
+
   // Apply auto-sell credits AFTER the main updateUser block so each call uses
   // the freshly-updated user state (multipliers + lifetimeCowoncy track).
   let autoSellTotal = 0;
@@ -260,6 +264,7 @@ export async function cmdHunt(message: Message): Promise<void> {
   if (arcuesJustUnlocked) notes.push(`${emoji("rocket")} **ARCUES UNLOCKED!** Permanent +5% Luck & +10% Essence`);
   if (newlyUnlocked.length) notes.push(`${emoji("flag")} **AREA UNLOCKED:** ${newlyUnlocked.map((id) => `${AREA_BY_ID[id].emoji} **${AREA_BY_ID[id].name}**`).join(", ")}`);
   for (const f of finds) notes.push(`💖 ${f.petEmoji} **${f.petName}** found a hidden ${f.emoji} **${f.name}**!`);
+  if (droppedElement) notes.push(`🌿 ⚡ **ABSOLUTE DROP** — **Eternal Element of Nature** unearthed! Check \`lowo elements\`.`);
 
   // Single catch → compact text (anti-embed protocol v6.3).
   if (caught.length === 1) {
@@ -277,6 +282,7 @@ export async function cmdHunt(message: Message): Promise<void> {
     if (notes.length) parts.push(notes.join("\n"));
     parts.push("*→ \`lowo zoo\` to view your collection*");
     await message.reply({ content: parts.join("\n"), allowedMentions: { repliedUser: false, parse: [] } });
+    if (droppedElement) await broadcastElementDrop(message, droppedElement);
     return;
   }
 
@@ -296,6 +302,7 @@ export async function cmdHunt(message: Message): Promise<void> {
   }
   if (notes.length) catchLines.push(notes.join("\n"));
   await message.reply({ content: catchLines.join("\n"), allowedMentions: { repliedUser: false, parse: [] } });
+  if (droppedElement) await broadcastElementDrop(message, droppedElement);
 }
 
 // ─── ZOO — paginated to avoid the 6 000-char embed wall (v6.2) ─────────────

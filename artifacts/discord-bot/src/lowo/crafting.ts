@@ -1,12 +1,79 @@
 import type { Message } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { getUser, updateUser } from "./storage.js";
 import { CRAFT_RECIPES, CRAFT_RECIPE_BY_ID, MINERAL_BY_ID } from "./data.js";
 import { emoji } from "./emojis.js";
 import { eventBonus } from "./events.js";
 
+const ETERNAL_EARTH_COST = {
+  cowoncy: 5_000_000_000,
+  essence: 100_000,
+  lowoCash: 50_000,
+};
+
+async function cmdCraftEternalEarth(message: Message): Promise<void> {
+  const u = getUser(message.author.id);
+  const els = u.elements ?? {};
+  const missing: string[] = [];
+  if ((els.eternal_nature     ?? 0) < 1) missing.push("🌿 **Eternal Element of Nature** (0/1)");
+  if ((els.eternal_underworld ?? 0) < 1) missing.push("💀 **Eternal Element of Underworld** (0/1)");
+  if ((els.eternal_ocean      ?? 0) < 1) missing.push("🌊 **Eternal Element of Ocean** (0/1)");
+  if (u.cowoncy  < ETERNAL_EARTH_COST.cowoncy)  missing.push(`💰 **Cowoncy** (${u.cowoncy.toLocaleString()} / ${ETERNAL_EARTH_COST.cowoncy.toLocaleString()})`);
+  if (u.essence  < ETERNAL_EARTH_COST.essence)  missing.push(`✨ **Essence** (${u.essence.toLocaleString()} / ${ETERNAL_EARTH_COST.essence.toLocaleString()})`);
+  if (u.lowoCash < ETERNAL_EARTH_COST.lowoCash) missing.push(`💎 **Lowo Cash** (${u.lowoCash} / ${ETERNAL_EARTH_COST.lowoCash.toLocaleString()})`);
+
+  if (missing.length > 0) {
+    const embed = new EmbedBuilder()
+      .setColor(0xFF4444)
+      .setTitle("⚡ Supreme Element Integration — Missing Requirements")
+      .setDescription(
+        `You cannot forge the **Eternal Element of Earth** yet.\n\n**Missing:**\n${missing.map((m) => `• ${m}`).join("\n")}`,
+      )
+      .setFooter({ text: "Eternal Elements — Endgame Crafting" });
+    await message.reply({ embeds: [embed] });
+    return;
+  }
+
+  updateUser(message.author.id, (x) => {
+    x.elements!.eternal_nature     -= 1;
+    x.elements!.eternal_underworld -= 1;
+    x.elements!.eternal_ocean      -= 1;
+    x.cowoncy  -= ETERNAL_EARTH_COST.cowoncy;
+    x.essence  -= ETERNAL_EARTH_COST.essence;
+    x.lowoCash -= ETERNAL_EARTH_COST.lowoCash;
+    x.elements!.eternal_earth = (x.elements!.eternal_earth ?? 0) + 1;
+  });
+
+  const embed = new EmbedBuilder()
+    .setColor(0xFFD700)
+    .setTitle("⚡ Supreme Element Integration — FORGED")
+    .setDescription(
+      [
+        `**${message.author.username}** has forged the **⚡ Eternal Element of Earth**.`,
+        ``,
+        `🌿 Eternal Element of Nature — consumed`,
+        `💀 Eternal Element of Underworld — consumed`,
+        `🌊 Eternal Element of Ocean — consumed`,
+        `💰 5,000,000,000 Cowoncy — deducted`,
+        `✨ 100,000 Essence — deducted`,
+        `💎 50,000 Lowo Cash — deducted`,
+        ``,
+        `> 🔱 **The earth element pulses with absolute power.**`,
+        `> Use \`lowo summon eternal_king\` to face what awaits *(costs 30,000 🪙 Battle Tokens)*.`,
+      ].join("\n"),
+    )
+    .setThumbnail(message.author.displayAvatarURL({ size: 128 }))
+    .setFooter({ text: "Eternal Elements — Endgame Crafting" })
+    .setTimestamp();
+  await message.reply({ embeds: [embed] });
+}
+
 export async function cmdCraft(message: Message, args: string[]): Promise<void> {
   const sub = args[0]?.toLowerCase();
   const u = getUser(message.author.id);
+
+  // ETERNAL ELEMENTS — special supreme recipe not in the normal mineral recipe table
+  if (sub === "eternal_earth") { await cmdCraftEternalEarth(message); return; }
 
   if (!sub || sub === "list") {
     const lines = [`${emoji("craft")} **Crafting Recipes** *(use \`lowo craft <recipeId>\` to forge)*`];

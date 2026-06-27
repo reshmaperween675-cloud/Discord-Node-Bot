@@ -137,6 +137,13 @@ export interface UserData {
   voidShopItems: Record<string, number>;
   // MODERATION — warn ladder
   warnCount: number;
+  // ETERNAL ELEMENTS (endgame)
+  elements: {
+    eternal_nature: number;
+    eternal_underworld: number;
+    eternal_ocean: number;
+    eternal_earth: number;
+  };
 }
 
 export interface MarketListingRecord {
@@ -228,6 +235,8 @@ function defaultUser(): UserData {
     voidShopItems: {},
     // MODERATION
     warnCount: 0,
+    // ETERNAL ELEMENTS
+    elements: { eternal_nature: 0, eternal_underworld: 0, eternal_ocean: 0, eternal_earth: 0 },
   };
 }
 

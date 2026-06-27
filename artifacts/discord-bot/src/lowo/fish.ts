@@ -4,6 +4,7 @@ import { rollFish, RARITY_COLOR, luckMultiplier } from "./data.js";
 import { onHuntCaught } from "./skills.js";
 import { isAutohuntActive } from "./extra.js";
 import { eventBonus } from "./events.js";
+import { tryDropElement, broadcastElementDrop } from "./elements.js";
 
 const FISH_COOLDOWN_MS = 15_000;
 
@@ -30,5 +31,10 @@ export async function cmdFish(message: Message): Promise<void> {
     if (!x.fishDex.includes(a.id)) x.fishDex.push(a.id);
   });
   onHuntCaught(message.author.id, a.id);
-  await message.reply(`🎣 **${message.author.username}** cast a line and reeled in a ${RARITY_COLOR[a.rarity]} **${a.name}** ${a.emoji} *(${a.rarity})* — *swimming in your* \`lowo aquarium\`.`);
+  // ETERNAL ELEMENTS — Ocean drop. Fish is always manual (autohunt never fishes).
+  const dropped = tryDropElement(message.author.id, "eternal_ocean", true);
+  let replyText = `🎣 **${message.author.username}** cast a line and reeled in a ${RARITY_COLOR[a.rarity]} **${a.name}** ${a.emoji} *(${a.rarity})* — *swimming in your* \`lowo aquarium\`.`;
+  if (dropped) replyText += `\n🌊 ⚡ **ABSOLUTE DROP** — **Eternal Element of Ocean** surfaced! Check \`lowo elements\`.`;
+  await message.reply(replyText);
+  if (dropped) await broadcastElementDrop(message, dropped);
 }

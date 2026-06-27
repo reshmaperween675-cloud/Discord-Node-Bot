@@ -5,6 +5,7 @@ import { eventBonus } from "./events.js";
 import { emoji } from "./emojis.js";
 import { isAutohuntActive } from "./extra.js";
 import { isBossActive, bossTakeDamage } from "./bosses.js";
+import { tryDropElement, broadcastElementDrop } from "./elements.js";
 
 const BASE_MINE_CD_MS = 30_000;
 
@@ -48,7 +49,12 @@ export async function cmdMine(message: Message): Promise<void> {
     bossTakeDamage(message, dmg, "pickaxe").catch(() => {});
   }
 
-  await message.reply(`${emoji("mine")} You swing your pickaxe and find: ${found.join(" • ")}`);
+  // ETERNAL ELEMENTS — Underworld drop. Mine is always manual (autohunt never mines).
+  const dropped = tryDropElement(message.author.id, "eternal_underworld", true);
+  let replyText = `${emoji("mine")} You swing your pickaxe and find: ${found.join(" • ")}`;
+  if (dropped) replyText += `\n💀 ⚡ **ABSOLUTE DROP** — **Eternal Element of Underworld** unearthed! Check \`lowo elements\`.`;
+  await message.reply(replyText);
+  if (dropped) await broadcastElementDrop(message, dropped);
 }
 
 export async function cmdMinerals(message: Message): Promise<void> {
