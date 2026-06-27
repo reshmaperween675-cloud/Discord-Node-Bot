@@ -19,8 +19,16 @@ const DROP_RATES: Record<DroppableElementId, number> = {
   eternal_ocean:      0.00001,  // 0.001%
 };
 
+const PITY_CAP = 300;
+
+const PITY_KEY: Record<DroppableElementId, "hunt" | "mine" | "fish"> = {
+  eternal_nature:     "hunt",
+  eternal_underworld: "mine",
+  eternal_ocean:      "fish",
+};
+
 // ─── tryDropElement ───────────────────────────────────────────────────────────
-// Returns the elementId if it dropped, null otherwise.
+// Returns the elementId if it dropped (random or pity), null otherwise.
 // isManual MUST be true — autohunt is hardcoded to 0% chance.
 export function tryDropElement(
   userId: string,
@@ -28,12 +36,27 @@ export function tryDropElement(
   isManual: boolean,
 ): DroppableElementId | null {
   if (!isManual) return null;
-  if (Math.random() >= DROP_RATES[elementId]) return null;
+
+  const pityKey = PITY_KEY[elementId];
+  let dropped = false;
+
   updateUser(userId, (x) => {
-    if (!x.elements) x.elements = { eternal_nature: 0, eternal_underworld: 0, eternal_ocean: 0, eternal_earth: 0 };
-    x.elements[elementId] = (x.elements[elementId] ?? 0) + 1;
+    if (!x.elements)    x.elements    = { eternal_nature: 0, eternal_underworld: 0, eternal_ocean: 0, eternal_earth: 0 };
+    if (!x.eternalPity) x.eternalPity = { hunt: 0, mine: 0, fish: 0 };
+
+    x.eternalPity[pityKey] = (x.eternalPity[pityKey] ?? 0) + 1;
+
+    const pitied = x.eternalPity[pityKey] >= PITY_CAP;
+    const lucky  = Math.random() < DROP_RATES[elementId];
+
+    if (pitied || lucky) {
+      x.elements[elementId] = (x.elements[elementId] ?? 0) + 1;
+      x.eternalPity[pityKey] = 0; // reset counter after drop
+      dropped = true;
+    }
   });
-  return elementId;
+
+  return dropped ? elementId : null;
 }
 
 // ─── broadcastElementDrop ─────────────────────────────────────────────────────
@@ -75,10 +98,16 @@ export async function cmdElements(message: Message, args: string[]): Promise<voi
   const hasAll3 = n >= 1 && uw >= 1 && oc >= 1;
   const hasEarth = ea >= 1;
 
+  const pity = u.eternalPity ?? { hunt: 0, mine: 0, fish: 0 };
+
   const row = (owned: number, id: keyof typeof ELEMENT_DEFS): string => {
     const el = ELEMENT_DEFS[id];
     const box = owned >= 1 ? "✅" : "⬜";
-    return `${box} ${el.emoji} **${el.name}** — ${owned}x\n   _${el.source} · ${el.rate}_`;
+    let pityLine = "";
+    if (id === "eternal_nature")     pityLine = `\n   🎯 Pity: **${pity.hunt}** / 300 hunts`;
+    if (id === "eternal_underworld") pityLine = `\n   🎯 Pity: **${pity.mine}** / 300 mines`;
+    if (id === "eternal_ocean")      pityLine = `\n   🎯 Pity: **${pity.fish}** / 300 fishes`;
+    return `${box} ${el.emoji} **${el.name}** — ${owned}x\n   _${el.source} · ${el.rate}_${pityLine}`;
   };
 
   const footer = hasEarth

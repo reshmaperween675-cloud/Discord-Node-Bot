@@ -144,6 +144,8 @@ export interface UserData {
     eternal_ocean: number;
     eternal_earth: number;
   };
+  // Pity counters — guaranteed drop at 300 manual actions each
+  eternalPity: { hunt: number; mine: number; fish: number };
 }
 
 export interface MarketListingRecord {
@@ -237,6 +239,7 @@ function defaultUser(): UserData {
     warnCount: 0,
     // ETERNAL ELEMENTS
     elements: { eternal_nature: 0, eternal_underworld: 0, eternal_ocean: 0, eternal_earth: 0 },
+    eternalPity: { hunt: 0, mine: 0, fish: 0 },
   };
 }
 
