@@ -6,7 +6,7 @@ import { emoji } from "./emojis.js";
 import { eventBonus } from "./events.js";
 
 const ETERNAL_EARTH_COST = {
-  cowoncy: 5_000_000_000,
+  cowoncy: 2_500_000_000,
   essence: 100_000,
   lowoCash: 50_000,
 };
@@ -54,7 +54,7 @@ async function cmdCraftEternalEarth(message: Message): Promise<void> {
         `🌿 Eternal Element of Nature — consumed`,
         `💀 Eternal Element of Underworld — consumed`,
         `🌊 Eternal Element of Ocean — consumed`,
-        `💰 5,000,000,000 Cowoncy — deducted`,
+        `💰 2,500,000,000 Cowoncy — deducted`,
         `✨ 100,000 Essence — deducted`,
         `💎 50,000 Lowo Cash — deducted`,
         ``,
