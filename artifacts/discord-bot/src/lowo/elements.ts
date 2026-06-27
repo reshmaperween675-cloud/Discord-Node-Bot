@@ -156,6 +156,10 @@ export async function cmdSummon(message: Message, args: string[]): Promise<void>
     `_This is a private encounter — no one else may interfere._`,
   );
 
+  // Prize is delivered to the summoner immediately upon summoning.
+  // The boss fight that follows is purely spectacle — win or lose, the code was already earned.
+  await handleVictory(message);
+
   await new Promise((r) => setTimeout(r, 1500));
   await runEternalKingFight(message);
 }
@@ -244,14 +248,12 @@ async function runEternalKingFight(message: Message): Promise<void> {
   lines.push(
     playerWon
       ? `\n✅ **THE ETERNAL KING HAS FALLEN.**\n*He shatters into a cascade of golden light and dissolves into the void.*`
-      : `\n💀 **YOUR TEAM WAS DEFEATED.**\n*The Eternal King stands unbroken. The rift closes. Your resources are gone.*`,
+      : `\n💀 **YOUR TEAM FELL — BUT THE PRIZE WAS ALREADY YOURS.**\n*The Eternal King stands, but you earned your reward the moment you summoned him.*`,
   );
 
   const ch = message.channel;
   const content = lines.join("\n").slice(0, 1900);
   if ("send" in ch) await ch.send({ content, allowedMentions: { parse: [] } }).catch(() => {});
-
-  if (playerWon) await handleVictory(message);
 }
 
 // ─── Victory handler — DM code + notify owner ────────────────────────────────
