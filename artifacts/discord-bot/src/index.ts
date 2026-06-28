@@ -480,30 +480,7 @@ client.once(Events.ClientReady, async (readyClient) => {
   console.log(`[READY] Logged in as ${readyClient.user.tag}`);
   console.log(`[READY] Guilds in cache: ${readyClient.guilds.cache.size}`);
 
-  if (readyClient.user.username !== BOT_DISPLAY_NAME) {
-    try {
-      await readyClient.user.setUsername(BOT_DISPLAY_NAME);
-      console.log(`[READY] Bot username set to ${BOT_DISPLAY_NAME}`);
-    } catch (err) {
-      console.error("[ERROR] Failed to update bot username:", err);
-    }
-  }
-
-  // Set the bot's "About Me" / application description (visible in profile popup)
-  try {
-    const app = await readyClient.application.fetch();
-    const desiredDescription =
-      "Last Stand Management Bot — leveling, leaderboards, raids, training, " +
-      "moderation, tournaments, and 80+ fun & meme commands.\n\n" +
-      "Type /help to see everything you can do.\n" +
-      "Staff: /help admin:true for the full admin command list.";
-    if (app.description !== desiredDescription) {
-      await readyClient.application.edit({ description: desiredDescription });
-      console.log("[READY] Bot description updated.");
-    }
-  } catch (err) {
-    console.error("[ERROR] Failed to update bot description:", err);
-  }
+  // Bot username and bio are managed via the Discord Developer Portal — not set in code.
 
   // Pre-warm the REST connection to Discord so the first interaction ack is fast
   try {
