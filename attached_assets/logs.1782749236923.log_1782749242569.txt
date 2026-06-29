@@ -1,0 +1,58 @@
+2026-06-29T16:04:09.132738604Z [inf]  scheduling build on Metal builder "builder-rzviqx"
+2026-06-29T16:04:14.859498116Z [inf]  unpacking archive
+2026-06-29T16:04:15.106540667Z [inf]  [internal] load build definition from Dockerfile
+2026-06-29T16:04:15.106864322Z [inf]  [internal] load build definition from Dockerfile
+2026-06-29T16:04:15.106912244Z [inf]  [internal] load build definition from Dockerfile
+2026-06-29T16:04:15.158407898Z [inf]  [internal] load build definition from Dockerfile
+2026-06-29T16:04:15.172404859Z [inf]  [internal] load metadata for docker.io/library/node:22-bookworm-slim
+2026-06-29T16:04:15.475985709Z [inf]  [internal] load metadata for docker.io/library/node:22-bookworm-slim
+2026-06-29T16:04:15.476325169Z [inf]  [internal] load .dockerignore
+2026-06-29T16:04:15.476704919Z [inf]  [internal] load .dockerignore
+2026-06-29T16:04:15.476713321Z [inf]  [internal] load .dockerignore
+2026-06-29T16:04:15.526022765Z [inf]  [internal] load .dockerignore
+2026-06-29T16:04:15.546832558Z [inf]  [ 7/17] COPY artifacts/api-server/package.json ./artifacts/api-server/
+2026-06-29T16:04:15.546833519Z [inf]  [ 6/17] COPY artifacts/discord-bot/package.json ./artifacts/discord-bot/
+2026-06-29T16:04:15.546837735Z [inf]  [ 5/17] COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+2026-06-29T16:04:15.546838347Z [inf]  [internal] load build context
+2026-06-29T16:04:15.546838988Z [inf]  [ 4/17] RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
+2026-06-29T16:04:15.546839518Z [inf]  [ 3/17] WORKDIR /app
+2026-06-29T16:04:15.546840069Z [inf]  [ 2/17] RUN apt-get update  && apt-get install -y --no-install-recommends fonts-dejavu-core fontconfig  && rm -rf /var/lib/apt/lists/*  && fc-cache -f
+2026-06-29T16:04:15.546840840Z [inf]  [builder 1/6] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-06-29T16:04:15.546841411Z [inf]  [builder 1/6] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-06-29T16:04:15.547176824Z [inf]  [17/17] RUN pnpm --filter @workspace/discord-bot run build
+2026-06-29T16:04:15.547179719Z [inf]  [16/17] COPY artifacts/discord-bot ./artifacts/discord-bot
+2026-06-29T16:04:15.547180650Z [inf]  [15/17] COPY lib/db ./lib/db
+2026-06-29T16:04:15.547181461Z [inf]  [14/17] RUN pnpm install --frozen-lockfile --filter "@workspace/discord-bot..."
+2026-06-29T16:04:15.547182232Z [inf]  [13/17] COPY scripts/package.json ./scripts/
+2026-06-29T16:04:15.547182984Z [inf]  [12/17] COPY lib/db/package.json ./lib/db/
+2026-06-29T16:04:15.547183755Z [inf]  [11/17] COPY lib/api-zod/package.json ./lib/api-zod/
+2026-06-29T16:04:15.547184486Z [inf]  [10/17] COPY lib/api-spec/package.json ./lib/api-spec/
+2026-06-29T16:04:15.547185357Z [inf]  [ 9/17] COPY lib/api-client-react/package.json ./lib/api-client-react/
+2026-06-29T16:04:15.547186218Z [inf]  [ 8/17] COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+2026-06-29T16:04:15.547610786Z [inf]  [internal] load build context
+2026-06-29T16:04:15.547619428Z [inf]  [internal] load build context
+2026-06-29T16:04:15.550097336Z [inf]  [internal] load build context
+2026-06-29T16:04:15.647526428Z [inf]  [internal] load build context
+2026-06-29T16:04:15.681682566Z [inf]  [ 2/17] RUN apt-get update  && apt-get install -y --no-install-recommends fonts-dejavu-core fontconfig  && rm -rf /var/lib/apt/lists/*  && fc-cache -f
+2026-06-29T16:04:15.681685150Z [inf]  [ 3/17] WORKDIR /app
+2026-06-29T16:04:15.681686061Z [inf]  [ 4/17] RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
+2026-06-29T16:04:15.681686892Z [inf]  [ 5/17] COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+2026-06-29T16:04:15.681687714Z [inf]  [ 6/17] COPY artifacts/discord-bot/package.json ./artifacts/discord-bot/
+2026-06-29T16:04:15.681688775Z [inf]  [ 7/17] COPY artifacts/api-server/package.json ./artifacts/api-server/
+2026-06-29T16:04:15.681690247Z [inf]  [ 8/17] COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+2026-06-29T16:04:15.681691088Z [inf]  [ 9/17] COPY lib/api-client-react/package.json ./lib/api-client-react/
+2026-06-29T16:04:15.681696076Z [inf]  [10/17] COPY lib/api-spec/package.json ./lib/api-spec/
+2026-06-29T16:04:15.681696957Z [inf]  [11/17] COPY lib/api-zod/package.json ./lib/api-zod/
+2026-06-29T16:04:15.681717138Z [inf]  [12/17] COPY lib/db/package.json ./lib/db/
+2026-06-29T16:04:15.848274680Z [inf]  [12/17] COPY lib/db/package.json ./lib/db/
+2026-06-29T16:04:15.860432621Z [inf]  [13/17] COPY scripts/package.json ./scripts/
+2026-06-29T16:04:15.941938642Z [inf]  [13/17] COPY scripts/package.json ./scripts/
+2026-06-29T16:04:15.952810204Z [inf]  [14/17] RUN pnpm install --frozen-lockfile --filter "@workspace/discord-bot..."
+2026-06-29T16:04:16.603515438Z [inf]  Scope: 2 of 9 workspace projects
+
+2026-06-29T16:04:16.674674494Z [inf]   ERR_PNPM_LOCKFILE_CONFIG_MISMATCH  Cannot proceed with the frozen installation. The current "overrides" configuration doesn't match the value found in the lockfile
+
+Update your lockfile using "pnpm install --no-frozen-lockfile"
+
+2026-06-29T16:04:16.744883275Z [err]  [14/17] RUN pnpm install --frozen-lockfile --filter "@workspace/discord-bot..."
+2026-06-29T16:04:16.773922115Z [err]  Build Failed: build daemon returned an error < failed to solve: process "/bin/sh -c pnpm install --frozen-lockfile --filter \"@workspace/discord-bot...\"" did not complete successfully: exit code: 1 >
