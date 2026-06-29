@@ -32,6 +32,4 @@ COPY artifacts/discord-bot ./artifacts/discord-bot
 
 EXPOSE 3000
 
-WORKDIR /app/artifacts/discord-bot
-
-CMD ["pnpm", "run", "start"]
+CMD ["pnpm", "--filter", "@workspace/discord-bot", "run", "start"]
