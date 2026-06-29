@@ -82,7 +82,7 @@ export const stopcensorData = new SlashCommandBuilder()
 
 export async function executeStopCensor(interaction: ChatInputCommandInteraction): Promise<void> {
   const guildId = interaction.guildId!;
-  setCensorConfig(guildId, { enabled: false });
+  await setCensorConfig(guildId, { enabled: false });
 
   const embed = new EmbedBuilder()
     .setColor(0xe74c3c)
