@@ -9,6 +9,7 @@ WORKDIR /app
 
 ENV PNPM_HOME=/usr/local/pnpm
 ENV PATH=$PNPM_HOME:$PATH
+ENV NODE_ENV=production
 
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
@@ -23,18 +24,12 @@ COPY lib/api-zod/package.json ./lib/api-zod/
 COPY lib/db/package.json ./lib/db/
 COPY scripts/package.json ./scripts/
 
+# lib/db/dist is pre-built JavaScript — committed to git and included here.
+# The pnpm workspace symlink resolves @workspace/db → lib/db, and the exports
+# field points to dist/*.js (not src/*.ts), so tsx loads plain JS at runtime.
 COPY lib/db ./lib/db
 
-# Install including devDeps so esbuild is available to compile lib/db.
-# NODE_ENV is intentionally not set to production here.
 RUN pnpm install --no-frozen-lockfile --filter "@workspace/discord-bot..."
-
-# Compile lib/db TypeScript → JavaScript. After this step the pnpm workspace
-# symlink for @workspace/db resolves to .js files, not .ts files, so tsx and
-# Node can load them without any module-resolver workarounds.
-RUN pnpm --filter "@workspace/db" run build
-
-ENV NODE_ENV=production
 
 COPY artifacts/discord-bot ./artifacts/discord-bot
 

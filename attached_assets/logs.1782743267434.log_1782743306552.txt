@@ -1,0 +1,287 @@
+2026-06-29T14:27:10.048310562Z [inf]  Starting Container
+2026-06-29T14:27:10.970647261Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:10.970652411Z [err]  }
+2026-06-29T14:27:10.970655811Z [err]  
+2026-06-29T14:27:10.970659321Z [err]  Node.js v22.23.1
+2026-06-29T14:27:10.970664711Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:10.970669631Z [inf]  
+2026-06-29T14:27:10.970672871Z [inf]  Exit status 1
+2026-06-29T14:27:10.970677251Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:10.970683541Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:10.970689171Z [inf]  
+2026-06-29T14:27:10.970694341Z [err]  
+2026-06-29T14:27:10.970699391Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:10.970704351Z [err]      triggerUncaughtException(
+2026-06-29T14:27:10.970708931Z [err]      ^
+2026-06-29T14:27:10.970713361Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:10.970717780Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:10.970722490Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:10.970727260Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:10.970734180Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:10.970738350Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743230052:2:3744)
+2026-06-29T14:27:10.970743250Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743230052:2:4243)
+2026-06-29T14:27:10.970748640Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743230052:2:4984)
+2026-06-29T14:27:10.970752960Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743230052:2:5361)
+2026-06-29T14:27:10.970757450Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:10.970762070Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:10.970767840Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:11.641441646Z [inf]  
+2026-06-29T14:27:11.641444876Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:11.641447526Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:11.641451026Z [inf]  
+2026-06-29T14:27:12.051519325Z [err]  
+2026-06-29T14:27:12.051522075Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:12.051524605Z [err]      triggerUncaughtException(
+2026-06-29T14:27:12.051527105Z [err]      ^
+2026-06-29T14:27:12.051530985Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:12.051533425Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:12.051535875Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:12.051538235Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:12.051541645Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:12.051544435Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743231761:2:3744)
+2026-06-29T14:27:12.051546955Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743231761:2:4243)
+2026-06-29T14:27:12.051549855Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743231761:2:4984)
+2026-06-29T14:27:12.051552315Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743231761:2:5361)
+2026-06-29T14:27:12.051554975Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:12.051557325Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:12.051559655Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:12.051562005Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:12.051564195Z [err]  }
+2026-06-29T14:27:12.051566655Z [err]  
+2026-06-29T14:27:12.053027293Z [err]  Node.js v22.23.1
+2026-06-29T14:27:12.053036923Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:12.053043233Z [inf]  Exit status 1
+2026-06-29T14:27:13.360422884Z [inf]  
+2026-06-29T14:27:13.360431654Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:13.360436844Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:13.360442674Z [inf]  
+2026-06-29T14:27:13.646198365Z [err]  
+2026-06-29T14:27:13.646213495Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:13.646220605Z [err]      triggerUncaughtException(
+2026-06-29T14:27:13.646227095Z [err]      ^
+2026-06-29T14:27:13.646233575Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:13.646239714Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:13.646246604Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:13.646252124Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:13.646258604Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:13.646265274Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743233475:2:3744)
+2026-06-29T14:27:13.646272814Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743233475:2:4243)
+2026-06-29T14:27:13.646280684Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743233475:2:4984)
+2026-06-29T14:27:13.646282554Z [err]  Node.js v22.23.1
+2026-06-29T14:27:13.646289854Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743233475:2:5361)
+2026-06-29T14:27:13.646295254Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:13.646304444Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:13.646310184Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:13.646315294Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:13.646320764Z [err]  }
+2026-06-29T14:27:13.646326314Z [err]  
+2026-06-29T14:27:13.663914464Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:13.663919294Z [inf]  Exit status 1
+2026-06-29T14:27:14.785265053Z [inf]  
+2026-06-29T14:27:14.785270023Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:14.785274963Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:14.785279303Z [inf]  
+2026-06-29T14:27:15.071664879Z [err]  
+2026-06-29T14:27:15.071672159Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:15.071676288Z [err]      triggerUncaughtException(
+2026-06-29T14:27:15.071680058Z [err]      ^
+2026-06-29T14:27:15.071684278Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:15.071687638Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:15.071691208Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:15.071694488Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:15.071697628Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:15.071700458Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743234847:2:3744)
+2026-06-29T14:27:15.071704368Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743234847:2:4243)
+2026-06-29T14:27:15.071708118Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743234847:2:4984)
+2026-06-29T14:27:15.071711828Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743234847:2:5361)
+2026-06-29T14:27:15.071715208Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:15.071719068Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:15.071722988Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:15.071726708Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:15.071730238Z [err]  }
+2026-06-29T14:27:15.071734238Z [err]  
+2026-06-29T14:27:15.071830427Z [err]  Node.js v22.23.1
+2026-06-29T14:27:15.094438314Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:15.094442954Z [inf]  Exit status 1
+2026-06-29T14:27:16.068143754Z [inf]  
+2026-06-29T14:27:16.068146414Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:16.068149744Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:16.068152584Z [inf]  
+2026-06-29T14:27:16.286093584Z [err]  
+2026-06-29T14:27:16.286098754Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:16.286101654Z [err]      triggerUncaughtException(
+2026-06-29T14:27:16.286104404Z [err]      ^
+2026-06-29T14:27:16.286108454Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:16.286111724Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:16.286114344Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:16.286117114Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:16.286120934Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:16.286123864Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743236119:2:3744)
+2026-06-29T14:27:16.286126574Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743236119:2:4243)
+2026-06-29T14:27:16.286129664Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743236119:2:4984)
+2026-06-29T14:27:16.286132644Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743236119:2:5361)
+2026-06-29T14:27:16.286135903Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:16.286138833Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:16.286141783Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:16.286144363Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:16.286147063Z [err]  }
+2026-06-29T14:27:16.286149683Z [err]  
+2026-06-29T14:27:16.286266072Z [err]  Node.js v22.23.1
+2026-06-29T14:27:16.298775826Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:16.298781026Z [inf]  Exit status 1
+2026-06-29T14:27:17.224178058Z [inf]  
+2026-06-29T14:27:17.224182468Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:17.224185738Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:17.224188918Z [inf]  
+2026-06-29T14:27:17.512371367Z [err]  
+2026-06-29T14:27:17.512374497Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:17.512377877Z [err]      triggerUncaughtException(
+2026-06-29T14:27:17.512383057Z [err]      ^
+2026-06-29T14:27:17.512386167Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:17.512389037Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:17.512391787Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:17.512394847Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:17.512397697Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:17.512400517Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743237318:2:3744)
+2026-06-29T14:27:17.512403147Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743237318:2:4243)
+2026-06-29T14:27:17.512406687Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743237318:2:4984)
+2026-06-29T14:27:17.512410787Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743237318:2:5361)
+2026-06-29T14:27:17.512415457Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:17.512419657Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:17.512423237Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:17.512426837Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:17.512431197Z [err]  }
+2026-06-29T14:27:17.512435247Z [err]  
+2026-06-29T14:27:17.512735295Z [err]  Node.js v22.23.1
+2026-06-29T14:27:17.512739125Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:17.512742265Z [inf]  Exit status 1
+2026-06-29T14:27:18.479619792Z [inf]  
+2026-06-29T14:27:18.479624972Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:18.479628642Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:18.479632652Z [inf]  
+2026-06-29T14:27:18.790879026Z [err]  
+2026-06-29T14:27:18.790884166Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:18.790887576Z [err]      triggerUncaughtException(
+2026-06-29T14:27:18.790890926Z [err]      ^
+2026-06-29T14:27:18.790894396Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:18.790896866Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:18.790899356Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:18.790901976Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:18.790904426Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:18.790907006Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743238583:2:3744)
+2026-06-29T14:27:18.790909526Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743238583:2:4243)
+2026-06-29T14:27:18.790912306Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743238583:2:4984)
+2026-06-29T14:27:18.790914746Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743238583:2:5361)
+2026-06-29T14:27:18.790918276Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:18.790920746Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:18.790923116Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:18.790925786Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:18.790928546Z [err]  }
+2026-06-29T14:27:18.790931566Z [err]  
+2026-06-29T14:27:18.791886257Z [err]  Node.js v22.23.1
+2026-06-29T14:27:18.811996666Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:18.812002986Z [inf]  Exit status 1
+2026-06-29T14:27:19.784889982Z [inf]  
+2026-06-29T14:27:19.784895882Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:19.784899942Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:19.784902792Z [inf]  
+2026-06-29T14:27:20.222609136Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:20.222621056Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:20.222679156Z [err]  
+2026-06-29T14:27:20.222683916Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:20.222688906Z [err]      triggerUncaughtException(
+2026-06-29T14:27:20.222693245Z [err]      ^
+2026-06-29T14:27:20.222698465Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:20.222702695Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:20.222707385Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:20.222711845Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:20.222716195Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:20.222720665Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743239914:2:3744)
+2026-06-29T14:27:20.222725825Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743239914:2:4243)
+2026-06-29T14:27:20.222729965Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743239914:2:4984)
+2026-06-29T14:27:20.222733955Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743239914:2:5361)
+2026-06-29T14:27:20.222830324Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:20.222835274Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:20.222841554Z [err]  }
+2026-06-29T14:27:20.222846364Z [err]  
+2026-06-29T14:27:20.224080474Z [err]  Node.js v22.23.1
+2026-06-29T14:27:20.224087274Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:20.224091004Z [inf]  Exit status 1
+2026-06-29T14:27:21.066328886Z [inf]  
+2026-06-29T14:27:21.066333246Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:21.066336906Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:21.066339786Z [inf]  
+2026-06-29T14:27:21.340231938Z [err]  
+2026-06-29T14:27:21.340238898Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:21.340243048Z [err]      triggerUncaughtException(
+2026-06-29T14:27:21.340248558Z [err]      ^
+2026-06-29T14:27:21.340252427Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:21.340256457Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:21.340260347Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:21.340263527Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:21.340266927Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:21.340292117Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743241170:2:3744)
+2026-06-29T14:27:21.340296007Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743241170:2:4243)
+2026-06-29T14:27:21.340299937Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743241170:2:4984)
+2026-06-29T14:27:21.340303217Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743241170:2:5361)
+2026-06-29T14:27:21.340307877Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:21.340311177Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:21.340314847Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:21.340319147Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:21.340323247Z [err]  }
+2026-06-29T14:27:21.340326907Z [err]  
+2026-06-29T14:27:21.341788045Z [err]  Node.js v22.23.1
+2026-06-29T14:27:21.353752772Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:21.353759452Z [inf]  Exit status 1
+2026-06-29T14:27:22.539279464Z [inf]  
+2026-06-29T14:27:22.539284724Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:22.539287584Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:22.539290284Z [inf]  
+2026-06-29T14:27:22.881862361Z [err]  
+2026-06-29T14:27:22.881866371Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:22.881872361Z [err]      triggerUncaughtException(
+2026-06-29T14:27:22.881876571Z [err]      ^
+2026-06-29T14:27:22.881880281Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:22.881883880Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:22.881887850Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:22.881891720Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:22.881895320Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:22.881899170Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743242583:2:3744)
+2026-06-29T14:27:22.881902950Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743242583:2:4243)
+2026-06-29T14:27:22.881907590Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743242583:2:4984)
+2026-06-29T14:27:22.881920110Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743242583:2:5361)
+2026-06-29T14:27:22.881924260Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:22.881928130Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:22.881932540Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:22.881936440Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:22.881940480Z [err]  }
+2026-06-29T14:27:22.881944580Z [err]  
+2026-06-29T14:27:22.882097659Z [err]  Node.js v22.23.1
+2026-06-29T14:27:22.882106398Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:22.882111178Z [inf]  Exit status 1
+2026-06-29T14:27:23.850922739Z [inf]  
+2026-06-29T14:27:23.850927619Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-06-29T14:27:23.850930869Z [inf]  > tsx src/index.ts
+2026-06-29T14:27:23.850933859Z [inf]  
+2026-06-29T14:27:24.285898527Z [err]      at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+2026-06-29T14:27:24.285905756Z [err]      at moduleResolve (node:internal/modules/esm/resolve:861:10)
+2026-06-29T14:27:24.285910556Z [err]      at defaultResolve (node:internal/modules/esm/resolve:985:11)
+2026-06-29T14:27:24.285914356Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:24.285915826Z [err]  
+2026-06-29T14:27:24.285917686Z [err]      at resolveBase (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743243944:2:3744)
+2026-06-29T14:27:24.285919696Z [err]  node:internal/modules/run_main:123
+2026-06-29T14:27:24.285922316Z [err]      at resolveDirectory (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743243944:2:4243)
+2026-06-29T14:27:24.285924866Z [err]      triggerUncaughtException(
+2026-06-29T14:27:24.285926896Z [err]      at resolveTsPaths (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743243944:2:4984)
+2026-06-29T14:27:24.285929566Z [err]      ^
+2026-06-29T14:27:24.285933806Z [err]  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts' imported from /app/artifacts/discord-bot/src/migrate-json.ts
+2026-06-29T14:27:24.285941296Z [err]      at resolve (file:///app/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1782743243944:2:5361)
+2026-06-29T14:27:24.285944166Z [err]      at nextResolve (node:internal/modules/esm/hooks:748:28)
+2026-06-29T14:27:24.285947406Z [err]      at Hooks.resolve (node:internal/modules/esm/hooks:240:30) {
+2026-06-29T14:27:24.285950126Z [err]    code: 'ERR_MODULE_NOT_FOUND',
+2026-06-29T14:27:24.285953126Z [err]    url: 'file:///app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts'
+2026-06-29T14:27:24.285956106Z [err]  }
+2026-06-29T14:27:24.285959356Z [err]  
+2026-06-29T14:27:24.286737650Z [err]  Node.js v22.23.1
+2026-06-29T14:27:24.286740550Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `tsx src/index.ts`
+2026-06-29T14:27:24.286744590Z [inf]  Exit status 1
