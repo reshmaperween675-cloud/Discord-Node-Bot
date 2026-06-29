@@ -1,5 +1,5 @@
 import type { Message } from "discord.js";
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import { handleHelp } from "./help.js";
 import { checkCooldown } from "./cooldowns.js";
 import { isChannelEnabled, getEnabledChannels, enableChannel, disableChannel } from "./store.js";
@@ -47,6 +47,11 @@ import {
 type Handler = (msg: Message, args: string[]) => Promise<void>;
 
 const PREFIX = "mewo";
+
+const CD_AI_TEXT_S = 8;
+const CD_AI_MEDIA_S = 15;
+const CD_WALLET_GAMBLE_S = 5;
+const CD_WALLET_DAILY_S = 3;
 
 function cooldownReply(msg: Message, seconds: number): Promise<void> {
   return msg.reply({
@@ -222,7 +227,7 @@ export async function handleMewoCommand(message: Message): Promise<boolean> {
 
   if (cmd === "enable") {
     if (!message.guildId) { await message.reply({ embeds: [new EmbedBuilder().setColor(0xED4245).setDescription("❌ Server-only.")] }); return true; }
-    if (!message.member?.permissions.has(8n)) { await message.reply({ embeds: [new EmbedBuilder().setColor(0xED4245).setDescription("❌ You need Administrator permission.")] }); return true; }
+    if (!message.member?.permissions.has(PermissionFlagsBits.Administrator)) { await message.reply({ embeds: [new EmbedBuilder().setColor(0xED4245).setDescription("❌ You need Administrator permission.")] }); return true; }
     enableChannel(message.channelId);
     await message.reply({
       embeds: [new EmbedBuilder()
@@ -237,7 +242,7 @@ export async function handleMewoCommand(message: Message): Promise<boolean> {
 
   if (cmd === "disable") {
     if (!message.guildId) { await message.reply({ embeds: [new EmbedBuilder().setColor(0xED4245).setDescription("❌ Server-only.")] }); return true; }
-    if (!message.member?.permissions.has(8n)) { await message.reply({ embeds: [new EmbedBuilder().setColor(0xED4245).setDescription("❌ You need Administrator permission.")] }); return true; }
+    if (!message.member?.permissions.has(PermissionFlagsBits.Administrator)) { await message.reply({ embeds: [new EmbedBuilder().setColor(0xED4245).setDescription("❌ You need Administrator permission.")] }); return true; }
     disableChannel(message.channelId);
     const remaining = getEnabledChannels();
     await message.reply({
@@ -318,11 +323,11 @@ export async function handleMewoCommand(message: Message): Promise<boolean> {
           break;
         }
         if (sub === "chatgpt" || sub === "llama" || sub === "deepseek") {
-          const cd = checkCooldown(message.author.id, `ai_${sub}`, 8);
+          const cd = checkCooldown(message.author.id, `ai_${sub}`, CD_AI_TEXT_S);
           if (cd !== false) { await cooldownReply(message, cd); break; }
         }
         if (sub === "imagine" || sub === "screenshot" || sub === "download") {
-          const cd = checkCooldown(message.author.id, `ai_${sub}`, 15);
+          const cd = checkCooldown(message.author.id, `ai_${sub}`, CD_AI_MEDIA_S);
           if (cd !== false) { await cooldownReply(message, cd); break; }
         }
         const h = sub ? AI_CMDS[sub] : null;
@@ -476,11 +481,11 @@ export async function handleMewoCommand(message: Message): Promise<boolean> {
       case "wallet": {
         const sub = args[0]?.toLowerCase();
         if (sub === "gamble" || sub === "bet") {
-          const cd = checkCooldown(message.author.id, "wallet_gamble", 5);
+          const cd = checkCooldown(message.author.id, "wallet_gamble", CD_WALLET_GAMBLE_S);
           if (cd !== false) { await cooldownReply(message, cd); break; }
         }
         if (sub === "daily") {
-          const cd = checkCooldown(message.author.id, "wallet_daily", 3);
+          const cd = checkCooldown(message.author.id, "wallet_daily", CD_WALLET_DAILY_S);
           if (cd !== false) { await cooldownReply(message, cd); break; }
         }
         if (!sub) { await cmdWallet(message, []); break; }
@@ -495,31 +500,31 @@ export async function handleMewoCommand(message: Message): Promise<boolean> {
       // ── AI direct shortcuts (no need for `mewo ai` prefix) ───────────────
       case "imagine":
       case "generate": {
-        const cd = checkCooldown(message.author.id, "ai_imagine", 15);
+        const cd = checkCooldown(message.author.id, "ai_imagine", CD_AI_MEDIA_S);
         if (cd !== false) { await cooldownReply(message, cd); break; }
         await cmdGrokImagine(message, args);
         break;
       }
       case "chatgpt": {
-        const cd = checkCooldown(message.author.id, "ai_chatgpt", 8);
+        const cd = checkCooldown(message.author.id, "ai_chatgpt", CD_AI_TEXT_S);
         if (cd !== false) { await cooldownReply(message, cd); break; }
         await cmdChatgpt(message, args);
         break;
       }
       case "deepseek": {
-        const cd = checkCooldown(message.author.id, "ai_deepseek", 8);
+        const cd = checkCooldown(message.author.id, "ai_deepseek", CD_AI_TEXT_S);
         if (cd !== false) { await cooldownReply(message, cd); break; }
         await cmdDeepseek(message, args);
         break;
       }
       case "llama": {
-        const cd = checkCooldown(message.author.id, "ai_llama", 8);
+        const cd = checkCooldown(message.author.id, "ai_llama", CD_AI_TEXT_S);
         if (cd !== false) { await cooldownReply(message, cd); break; }
         await cmdLlama(message, args);
         break;
       }
       case "perplexity": {
-        const cd = checkCooldown(message.author.id, "ai_perplexity", 8);
+        const cd = checkCooldown(message.author.id, "ai_perplexity", CD_AI_TEXT_S);
         if (cd !== false) { await cooldownReply(message, cd); break; }
         await cmdPerplexity(message, args);
         break;
@@ -528,13 +533,13 @@ export async function handleMewoCommand(message: Message): Promise<boolean> {
         await cmdOcr(message, args);
         break;
       case "screenshot": {
-        const cd = checkCooldown(message.author.id, "ai_screenshot", 15);
+        const cd = checkCooldown(message.author.id, "ai_screenshot", CD_AI_MEDIA_S);
         if (cd !== false) { await cooldownReply(message, cd); break; }
         await cmdScreenshot(message, args);
         break;
       }
       case "download": {
-        const cd = checkCooldown(message.author.id, "ai_download", 15);
+        const cd = checkCooldown(message.author.id, "ai_download", CD_AI_MEDIA_S);
         if (cd !== false) { await cooldownReply(message, cd); break; }
         await cmdDownload(message, args);
         break;

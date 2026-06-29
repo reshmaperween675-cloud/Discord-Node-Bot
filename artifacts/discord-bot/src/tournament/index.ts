@@ -114,7 +114,7 @@ export const tournamentData = new SlashCommandBuilder()
   );
 
 export const closeTournamentData = new SlashCommandBuilder()
-  .setName("closetournamey")
+  .setName("closetournament")
   .setDescription("Close a tournament announcement. (Admin only)")
   .setDefaultMemberPermissions(ADMIN)
   .addStringOption((option) =>
