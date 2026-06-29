@@ -28,6 +28,16 @@ COPY lib/db ./lib/db
 
 RUN pnpm install --no-frozen-lockfile --filter "@workspace/discord-bot..."
 
+# pnpm creates a relative symlink for the workspace package that can resolve
+# incorrectly in Docker. Replace with an absolute symlink in every place Node
+# will look so resolution is unambiguous.
+RUN mkdir -p /app/artifacts/discord-bot/node_modules/@workspace \
+ && rm -rf /app/artifacts/discord-bot/node_modules/@workspace/db \
+ && ln -sf /app/lib/db /app/artifacts/discord-bot/node_modules/@workspace/db \
+ && mkdir -p /app/node_modules/@workspace \
+ && rm -rf /app/node_modules/@workspace/db \
+ && ln -sf /app/lib/db /app/node_modules/@workspace/db
+
 COPY artifacts/discord-bot ./artifacts/discord-bot
 
 EXPOSE 3000
