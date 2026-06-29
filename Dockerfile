@@ -9,7 +9,6 @@ WORKDIR /app
 
 ENV PNPM_HOME=/usr/local/pnpm
 ENV PATH=$PNPM_HOME:$PATH
-ENV NODE_ENV=production
 
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
@@ -25,24 +24,21 @@ COPY lib/db/package.json ./lib/db/
 COPY scripts/package.json ./scripts/
 
 COPY lib/db ./lib/db
+COPY artifacts/discord-bot ./artifacts/discord-bot
 
+# Install all workspace deps (including @workspace/db) so pnpm deploy can bundle them.
+# NODE_ENV is intentionally unset here so devDependencies are available during install.
 RUN pnpm install --no-frozen-lockfile --filter "@workspace/discord-bot..."
 
-# pnpm creates a symlink: artifacts/discord-bot/node_modules/@workspace/db -> lib/db
-# tsx (TypeScript runner) resolves the exports map correctly, but then does a
-# TypeScript source lookup using the *symlink* path instead of the real path,
-# constructing a path like:
-#   /app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts
-# That file doesn't exist at the symlink location (the real file is under lib/db/),
-# so tsx crashes with ERR_MODULE_NOT_FOUND.
-#
-# Fix: replace the symlink with a real copy so every sub-path resolves correctly.
-RUN cp -rL artifacts/discord-bot/node_modules/@workspace/db /tmp/db-pkg && \
-    rm -rf artifacts/discord-bot/node_modules/@workspace/db && \
-    mv /tmp/db-pkg artifacts/discord-bot/node_modules/@workspace/db
+# `pnpm deploy` produces a self-contained directory where every workspace
+# dependency (@workspace/db etc.) is COPIED as a real folder — no symlinks.
+# This permanently eliminates the tsx symlink/TypeScript-source-lookup bug that
+# caused ERR_MODULE_NOT_FOUND on @workspace/db/src/schema/index.ts.
+RUN pnpm deploy --filter @workspace/discord-bot /deploy
 
-COPY artifacts/discord-bot ./artifacts/discord-bot
+ENV NODE_ENV=production
+WORKDIR /deploy
 
 EXPOSE 3000
 
-CMD ["pnpm", "--filter", "@workspace/discord-bot", "run", "start"]
+CMD ["node_modules/.bin/tsx", "src/index.ts"]

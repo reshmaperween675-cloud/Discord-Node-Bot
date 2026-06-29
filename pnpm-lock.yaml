@@ -239,6 +239,9 @@ importers:
       sharp:
         specifier: ^0.35.2
         version: 0.35.2
+      tsx:
+        specifier: 'catalog:'
+        version: 4.21.0
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -246,9 +249,6 @@ importers:
       '@types/sharp':
         specifier: ^0.32.0
         version: 0.32.0
-      tsx:
-        specifier: 'catalog:'
-        version: 4.21.0
       typescript:
         specifier: ~5.9.2
         version: 5.9.3
