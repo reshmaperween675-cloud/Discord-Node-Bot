@@ -24,12 +24,22 @@ COPY lib/api-zod/package.json ./lib/api-zod/
 COPY lib/db/package.json ./lib/db/
 COPY scripts/package.json ./scripts/
 
-# lib/db/dist is pre-built JavaScript — committed to git and included here.
-# The pnpm workspace symlink resolves @workspace/db → lib/db, and the exports
-# field points to dist/*.js (not src/*.ts), so tsx loads plain JS at runtime.
 COPY lib/db ./lib/db
 
 RUN pnpm install --no-frozen-lockfile --filter "@workspace/discord-bot..."
+
+# pnpm creates a symlink: artifacts/discord-bot/node_modules/@workspace/db -> lib/db
+# tsx (TypeScript runner) resolves the exports map correctly, but then does a
+# TypeScript source lookup using the *symlink* path instead of the real path,
+# constructing a path like:
+#   /app/artifacts/discord-bot/node_modules/@workspace/db/src/schema/index.ts
+# That file doesn't exist at the symlink location (the real file is under lib/db/),
+# so tsx crashes with ERR_MODULE_NOT_FOUND.
+#
+# Fix: replace the symlink with a real copy so every sub-path resolves correctly.
+RUN cp -rL artifacts/discord-bot/node_modules/@workspace/db /tmp/db-pkg && \
+    rm -rf artifacts/discord-bot/node_modules/@workspace/db && \
+    mv /tmp/db-pkg artifacts/discord-bot/node_modules/@workspace/db
 
 COPY artifacts/discord-bot ./artifacts/discord-bot
 
