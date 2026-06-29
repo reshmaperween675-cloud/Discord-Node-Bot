@@ -1,1 +1,2 @@
 - [Drizzle async-store migration](drizzle-migration.md) — all JSON/bot_kv stores replaced with async Drizzle ORM; callers must await every store function.
+- [lib/db must export compiled JS](lib-db-build.md) — workspace package must build to dist/ with esbuild; exporting .ts source breaks pnpm symlink resolution in Docker.

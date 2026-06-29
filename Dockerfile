@@ -9,7 +9,6 @@ WORKDIR /app
 
 ENV PNPM_HOME=/usr/local/pnpm
 ENV PATH=$PNPM_HOME:$PATH
-ENV NODE_ENV=production
 
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
@@ -26,16 +25,16 @@ COPY scripts/package.json ./scripts/
 
 COPY lib/db ./lib/db
 
+# Install including devDeps so esbuild is available to compile lib/db.
+# NODE_ENV is intentionally not set to production here.
 RUN pnpm install --no-frozen-lockfile --filter "@workspace/discord-bot..."
 
-# Remove pnpm's workspace symlink for @workspace/db and replace with a real
-# copy of the source so tsx can find .ts files without following symlinks.
-RUN rm -rf /app/artifacts/discord-bot/node_modules/@workspace/db \
- && mkdir -p /app/artifacts/discord-bot/node_modules/@workspace \
- && cp -r /app/lib/db /app/artifacts/discord-bot/node_modules/@workspace/db \
- && rm -rf /app/node_modules/@workspace/db \
- && mkdir -p /app/node_modules/@workspace \
- && cp -r /app/lib/db /app/node_modules/@workspace/db
+# Compile lib/db TypeScript → JavaScript. After this step the pnpm workspace
+# symlink for @workspace/db resolves to .js files, not .ts files, so tsx and
+# Node can load them without any module-resolver workarounds.
+RUN pnpm --filter "@workspace/db" run build
+
+ENV NODE_ENV=production
 
 COPY artifacts/discord-bot ./artifacts/discord-bot
 
