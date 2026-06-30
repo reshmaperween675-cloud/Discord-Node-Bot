@@ -7,6 +7,7 @@
     "hello": "tsx ./src/hello.ts",
     "restore-leveling": "tsx ./src/restore-leveling.ts",
     "export-leveling-sql": "tsx ./src/export-leveling-sql.ts",
+    "migrate-guild": "tsx ./src/migrate-guild.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
