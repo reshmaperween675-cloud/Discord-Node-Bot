@@ -17,6 +17,7 @@ import {
   getGuildLevelRoles,
   resetWeeklyXp,
   setLastWeeklyReset,
+  GuildConfig,
 } from "./db.js";
 
 // ─── Command Definition ───────────────────────────────────────────────────────
@@ -70,11 +71,8 @@ function navRow(current?: string): ActionRowBuilder<StringSelectMenuBuilder> {
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 
-function buildMainEmbed(guildId: string): EmbedBuilder {
-  const config = getGuildConfig(guildId);
-  const levelRoles = getGuildLevelRoles(guildId);
+function buildMainEmbed(config: GuildConfig, levelRoles: Record<string, string>): EmbedBuilder {
   const roleCount = Object.keys(levelRoles).length;
-
   return new EmbedBuilder()
     .setColor(config.enabled ? 0x5865f2 : 0xed4245)
     .setTitle("◈  MASTER CONTROL PANEL")
@@ -119,8 +117,7 @@ function buildMainEmbed(guildId: string): EmbedBuilder {
 
 // ─── XP Settings Section ──────────────────────────────────────────────────────
 
-function buildXpEmbed(guildId: string): EmbedBuilder {
-  const config = getGuildConfig(guildId);
+function buildXpEmbed(config: GuildConfig): EmbedBuilder {
   const blChans = config.blacklistedChannels.length > 0
     ? config.blacklistedChannels.map((id) => `<#${id}>`).join(", ")
     : "None";
@@ -142,8 +139,7 @@ function buildXpEmbed(guildId: string): EmbedBuilder {
     .setFooter({ text: "Use /setxprange, /setxpcooldown, /blacklistchannel to fine-tune" });
 }
 
-function buildXpButtons(guildId: string): ActionRowBuilder<ButtonBuilder> {
-  const config = getGuildConfig(guildId);
+function buildXpButtons(config: GuildConfig): ActionRowBuilder<ButtonBuilder> {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId("dash_btn_toggle_xp")
@@ -187,9 +183,7 @@ function buildXpRangeButtons(): ActionRowBuilder<ButtonBuilder> {
 
 // ─── Role Settings Section ────────────────────────────────────────────────────
 
-function buildRolesEmbed(guildId: string): EmbedBuilder {
-  const config = getGuildConfig(guildId);
-  const levelRoles = getGuildLevelRoles(guildId);
+function buildRolesEmbed(config: GuildConfig, levelRoles: Record<string, string>): EmbedBuilder {
   const lines = Object.entries(levelRoles)
     .sort((a, b) => Number(a[0]) - Number(b[0]))
     .map(([lvl, name]) => `**Lv.${lvl}** → ${name}`)
@@ -217,8 +211,7 @@ function buildRolesEmbed(guildId: string): EmbedBuilder {
     });
 }
 
-function buildRolesButtons(guildId: string): ActionRowBuilder<ButtonBuilder> {
-  const config = getGuildConfig(guildId);
+function buildRolesButtons(config: GuildConfig): ActionRowBuilder<ButtonBuilder> {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId("dash_btn_toggle_keeproles")
@@ -229,8 +222,7 @@ function buildRolesButtons(guildId: string): ActionRowBuilder<ButtonBuilder> {
 
 // ─── Multipliers Section ──────────────────────────────────────────────────────
 
-function buildMultiEmbed(guildId: string): EmbedBuilder {
-  const config = getGuildConfig(guildId);
+function buildMultiEmbed(config: GuildConfig): EmbedBuilder {
   const roleMultLines = Object.entries(config.roleMultipliers)
     .map(([id, m]) => `<@&${id}> → **${m}x**`)
     .join("\n") || "None configured";
@@ -275,8 +267,7 @@ function buildMultiButtons(): ActionRowBuilder<ButtonBuilder> {
 
 // ─── Weekly System Section ────────────────────────────────────────────────────
 
-function buildWeeklyEmbed(guildId: string): EmbedBuilder {
-  const config = getGuildConfig(guildId);
+function buildWeeklyEmbed(config: GuildConfig): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(0xeb459e)
     .setTitle("📅  WEEKLY SYSTEM")
@@ -309,8 +300,7 @@ function buildWeeklyButtons(): ActionRowBuilder<ButtonBuilder> {
 
 // ─── Level-Up Message Section ─────────────────────────────────────────────────
 
-function buildLevelUpEmbed(guildId: string): EmbedBuilder {
-  const config = getGuildConfig(guildId);
+function buildLevelUpEmbed(config: GuildConfig): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(0x00b0f4)
     .setTitle("🔔  LEVEL-UP MESSAGES")
@@ -337,8 +327,7 @@ function buildLevelUpEmbed(guildId: string): EmbedBuilder {
     .setFooter({ text: "Use /setxpchannel to set a specific channel" });
 }
 
-function buildLevelUpButtons(guildId: string): ActionRowBuilder<ButtonBuilder> {
-  const config = getGuildConfig(guildId);
+function buildLevelUpButtons(config: GuildConfig): ActionRowBuilder<ButtonBuilder> {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId("dash_btn_toggle_announcements")
@@ -353,8 +342,7 @@ function buildLevelUpButtons(guildId: string): ActionRowBuilder<ButtonBuilder> {
 
 // ─── Anti-Spam Section ────────────────────────────────────────────────────────
 
-function buildAntiSpamEmbed(guildId: string): EmbedBuilder {
-  const config = getGuildConfig(guildId);
+function buildAntiSpamEmbed(config: GuildConfig): EmbedBuilder {
   const enabled = config.antiSpamEnabled !== false;
   return new EmbedBuilder()
     .setColor(0xed4245)
@@ -383,8 +371,7 @@ function buildAntiSpamEmbed(guildId: string): EmbedBuilder {
     });
 }
 
-function buildAntiSpamButtons(guildId: string): ActionRowBuilder<ButtonBuilder> {
-  const config = getGuildConfig(guildId);
+function buildAntiSpamButtons(config: GuildConfig): ActionRowBuilder<ButtonBuilder> {
   const enabled = config.antiSpamEnabled !== false;
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
@@ -394,53 +381,57 @@ function buildAntiSpamButtons(guildId: string): ActionRowBuilder<ButtonBuilder> 
   );
 }
 
-// ─── Section renderer ─────────────────────────────────────────────────────────
+// ─── Section renderer (async — fetches config/roles then renders) ─────────────
 
 type SectionId = "dash_xp" | "dash_roles" | "dash_multi" | "dash_weekly" | "dash_levelup" | "dash_antispam";
 
-function renderSection(
+async function renderSection(
   guildId: string,
   section: SectionId,
-): {
+): Promise<{
   embeds: EmbedBuilder[];
   components: ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>[];
-} {
+}> {
   const nav = navRow(section);
+  const [config, levelRoles] = await Promise.all([
+    getGuildConfig(guildId),
+    getGuildLevelRoles(guildId),
+  ]);
 
   switch (section) {
     case "dash_xp":
       return {
-        embeds: [buildXpEmbed(guildId)],
-        components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildXpButtons(guildId), buildXpRangeButtons()],
+        embeds: [buildXpEmbed(config)],
+        components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildXpButtons(config), buildXpRangeButtons()],
       };
     case "dash_roles":
       return {
-        embeds: [buildRolesEmbed(guildId)],
-        components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildRolesButtons(guildId)],
+        embeds: [buildRolesEmbed(config, levelRoles)],
+        components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildRolesButtons(config)],
       };
     case "dash_multi":
       return {
-        embeds: [buildMultiEmbed(guildId)],
+        embeds: [buildMultiEmbed(config)],
         components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildMultiButtons()],
       };
     case "dash_weekly":
       return {
-        embeds: [buildWeeklyEmbed(guildId)],
+        embeds: [buildWeeklyEmbed(config)],
         components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildWeeklyButtons()],
       };
     case "dash_levelup":
       return {
-        embeds: [buildLevelUpEmbed(guildId)],
-        components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildLevelUpButtons(guildId)],
+        embeds: [buildLevelUpEmbed(config)],
+        components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildLevelUpButtons(config)],
       };
     case "dash_antispam":
       return {
-        embeds: [buildAntiSpamEmbed(guildId)],
-        components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildAntiSpamButtons(guildId)],
+        embeds: [buildAntiSpamEmbed(config)],
+        components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>, buildAntiSpamButtons(config)],
       };
     default:
       return {
-        embeds: [buildMainEmbed(guildId)],
+        embeds: [buildMainEmbed(config, levelRoles)],
         components: [nav as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>],
       };
   }
@@ -450,8 +441,12 @@ function renderSection(
 
 export async function executeDashboard(i: ChatInputCommandInteraction): Promise<void> {
   const guildId = i.guildId!;
+  const [config, levelRoles] = await Promise.all([
+    getGuildConfig(guildId),
+    getGuildLevelRoles(guildId),
+  ]);
   await i.editReply({
-    embeds: [buildMainEmbed(guildId)],
+    embeds: [buildMainEmbed(config, levelRoles)],
     components: [navRow() as ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>],
   });
 }
@@ -462,7 +457,7 @@ export async function handleDashboardSelect(i: StringSelectMenuInteraction): Pro
   if (i.customId !== "dash_nav") return;
   const guildId = i.guildId!;
   const section = i.values[0] as SectionId;
-  const { embeds, components } = renderSection(guildId, section);
+  const { embeds, components } = await renderSection(guildId, section);
   await i.editReply({ embeds, components });
 }
 
@@ -474,92 +469,84 @@ export async function handleDashboardButton(i: ButtonInteraction): Promise<void>
 
   let refreshSection: SectionId | null = null;
 
-  // XP toggles
   if (id === "dash_btn_toggle_xp") {
-    const config = getGuildConfig(guildId);
-    patchGuildConfig(guildId, { enabled: !config.enabled });
+    const config = await getGuildConfig(guildId);
+    await patchGuildConfig(guildId, { enabled: !config.enabled });
     refreshSection = "dash_xp";
   }
 
-  // Cooldown presets
   else if (id === "dash_btn_xp_cooldown_30") {
-    patchGuildConfig(guildId, { cooldown: 30 });
+    await patchGuildConfig(guildId, { cooldown: 30 });
     refreshSection = "dash_xp";
   } else if (id === "dash_btn_xp_cooldown_60") {
-    patchGuildConfig(guildId, { cooldown: 60 });
+    await patchGuildConfig(guildId, { cooldown: 60 });
     refreshSection = "dash_xp";
   } else if (id === "dash_btn_xp_cooldown_120") {
-    patchGuildConfig(guildId, { cooldown: 120 });
+    await patchGuildConfig(guildId, { cooldown: 120 });
     refreshSection = "dash_xp";
   }
 
-  // XP range presets
   else if (id === "dash_btn_xprange_1015") {
-    patchGuildConfig(guildId, { xpMin: 10, xpMax: 15 });
+    await patchGuildConfig(guildId, { xpMin: 10, xpMax: 15 });
     refreshSection = "dash_xp";
   } else if (id === "dash_btn_xprange_1525") {
-    patchGuildConfig(guildId, { xpMin: 15, xpMax: 25 });
+    await patchGuildConfig(guildId, { xpMin: 15, xpMax: 25 });
     refreshSection = "dash_xp";
   } else if (id === "dash_btn_xprange_2040") {
-    patchGuildConfig(guildId, { xpMin: 20, xpMax: 40 });
+    await patchGuildConfig(guildId, { xpMin: 20, xpMax: 40 });
     refreshSection = "dash_xp";
   } else if (id === "dash_btn_xprange_3060") {
-    patchGuildConfig(guildId, { xpMin: 30, xpMax: 60 });
+    await patchGuildConfig(guildId, { xpMin: 30, xpMax: 60 });
     refreshSection = "dash_xp";
   }
 
-  // Role settings
   else if (id === "dash_btn_toggle_keeproles") {
-    const config = getGuildConfig(guildId);
-    patchGuildConfig(guildId, { keepOldRoles: !config.keepOldRoles });
+    const config = await getGuildConfig(guildId);
+    await patchGuildConfig(guildId, { keepOldRoles: !config.keepOldRoles });
     refreshSection = "dash_roles";
   }
 
-  // Multiplier presets
   else if (id === "dash_btn_multi_server_1") {
-    patchGuildConfig(guildId, { serverMultiplier: 1.0 });
+    await patchGuildConfig(guildId, { serverMultiplier: 1.0 });
     refreshSection = "dash_multi";
   } else if (id === "dash_btn_multi_server_15") {
-    patchGuildConfig(guildId, { serverMultiplier: 1.5 });
+    await patchGuildConfig(guildId, { serverMultiplier: 1.5 });
     refreshSection = "dash_multi";
   } else if (id === "dash_btn_multi_server_2") {
-    patchGuildConfig(guildId, { serverMultiplier: 2.0 });
+    await patchGuildConfig(guildId, { serverMultiplier: 2.0 });
     refreshSection = "dash_multi";
   } else if (id === "dash_btn_multi_server_3") {
-    patchGuildConfig(guildId, { serverMultiplier: 3.0 });
+    await patchGuildConfig(guildId, { serverMultiplier: 3.0 });
     refreshSection = "dash_multi";
   } else if (id === "dash_btn_multi_event_reset") {
-    patchGuildConfig(guildId, { eventMultiplier: 1.0 });
+    await patchGuildConfig(guildId, { eventMultiplier: 1.0 });
     refreshSection = "dash_multi";
   }
 
-  // Weekly reset
   else if (id === "dash_btn_weekly_reset") {
-    resetWeeklyXp(guildId);
-    setLastWeeklyReset(Date.now());
+    await resetWeeklyXp(guildId);
+    await setLastWeeklyReset(Date.now());
     refreshSection = "dash_weekly";
   }
 
-  // Level-up message settings
   else if (id === "dash_btn_toggle_announcements") {
-    const config = getGuildConfig(guildId);
-    patchGuildConfig(guildId, { announcements: !config.announcements });
+    const config = await getGuildConfig(guildId);
+    await patchGuildConfig(guildId, { announcements: !config.announcements });
     refreshSection = "dash_levelup";
   } else if (id === "dash_btn_toggle_ping") {
-    const config = getGuildConfig(guildId);
-    patchGuildConfig(guildId, { pingOnLevelUp: !config.pingOnLevelUp });
+    const config = await getGuildConfig(guildId);
+    await patchGuildConfig(guildId, { pingOnLevelUp: !config.pingOnLevelUp });
     refreshSection = "dash_levelup";
   }
 
-  // Anti-spam
   else if (id === "dash_btn_toggle_antispam") {
-    const config = getGuildConfig(guildId);
-    patchGuildConfig(guildId, { antiSpamEnabled: config.antiSpamEnabled === false ? true : false });
+    const config = await getGuildConfig(guildId);
+    await patchGuildConfig(guildId, { antiSpamEnabled: config.antiSpamEnabled === false ? true : false });
     refreshSection = "dash_antispam";
   }
 
   if (refreshSection) {
-    const { embeds, components } = renderSection(guildId, refreshSection);
+    const { embeds, components } = await renderSection(guildId, refreshSection);
     await i.editReply({ embeds, components });
   }
 }

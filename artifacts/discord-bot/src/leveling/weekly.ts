@@ -14,15 +14,15 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 export async function runWeeklyReset(client: Client): Promise<void> {
   const now = Date.now();
-  const last = getLastWeeklyReset();
+  const last = await getLastWeeklyReset();
   if (now - last < SEVEN_DAYS_MS) return;
 
   console.log("[WEEKLY] Running weekly XP reset...");
-  setLastWeeklyReset(now);
+  await setLastWeeklyReset(now);
 
   for (const [guildId, guild] of client.guilds.cache) {
     try {
-      const all = getAllUsers(guildId)
+      const all = (await getAllUsers(guildId))
         .filter((u) => u.weeklyXp > 0)
         .sort((a, b) => b.weeklyXp - a.weeklyXp);
 
@@ -32,10 +32,9 @@ export async function runWeeklyReset(client: Client): Promise<void> {
       }));
 
       const weekLabel = new Date(last).toISOString().split("T")[0];
-      recordWeeklyHistory({ week: weekLabel, guildId, winners });
+      await recordWeeklyHistory({ week: weekLabel, guildId, winners });
 
-      // Announce winners
-      const config = getGuildConfig(guildId);
+      const config = await getGuildConfig(guildId);
       if (config.announcements && winners.length > 0) {
         const medals = ["🥇", "🥈", "🥉"];
         const lines = await Promise.all(
@@ -58,7 +57,6 @@ export async function runWeeklyReset(client: Client): Promise<void> {
           .setFooter({ text: `Week of ${weekLabel}  ·  Last Stand Management` })
           .setTimestamp();
 
-        // Find announcement channel
         let channel: TextChannel | null = null;
         if (config.levelUpChannelId) {
           try {
@@ -84,8 +82,7 @@ export async function runWeeklyReset(client: Client): Promise<void> {
         }
       }
 
-      // Reset weekly XP after announcement
-      resetWeeklyXp(guildId);
+      await resetWeeklyXp(guildId);
       console.log(`[WEEKLY] Reset weekly XP for guild ${guildId}`);
     } catch (err) {
       console.error(`[WEEKLY] Error processing guild ${guildId}:`, err);
@@ -104,7 +101,6 @@ export function startWeeklyResetScheduler(client: Client): void {
     );
   };
 
-  // Run once on startup (in case bot was offline during reset window)
   tick();
   setInterval(tick, ONE_HOUR);
   console.log("[WEEKLY] Weekly reset scheduler started.");

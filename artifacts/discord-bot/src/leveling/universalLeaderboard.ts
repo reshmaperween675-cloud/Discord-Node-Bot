@@ -33,7 +33,6 @@ const CATEGORY_META: Record<
 const CATEGORY_ORDER: Category[] = ["overall", "voice", "reactions", "weekly", "monthly"];
 
 const TOP_N = 10;
-const HEADER_LINE = "**LAST STAND  `|`  AS  `|`  IND**";
 
 // ─── Slash command data ───────────────────────────────────────────────────────
 
@@ -50,8 +49,8 @@ interface RankedUser {
   level: number;
 }
 
-function rankUsers(guildId: string, category: Category): RankedUser[] {
-  const all = getAllUsers(guildId);
+async function rankUsers(guildId: string, category: Category): Promise<RankedUser[]> {
+  const all = await getAllUsers(guildId);
 
   const mapped: RankedUser[] = all.map((u) => {
     const level = computeLevel(u.totalXp).level;
@@ -59,7 +58,6 @@ function rankUsers(guildId: string, category: Category): RankedUser[] {
     switch (category) {
       case "overall":   primary = u.totalXp; break;
       case "weekly":    primary = u.weeklyXp; break;
-      // No dedicated trackers yet — fall back to total XP.
       case "monthly":   primary = u.totalXp; break;
       case "voice":     primary = u.totalXp; break;
       case "reactions": primary = u.totalXp; break;
@@ -137,10 +135,8 @@ async function renderPayload(
   components: ActionRowBuilder<StringSelectMenuBuilder>[];
 }> {
   const guildId = interaction.guildId!;
-  const ranked = rankUsers(guildId, category);
+  const ranked = await rankUsers(guildId, category);
   const meta = CATEGORY_META[category];
-
-  const files: AttachmentBuilder[] = [];
 
   if (ranked.length === 0) {
     return {
@@ -153,12 +149,11 @@ async function renderPayload(
 
   const entries = await buildEntries(interaction, ranked, category);
   const buf = await generateBlockLeaderboardCard(meta.title, entries);
-  files.push(new AttachmentBuilder(buf, { name: "leaderboard.png" }));
 
   return {
     content: "**LAST STAND  |  AS  |  IND**",
     embeds: [],
-    files,
+    files: [new AttachmentBuilder(buf, { name: "leaderboard.png" })],
     components: [buildSelectRow(category)],
   };
 }

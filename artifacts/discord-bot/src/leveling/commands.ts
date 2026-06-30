@@ -32,11 +32,10 @@ export async function executeRank(i: ChatInputCommandInteraction): Promise<void>
   const target = i.options.getUser("user") ?? i.user;
   const guildId = i.guildId!;
 
-  const userData = getUser(guildId, target.id);
+  const userData = await getUser(guildId, target.id);
   const { level, currentXp, neededXp } = computeLevel(userData.totalXp);
 
-  // Server rank position (by total XP)
-  const all = getAllUsers(guildId).sort((a, b) => b.totalXp - a.totalXp);
+  const all = (await getAllUsers(guildId)).sort((a, b) => b.totalXp - a.totalXp);
   const rank = all.findIndex((u) => u.userId === target.id) + 1;
   const bar = progressBar(currentXp, neededXp, 18);
 
@@ -77,7 +76,7 @@ export async function executeLeaderboard(i: ChatInputCommandInteraction): Promis
   const page = (i.options.getInteger("page") ?? 1) - 1;
   const PER_PAGE = 10;
 
-  const all = getAllUsers(guildId)
+  const all = (await getAllUsers(guildId))
     .filter((u) => u.totalXp > 0)
     .sort((a, b) => b.totalXp - a.totalXp);
 
@@ -133,7 +132,7 @@ export const weeklyLbData = new SlashCommandBuilder()
 export async function executeWeeklyLb(i: ChatInputCommandInteraction): Promise<void> {
   const guildId = i.guildId!;
 
-  const all = getAllUsers(guildId)
+  const all = (await getAllUsers(guildId))
     .filter((u) => u.weeklyXp > 0)
     .sort((a, b) => b.weeklyXp - a.weeklyXp)
     .slice(0, 10);
@@ -155,7 +154,6 @@ export async function executeWeeklyLb(i: ChatInputCommandInteraction): Promise<v
         }
       } catch { /* ignore */ }
 
-      // Compute level gained this week
       const currentLevel = computeLevel(u.totalXp).level;
       const prevLevel = computeLevel(Math.max(0, u.totalXp - u.weeklyXp)).level;
       const levelGain = Math.max(0, currentLevel - prevLevel);
@@ -194,17 +192,17 @@ export async function executeAddXp(i: ChatInputCommandInteraction): Promise<void
   const amount = i.options.getInteger("amount", true);
   const guildId = i.guildId!;
 
-  const before = getUser(guildId, target.id);
+  const before = await getUser(guildId, target.id);
   const oldLevel = computeLevel(before.totalXp).level;
 
-  const updated = modifyUserXp(guildId, target.id, amount, "add");
+  const updated = await modifyUserXp(guildId, target.id, amount, "add");
   updated.weeklyXp = (updated.weeklyXp || 0) + amount;
   const { level } = computeLevel(updated.totalXp);
 
   if (level > oldLevel) {
     try {
       const member = await i.guild!.members.fetch(target.id);
-      const config = getGuildConfig(guildId);
+      const config = await getGuildConfig(guildId);
       await handleLevelUp(member, oldLevel, level, config, i.client, guildId, {
         tag: i.user.tag,
         command: "addxp",
@@ -244,7 +242,7 @@ export async function executeRemoveXp(i: ChatInputCommandInteraction): Promise<v
   const amount = i.options.getInteger("amount", true);
   const guildId = i.guildId!;
 
-  const updated = modifyUserXp(guildId, target.id, amount, "remove");
+  const updated = await modifyUserXp(guildId, target.id, amount, "remove");
   const { level } = computeLevel(updated.totalXp);
 
   const embed = new EmbedBuilder()
@@ -277,16 +275,16 @@ export async function executeSetXp(i: ChatInputCommandInteraction): Promise<void
   const amount = i.options.getInteger("amount", true);
   const guildId = i.guildId!;
 
-  const before = getUser(guildId, target.id);
+  const before = await getUser(guildId, target.id);
   const oldLevel = computeLevel(before.totalXp).level;
 
-  const updated = modifyUserXp(guildId, target.id, amount, "set");
+  const updated = await modifyUserXp(guildId, target.id, amount, "set");
   const { level } = computeLevel(updated.totalXp);
 
   if (level > oldLevel) {
     try {
       const member = await i.guild!.members.fetch(target.id);
-      const config = getGuildConfig(guildId);
+      const config = await getGuildConfig(guildId);
       await handleLevelUp(member, oldLevel, level, config, i.client, guildId, {
         tag: i.user.tag,
         command: "setxp",
@@ -359,7 +357,7 @@ export const resetXpData = new SlashCommandBuilder()
 
 export async function executeResetXp(i: ChatInputCommandInteraction): Promise<void> {
   const target = i.options.getUser("user", true);
-  resetUser(i.guildId!, target.id);
+  await resetUser(i.guildId!, target.id);
 
   const embed = new EmbedBuilder()
     .setColor(0xfaa61a)
@@ -388,12 +386,11 @@ export async function executeSetLevelRole(i: ChatInputCommandInteraction): Promi
   const roleName = i.options.getString("role_name", true);
   const guildId = i.guildId!;
 
-  // Validate role exists
   const role = i.guild!.roles.cache.find(
     (r) => r.name.toLowerCase() === roleName.toLowerCase()
   );
 
-  setLevelRole(guildId, level, roleName);
+  await setLevelRole(guildId, level, roleName);
 
   const embed = new EmbedBuilder()
     .setColor(0x57f287)
@@ -420,7 +417,7 @@ export const removeLevelRoleData = new SlashCommandBuilder()
 
 export async function executeRemoveLevelRole(i: ChatInputCommandInteraction): Promise<void> {
   const level = i.options.getInteger("level", true);
-  const removed = removeLevelRole(i.guildId!, level);
+  const removed = await removeLevelRole(i.guildId!, level);
 
   await i.editReply({
     content: removed
@@ -441,7 +438,7 @@ export const setXpCooldownData = new SlashCommandBuilder()
 
 export async function executeSetXpCooldown(i: ChatInputCommandInteraction): Promise<void> {
   const seconds = i.options.getInteger("seconds", true);
-  patchGuildConfig(i.guildId!, { cooldown: seconds });
+  await patchGuildConfig(i.guildId!, { cooldown: seconds });
   await i.editReply({ content: `✅ XP cooldown set to **${seconds} seconds**.` });
 }
 
@@ -465,7 +462,7 @@ export async function executeSetXpRange(i: ChatInputCommandInteraction): Promise
     await i.editReply({ content: "❌ Minimum XP cannot be greater than maximum." });
     return;
   }
-  patchGuildConfig(i.guildId!, { xpMin: min, xpMax: max });
+  await patchGuildConfig(i.guildId!, { xpMin: min, xpMax: max });
   await i.editReply({ content: `✅ XP range set to **${min} – ${max}** per message.` });
 }
 
@@ -490,7 +487,7 @@ export async function executeSetXpChannel(i: ChatInputCommandInteraction): Promi
   if (channel !== undefined) patch.levelUpChannelId = channel?.id ?? null;
   if (pingUser !== null && pingUser !== undefined) patch.pingOnLevelUp = pingUser;
 
-  patchGuildConfig(i.guildId!, patch);
+  await patchGuildConfig(i.guildId!, patch);
 
   const lines: string[] = [];
   if (channel !== undefined) {
@@ -538,13 +535,13 @@ export async function executeSetMultiplier(i: ChatInputCommandInteraction): Prom
   const value = i.options.getNumber("value", true);
   const role = i.options.getRole("role");
   const guildId = i.guildId!;
-  const config = getGuildConfig(guildId);
+  const config = await getGuildConfig(guildId);
 
   if (type === "server") {
-    patchGuildConfig(guildId, { serverMultiplier: value });
+    await patchGuildConfig(guildId, { serverMultiplier: value });
     await i.editReply({ content: `✅ Server-wide XP multiplier set to **${value}x**.` });
   } else if (type === "event") {
-    patchGuildConfig(guildId, { eventMultiplier: value });
+    await patchGuildConfig(guildId, { eventMultiplier: value });
     await i.editReply({ content: `✅ Event XP multiplier set to **${value}x**. Remember to reset it when the event ends!` });
   } else if (type === "role") {
     if (!role) {
@@ -552,7 +549,7 @@ export async function executeSetMultiplier(i: ChatInputCommandInteraction): Prom
       return;
     }
     const updated = { ...config.roleMultipliers, [role.id]: value };
-    patchGuildConfig(guildId, { roleMultipliers: updated });
+    await patchGuildConfig(guildId, { roleMultipliers: updated });
     await i.editReply({ content: `✅ Members with **${role.name}** will receive **${value}x** XP.` });
   }
 }
@@ -574,16 +571,16 @@ export async function executeBlacklistChannel(i: ChatInputCommandInteraction): P
   const channel = i.options.getChannel("channel", true);
   const remove = i.options.getBoolean("remove") ?? false;
   const guildId = i.guildId!;
-  const config = getGuildConfig(guildId);
+  const config = await getGuildConfig(guildId);
 
   let list = [...config.blacklistedChannels];
   if (remove) {
     list = list.filter((id) => id !== channel.id);
-    patchGuildConfig(guildId, { blacklistedChannels: list });
+    await patchGuildConfig(guildId, { blacklistedChannels: list });
     await i.editReply({ content: `✅ <#${channel.id}> removed from XP blacklist.` });
   } else {
     if (!list.includes(channel.id)) list.push(channel.id);
-    patchGuildConfig(guildId, { blacklistedChannels: list });
+    await patchGuildConfig(guildId, { blacklistedChannels: list });
     await i.editReply({ content: `✅ <#${channel.id}> added to XP blacklist — no XP will be earned there.` });
   }
 }
@@ -605,12 +602,12 @@ export async function executeWhitelistChannel(i: ChatInputCommandInteraction): P
   const channel = i.options.getChannel("channel", true);
   const remove = i.options.getBoolean("remove") ?? false;
   const guildId = i.guildId!;
-  const config = getGuildConfig(guildId);
+  const config = await getGuildConfig(guildId);
 
   let list = [...config.whitelistedChannels];
   if (remove) {
     list = list.filter((id) => id !== channel.id);
-    patchGuildConfig(guildId, { whitelistedChannels: list });
+    await patchGuildConfig(guildId, { whitelistedChannels: list });
     await i.editReply({
       content: list.length === 0
         ? `✅ <#${channel.id}> removed. Whitelist is now empty — XP allowed in all channels.`
@@ -618,7 +615,7 @@ export async function executeWhitelistChannel(i: ChatInputCommandInteraction): P
     });
   } else {
     if (!list.includes(channel.id)) list.push(channel.id);
-    patchGuildConfig(guildId, { whitelistedChannels: list });
+    await patchGuildConfig(guildId, { whitelistedChannels: list });
     await i.editReply({ content: `✅ <#${channel.id}> added to whitelist. XP will ONLY be earned in whitelisted channels.` });
   }
 }
@@ -632,8 +629,10 @@ export const xpConfigData = new SlashCommandBuilder()
 
 export async function executeXpConfig(i: ChatInputCommandInteraction): Promise<void> {
   const guildId = i.guildId!;
-  const config = getGuildConfig(guildId);
-  const levelRoles = getGuildLevelRoles(guildId);
+  const [config, levelRoles] = await Promise.all([
+    getGuildConfig(guildId),
+    getGuildLevelRoles(guildId),
+  ]);
 
   const roleLines = Object.entries(levelRoles)
     .sort((a, b) => Number(a[0]) - Number(b[0]))
@@ -678,7 +677,7 @@ export const levelRolesData = new SlashCommandBuilder()
 
 export async function executeLevelRoles(i: ChatInputCommandInteraction): Promise<void> {
   const guildId = i.guildId!;
-  const levelRoles = getGuildLevelRoles(guildId);
+  const levelRoles = await getGuildLevelRoles(guildId);
 
   const lines = Object.entries(levelRoles)
     .sort((a, b) => Number(a[0]) - Number(b[0]))
@@ -709,12 +708,12 @@ export const startLsXpSystemData = new SlashCommandBuilder()
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 export async function executeStartLsXpSystem(i: ChatInputCommandInteraction): Promise<void> {
-  const config = getGuildConfig(i.guildId!);
+  const config = await getGuildConfig(i.guildId!);
   if (config.enabled) {
     await i.editReply({ content: "⚠️ The XP system is already running." });
     return;
   }
-  patchGuildConfig(i.guildId!, { enabled: true });
+  await patchGuildConfig(i.guildId!, { enabled: true });
 
   const embed = new EmbedBuilder()
     .setColor(0x57f287)
@@ -742,12 +741,12 @@ export const stopLsXpSystemData = new SlashCommandBuilder()
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 export async function executeStopLsXpSystem(i: ChatInputCommandInteraction): Promise<void> {
-  const config = getGuildConfig(i.guildId!);
+  const config = await getGuildConfig(i.guildId!);
   if (!config.enabled) {
     await i.editReply({ content: "⚠️ The XP system is already stopped." });
     return;
   }
-  patchGuildConfig(i.guildId!, { enabled: false });
+  await patchGuildConfig(i.guildId!, { enabled: false });
 
   const embed = new EmbedBuilder()
     .setColor(0xed4245)

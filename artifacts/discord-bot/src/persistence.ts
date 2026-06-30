@@ -294,6 +294,49 @@ async function ensureSchema(): Promise<void> {
       guild_id  TEXT  PRIMARY KEY,
       overrides JSONB NOT NULL DEFAULT '{}'
     );
+
+    CREATE TABLE IF NOT EXISTS leveling_users (
+      guild_id             TEXT   NOT NULL,
+      user_id              TEXT   NOT NULL,
+      xp                   INT    NOT NULL DEFAULT 0,
+      level                INT    NOT NULL DEFAULT 0,
+      total_xp             INT    NOT NULL DEFAULT 0,
+      weekly_xp            INT    NOT NULL DEFAULT 0,
+      last_message_at      BIGINT NOT NULL DEFAULT 0,
+      last_message_content TEXT   NOT NULL DEFAULT '',
+      PRIMARY KEY (guild_id, user_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS leveling_configs (
+      guild_id              TEXT    PRIMARY KEY,
+      enabled               BOOLEAN NOT NULL DEFAULT true,
+      xp_min                INT     NOT NULL DEFAULT 15,
+      xp_max                INT     NOT NULL DEFAULT 25,
+      cooldown              INT     NOT NULL DEFAULT 60,
+      level_up_channel_id   TEXT,
+      announcements         BOOLEAN NOT NULL DEFAULT true,
+      ping_on_level_up      BOOLEAN NOT NULL DEFAULT true,
+      keep_old_roles        BOOLEAN NOT NULL DEFAULT true,
+      blacklisted_channels  TEXT[]  NOT NULL DEFAULT '{}',
+      whitelisted_channels  TEXT[]  NOT NULL DEFAULT '{}',
+      server_multiplier     FLOAT   NOT NULL DEFAULT 1.0,
+      role_multipliers      JSONB   NOT NULL DEFAULT '{}',
+      event_multiplier      FLOAT   NOT NULL DEFAULT 1.0,
+      anti_spam_enabled     BOOLEAN NOT NULL DEFAULT true
+    );
+
+    CREATE TABLE IF NOT EXISTS leveling_level_roles (
+      guild_id  TEXT NOT NULL,
+      level     INT  NOT NULL,
+      role_name TEXT NOT NULL,
+      PRIMARY KEY (guild_id, level)
+    );
+
+    CREATE TABLE IF NOT EXISTS leveling_meta (
+      key         TEXT   PRIMARY KEY,
+      int_val     BIGINT,
+      json_val    JSONB
+    );
   `);
 
   await db.query(`ALTER TABLE auth_backups DROP CONSTRAINT IF EXISTS auth_backups_pkey;`).catch(() => {});
