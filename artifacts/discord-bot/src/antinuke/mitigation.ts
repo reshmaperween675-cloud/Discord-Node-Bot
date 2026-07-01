@@ -20,9 +20,9 @@ export async function quarantine(
   isBotExecutor: boolean,
   action: ActionType,
   details: string,
-): Promise<void> {
+): Promise<boolean> {
   const key = `${guild.id}:${executorId}`;
-  if (quarantineActive.has(key)) return;
+  if (quarantineActive.has(key)) return false;
   quarantineActive.add(key);
 
   clearActions(guild.id, executorId);
@@ -138,4 +138,5 @@ export async function quarantine(
 
   // Allow re-entry after 60 seconds
   setTimeout(() => quarantineActive.delete(key), 60_000);
+  return true;
 }

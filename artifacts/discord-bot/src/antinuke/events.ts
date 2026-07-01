@@ -84,7 +84,8 @@ async function handleAction(
 
   if (!triggered) return false;
 
-  await quarantine(client, guild, executorId, isBotExecutor, action, details);
+  const didQuarantine = await quarantine(client, guild, executorId, isBotExecutor, action, details);
+  if (!didQuarantine) return true; // already handled — skip duplicate alert + restore
 
   const alertEmbed = new EmbedBuilder()
     .setColor(0xFF0000)
