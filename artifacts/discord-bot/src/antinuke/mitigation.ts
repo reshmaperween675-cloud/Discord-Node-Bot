@@ -102,20 +102,19 @@ export async function quarantine(
   // ── 3. Build embed ────────────────────────────────────────────────────────
   const embed = new EmbedBuilder()
     .setColor(0xFF0000)
-    .setAuthor({ name: "⚡ ANTI-NUKE SYSTEM — THREAT NEUTRALIZED" })
-    .setTitle("🚨 Rogue Executor Quarantined")
+    .setTitle(`🚨 Someone just got caught in ${guild.name}`)
     .setDescription(
-      "An executor exceeded the action threshold and has been **immediately quarantined**.",
+      isBotExecutor
+        ? `A bot (<@${executorId}>) started doing damage and got banned straight away.`
+        : `<@${executorId}> crossed the line and we've dealt with them.`,
     )
     .addFields(
-      { name: "👤 Threat Actor",   value: `<@${executorId}> (\`${executorId}\`)`, inline: true },
-      { name: "🤖 Is Bot",         value: isBotExecutor ? "**Yes** (always banned)" : "No", inline: true },
-      { name: "⚡ Trigger",        value: `\`${action}\``,                        inline: true },
-      { name: "📋 Details",        value: details,                                  inline: false },
-      { name: "⚖️ Punishment",     value: `\`${effectivePunish}\``,               inline: true },
-      { name: "🔒 Actions Taken",  value: actionsTaken.join("\n") || "*(none)*",    inline: false },
+      { name: "Who",       value: `<@${executorId}> (\`${executorId}\`)`,          inline: true },
+      { name: "Bot?",      value: isBotExecutor ? "Yes (instant ban)" : "No",       inline: true },
+      { name: "What",      value: details,                                            inline: false },
+      { name: "What we did", value: actionsTaken.join("\n") || "*(nothing — check permissions)*", inline: false },
     )
-    .setFooter({ text: `Last Stand Anti-Nuke • ${guild.name}` })
+    .setFooter({ text: guild.name })
     .setTimestamp();
 
   // ── 4. Send to log channel ────────────────────────────────────────────────
@@ -136,7 +135,7 @@ export async function quarantine(
   try {
     const owner = await guild.fetchOwner();
     await owner.send({
-      content: `🚨 **Anti-Nuke alert on \`${guild.name}\`!** Action: \`${action}\` | Punishment: \`${effectivePunish}\``,
+      content: `heads up — someone just got caught trying something in **${guild.name}**`,
       embeds: [embed],
     });
   } catch (e) {

@@ -155,17 +155,16 @@ async function runRestore(message: Message, client: Client, offenderId: string):
         const user    = await client.users.fetch(ban.userId);
         const dmEmbed = new EmbedBuilder()
           .setColor(COLOR_WIN)
-          .setTitle(`We sincerely apologise — ${guild.name}`)
+          .setTitle(`Sorry about that — ${guild.name}`)
           .setThumbnail(guild.iconURL({ size: 256 }))
           .setDescription(
-            `Hey **${ban.username}**,\n\n` +
-            `A **rogue actor** gained access and attempted to nuke our server — ` +
-            `banning innocent members including you in the process.\n\n` +
-            `You have been **fully unbanned**. We'd love to have you back:\n\n` +
-            `**[➡️ Click here to rejoin ${guild.name}](${inviteUrl})**\n` +
-            `*(Single-use link, made just for you)*`,
+            `Hey ${ban.username},\n\n` +
+            `someone got into our server and went on a banning spree — you got caught in it, which wasn't your fault at all.\n\n` +
+            `You've been unbanned. Come back whenever you're ready:\n\n` +
+            `**[Rejoin ${guild.name}](${inviteUrl})**\n` +
+            `*(this link is just for you)*`,
           )
-          .setFooter({ text: `${guild.name} • Anti-Nuke Protection System` })
+          .setFooter({ text: guild.name })
           .setTimestamp();
         await user.send({ embeds: [dmEmbed] });
         dmOk++;
