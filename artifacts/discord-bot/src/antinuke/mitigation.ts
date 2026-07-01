@@ -102,17 +102,18 @@ export async function quarantine(
   // ── 3. Build embed ────────────────────────────────────────────────────────
   const embed = new EmbedBuilder()
     .setColor(0xFF0000)
-    .setTitle(`🚨 Someone just got caught in ${guild.name}`)
+    .setTitle("🚨 We caught a nigga tryna nuke")
     .setDescription(
       isBotExecutor
-        ? `A bot (<@${executorId}>) started doing damage and got banned straight away.`
-        : `<@${executorId}> crossed the line and we've dealt with them.`,
+        ? `A bot was caught doing damage — got banned on sight.`
+        : `<@${executorId}> tried it. Already handled.`,
     )
     .addFields(
-      { name: "Who",       value: `<@${executorId}> (\`${executorId}\`)`,          inline: true },
-      { name: "Bot?",      value: isBotExecutor ? "Yes (instant ban)" : "No",       inline: true },
-      { name: "What",      value: details,                                            inline: false },
-      { name: "What we did", value: actionsTaken.join("\n") || "*(nothing — check permissions)*", inline: false },
+      { name: "👤 Who",          value: `<@${executorId}> (\`${executorId}\`)`,                                      inline: true  },
+      { name: "🤖 Bot?",         value: isBotExecutor ? "Yes (perma banned)" : "No",                                 inline: true  },
+      { name: "⚡ What they did", value: details,                                                                      inline: false },
+      { name: "🔨 Punishment",   value: `\`${effectivePunish}\``,                                                     inline: true  },
+      { name: "✅ Actions taken", value: actionsTaken.join("\n") || "*(nothing — bot may be missing permissions)*",   inline: false },
     )
     .setFooter({ text: guild.name })
     .setTimestamp();
