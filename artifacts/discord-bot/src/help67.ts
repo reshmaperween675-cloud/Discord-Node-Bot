@@ -1,14 +1,12 @@
-import { EmbedBuilder, Message, PermissionFlagsBits } from "discord.js";
+import { EmbedBuilder, Message } from "discord.js";
+import { requireLowoOwnerMessage } from "./utility/lowoOwner.js";
 
 const COLOR_PRIMARY = 0x2f3136;
 const COLOR_ACCENT = 0x00ffff;
 
 export async function handleHelp67(message: Message): Promise<void> {
   if (!message.guild || !message.member) return;
-  if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
-    await message.reply({ content: "You don't have permission to use this." });
-    return;
-  }
+  if (!requireLowoOwnerMessage(message)) return;
 
   const embed = new EmbedBuilder()
     .setColor(COLOR_ACCENT)

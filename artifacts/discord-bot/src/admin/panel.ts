@@ -1,5 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { Message, PermissionFlagsBits, GuildMember, TextChannel } from "discord.js";
+import { Message, TextChannel } from "discord.js";
+import { requireLowoOwnerMessage } from "../utility/lowoOwner.js";
 import { getPool } from "../persistence.js";
 import { timingSafeEqual, randomBytes } from "crypto";
 
@@ -449,7 +450,7 @@ export async function handleAdminPanel(
 
 export async function handleAbcdAdmin(message: Message): Promise<void> {
   if (!message.guild || !message.member) return;
-  if (!(message.member as GuildMember).permissions.has(PermissionFlagsBits.ManageGuild)) return;
+  if (!requireLowoOwnerMessage(message)) return;
 
   const host     = process.env.PUBLIC_HOST ?? process.env.RAILWAY_PUBLIC_DOMAIN ?? "last-stand.up.railway.app";
   const panelUrl = `https://${host}/admin/panel?token=${ADMIN_TOKEN}`;

@@ -1,3 +1,4 @@
+import { requireLowoOwnerMessage } from "../utility/lowoOwner.js";
 import {
   EmbedBuilder,
   Message,
@@ -143,10 +144,7 @@ export async function handleAddAuthPlayers(message: Message): Promise<void> {
 
 export async function handleEmergencyLockdown(message: Message): Promise<void> {
   if (!message.guild || !message.member) return;
-  if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) {
-    await message.reply({ content: "❌ Administrator permission required for emergency lockdown." });
-    return;
-  }
+  if (!requireLowoOwnerMessage(message)) return;
   await (message.channel as TextChannel).sendTyping();
 
   const everyoneRole = message.guild.roles.everyone;
@@ -196,7 +194,8 @@ export async function handleEmergencyLockdown(message: Message): Promise<void> {
 }
 
 export async function handleBackupStats(message: Message): Promise<void> {
-  if (!message.guild || !message.member || !isAdmin(message.member)) return;
+  if (!message.guild || !message.member) return;
+  if (!requireLowoOwnerMessage(message)) return;
 
   const guildId = message.guild.id;
   const count = await getAuthBackupCount(guildId);

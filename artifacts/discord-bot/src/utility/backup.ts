@@ -5,6 +5,7 @@ import {
   AttachmentBuilder,
 } from "discord.js";
 import pg from "pg";
+import { requireLowoOwnerInteraction } from "./lowoOwner.js";
 
 const { Client } = pg;
 
@@ -14,6 +15,8 @@ export const backupDbData = new SlashCommandBuilder()
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 export async function executeBackupDb(interaction: ChatInputCommandInteraction): Promise<void> {
+  if (!await requireLowoOwnerInteraction(interaction)) return;
+
   const connString = process.env.DATABASE_URL;
   if (!connString) {
     await interaction.editReply({ content: "DATABASE_URL is not set — cannot connect to Postgres." });
