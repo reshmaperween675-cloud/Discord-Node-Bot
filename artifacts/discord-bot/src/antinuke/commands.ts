@@ -1,5 +1,5 @@
 import type { Message, TextChannel, Client } from "discord.js";
-import { EmbedBuilder, ChannelType, OverwriteType } from "discord.js";
+import { EmbedBuilder, ChannelType, OverwriteType, PermissionFlagsBits } from "discord.js";
 import {
   getConfig,
   saveConfig,
@@ -14,11 +14,12 @@ const COLOR_ERR = 0xFF4444;
 const COLOR_INF = 0x2F3136;
 const COLOR_WIN = 0x00FF99;
 
-const LOWO_OWNER_ID = process.env.LOWO_OWNER_ID ?? "";
-
-function requireLowoOwner(message: Message): boolean {
-  if (!LOWO_OWNER_ID || message.author.id !== LOWO_OWNER_ID) return false;
-  return true;
+function isAdmin(message: Message): boolean {
+  if (!message.guild || !message.member) return false;
+  return (
+    message.author.id === message.guild.ownerId ||
+    message.member.permissions.has(PermissionFlagsBits.Administrator)
+  );
 }
 
 // ─── RESTORE ──────────────────────────────────────────────────────────────────
@@ -211,7 +212,13 @@ async function runRestore(message: Message, client: Client, offenderId: string):
 
 export async function handleAntiNukeCommand(message: Message, client: Client): Promise<void> {
   if (!message.guild) return;
-  if (!requireLowoOwner(message)) return;
+  if (!isAdmin(message)) {
+    await message.reply({ embeds: [
+      new EmbedBuilder().setColor(COLOR_ERR)
+        .setDescription("❌ You need the **Administrator** permission to use anti-nuke commands."),
+    ]});
+    return;
+  }
 
   const parts = message.content.trim().split(/\s+/);
   const sub   = parts[1]?.toLowerCase();
