@@ -29,8 +29,7 @@ async function resolveExecutor(
 ): Promise<string | null> {
   await new Promise<void>(res => setTimeout(res, AUDIT_DELAY_MS));
   try {
-    // Fetch more entries to handle audit log flooding during a nuke
-    const logs  = await guild.fetchAuditLogs({ type: auditEvent, limit: 15 });
+    const logs  = await guild.fetchAuditLogs({ type: auditEvent, limit: 5 });
     const entry = logs.entries.find(e => Date.now() - e.createdTimestamp < 8_000);
     return entry?.executor?.id ?? null;
   } catch { return null; }
@@ -54,17 +53,7 @@ async function handleAction(
   const whitelist = await getWhitelist(guild.id);
   if (whitelist.has(executorId)) return false;
 
-  // ── Bot executor: trigger immediately on first action ────────────────────
-  // Bots operate at machine speed — thresholds designed for humans don't apply.
-  // Any bot (not the server owner or this bot) performing destructive actions
-  // is treated as malicious and quarantined on the very first event.
-  let isBotExecutor = false;
-  try {
-    const executorUser = await client.users.fetch(executorId);
-    isBotExecutor = executorUser.bot;
-  } catch { /* user fetch failed — treat as human, fall back to threshold */ }
-
-  const triggered = isBotExecutor || recordAction(guild.id, executorId, action, config);
+  const triggered = recordAction(guild.id, executorId, action, config);
   if (triggered) {
     await quarantine(client, guild, executorId, action, details);
 
@@ -73,9 +62,9 @@ async function handleAction(
       .setColor(0xFF0000)
       .setTitle("🚨 ANTI-NUKE — OFFENDER QUARANTINED")
       .setDescription(
-        `<@${executorId}> ${isBotExecutor ? "is a **rogue bot** and was" : "crossed the **" + action + "** threshold and has been"} quarantined.\n\n` +
+        `<@${executorId}> crossed the **${action}** threshold and has been quarantined.\n\n` +
         `**Last action:** ${details}\n\n` +
-        `${isBotExecutor ? "The bot has been **banned** from the server." : `All their roles have been stripped. Use \`?antinuke restore <@${executorId}>\` to undo the damage.`}`,
+        `All their roles have been stripped. Use \`?antinuke restore <@${executorId}>\` to undo the damage.`,
       )
       .setTimestamp();
     await postAntiNukeLog(client, guild, alertEmbed);
