@@ -102,18 +102,11 @@ export async function quarantine(
   // ── 3. Build embed ────────────────────────────────────────────────────────
   const embed = new EmbedBuilder()
     .setColor(0xFF0000)
-    .setTitle("🚨 We caught a nigga tryna nuke")
-    .setDescription(
-      isBotExecutor
-        ? `A bot was caught doing damage — got banned on sight.`
-        : `<@${executorId}> tried it. Already handled.`,
-    )
+    .setTitle("A nigga tried nuking us😂")
     .addFields(
-      { name: "👤 Who",          value: `<@${executorId}> (\`${executorId}\`)`,                                      inline: true  },
-      { name: "🤖 Bot?",         value: isBotExecutor ? "Yes (perma banned)" : "No",                                 inline: true  },
-      { name: "⚡ What they did", value: details,                                                                      inline: false },
-      { name: "🔨 Punishment",   value: `\`${effectivePunish}\``,                                                     inline: true  },
-      { name: "✅ Actions taken", value: actionsTaken.join("\n") || "*(nothing — bot may be missing permissions)*",   inline: false },
+      { name: "Who",          value: `<@${executorId}> (\`${executorId}\`)`, inline: false },
+      { name: "What they did", value: details,                                inline: false },
+      { name: "Punishment",   value: effectivePunish,                         inline: false },
     )
     .setFooter({ text: guild.name })
     .setTimestamp();
