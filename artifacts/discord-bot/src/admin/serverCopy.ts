@@ -484,6 +484,40 @@ export async function handlePasteCommand(message: Message, client: Client): Prom
       }
     }
 
+    // ── Step 3b: Reposition surviving channels/categories ─────────────────
+    // Channels that weren't deleted still need to be moved to match the
+    // snapshot's order and parent category.
+    let catsRepositioned = 0, chRepositioned = 0;
+
+    for (const cat of snapCats) {
+      const currentId = categoryIdMap.get(cat.id);
+      if (!currentId) continue;
+      const current = guild.channels.cache.get(currentId);
+      if (!current) continue;
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (current as any).edit({ position: cat.position }, "?paste reorder");
+        catsRepositioned++;
+        await sleep(300);
+      } catch { /* non-fatal — position conflict */ }
+    }
+
+    for (const ch of snapChannels) {
+      const key = `${ch.name.toLowerCase()}:${ch.type}`;
+      const current = existingChannels.get(key);
+      if (!current) continue;
+      const parentId = ch.parentId ? (categoryIdMap.get(ch.parentId) ?? null) : null;
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (current as any).edit({
+          position: ch.position,
+          parent:   parentId ?? undefined,
+        }, "?paste reorder");
+        chRepositioned++;
+        await sleep(300);
+      } catch { /* non-fatal */ }
+    }
+
     // ── Step 4: Emojis ────────────────────────────────────────────────────
     for (const emoji of snap.emojis) {
       if (existingEmojis.has(emoji.name.toLowerCase())) {
@@ -567,12 +601,12 @@ export async function handlePasteCommand(message: Message, client: Client): Prom
       .setTitle(errors.length === 0 ? "done" : "done (some stuff failed tho)")
       .setDescription(`restored from **${takenAt}**`)
       .addFields(
-        { name: "Roles",      value: `${rolesCreated} added · ${rolesSkipped} already there`,    inline: true },
-        { name: "Categories", value: `${catsCreated} added · ${catsSkipped} already there`,     inline: true },
-        { name: "Channels",   value: `${chCreated} added · ${chSkipped} already there`,         inline: true },
-        { name: "Emojis",     value: `${emojisCreated} added · ${emojisSkipped} already there`,  inline: true },
-        { name: "Stickers",   value: `${stickersCreated} added · ${stickersSkipped} already there`, inline: true },
-        { name: "Soundboard", value: `${soundsCreated} added · ${soundsSkipped} already there`, inline: true },
+        { name: "Roles",      value: `${rolesCreated} added · ${rolesSkipped} already there`,                                    inline: true },
+        { name: "Categories", value: `${catsCreated} added · ${catsSkipped} already there · ${catsRepositioned} repositioned`, inline: true },
+        { name: "Channels",   value: `${chCreated} added · ${chSkipped} already there · ${chRepositioned} repositioned`,      inline: true },
+        { name: "Emojis",     value: `${emojisCreated} added · ${emojisSkipped} already there`,                               inline: true },
+        { name: "Stickers",   value: `${stickersCreated} added · ${stickersSkipped} already there`,                           inline: true },
+        { name: "Soundboard", value: `${soundsCreated} added · ${soundsSkipped} already there`,                               inline: true },
       );
 
     if (errors.length > 0) {
@@ -713,6 +747,38 @@ export async function runPasteRestore(guild: Guild, client: Client): Promise<{ f
     } catch (e) { errors.push(`Channel #${ch.name}: ${(e as Error).message}`); }
   }
 
+  // Step 3b: Reposition surviving channels/categories
+  let catsRepositioned = 0, chRepositioned = 0;
+
+  for (const cat of snapCats) {
+    const currentId = categoryIdMap.get(cat.id);
+    if (!currentId) continue;
+    const current = guild.channels.cache.get(currentId);
+    if (!current) continue;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (current as any).edit({ position: cat.position }, "Anti-Nuke auto-restore: reorder");
+      catsRepositioned++;
+      await sleep(300);
+    } catch { /* non-fatal */ }
+  }
+
+  for (const ch of snapChannels) {
+    const key = `${ch.name.toLowerCase()}:${ch.type}`;
+    const current = existingChannels.get(key);
+    if (!current) continue;
+    const parentId = ch.parentId ? (categoryIdMap.get(ch.parentId) ?? null) : null;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (current as any).edit({
+        position: ch.position,
+        parent:   parentId ?? undefined,
+      }, "Anti-Nuke auto-restore: reorder");
+      chRepositioned++;
+      await sleep(300);
+    } catch { /* non-fatal */ }
+  }
+
   // Step 4: Emojis
   for (const emoji of snap.emojis) {
     if (existingEmojis.has(emoji.name.toLowerCase())) { emojisSkipped++; continue; }
@@ -770,12 +836,12 @@ export async function runPasteRestore(guild: Guild, client: Client): Promise<{ f
     .setTitle(errors.length === 0 ? "server's back" : "server's back (some stuff failed)")
     .setDescription(`restored from snapshot — **${takenAt}**`)
     .addFields(
-      { name: "Roles",      value: `${rolesCreated} added · ${rolesSkipped} already there`,    inline: true },
-      { name: "Categories", value: `${catsCreated} added · ${catsSkipped} already there`,     inline: true },
-      { name: "Channels",   value: `${chCreated} added · ${chSkipped} already there`,         inline: true },
-      { name: "Emojis",     value: `${emojisCreated} added · ${emojisSkipped} already there`,  inline: true },
-      { name: "Stickers",   value: `${stickersCreated} added · ${stickersSkipped} already there`, inline: true },
-      { name: "Soundboard", value: `${soundsCreated} added · ${soundsSkipped} already there`, inline: true },
+      { name: "Roles",      value: `${rolesCreated} added · ${rolesSkipped} already there`,                                    inline: true },
+      { name: "Categories", value: `${catsCreated} added · ${catsSkipped} already there · ${catsRepositioned} repositioned`, inline: true },
+      { name: "Channels",   value: `${chCreated} added · ${chSkipped} already there · ${chRepositioned} repositioned`,      inline: true },
+      { name: "Emojis",     value: `${emojisCreated} added · ${emojisSkipped} already there`,                               inline: true },
+      { name: "Stickers",   value: `${stickersCreated} added · ${stickersSkipped} already there`,                           inline: true },
+      { name: "Soundboard", value: `${soundsCreated} added · ${soundsSkipped} already there`,                               inline: true },
     );
 
   if (errors.length > 0) {
