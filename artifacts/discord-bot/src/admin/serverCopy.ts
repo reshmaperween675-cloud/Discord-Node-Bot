@@ -789,6 +789,114 @@ export async function runPasteRestore(guild: Guild, client: Client): Promise<{ f
   return { found: true, embed };
 }
 
+// ── ?paste int — remove duplicates + channels not in snapshot ────────────────
+//
+// Deletes any channel or role that either:
+//   (a) appears more than once with the same name+type (duplicates)
+//   (b) does not exist in the saved ?copy snapshot at all (nuke spam)
+
+export async function handlePasteIntCommand(message: Message, _client: Client): Promise<void> {
+  if (!message.guild) return;
+  if (!message.member?.permissions.has(PermissionFlagsBits.Administrator)) {
+    await message.reply({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+      .setDescription("❌ You need **Administrator** to use `?paste int`.")]});
+    return;
+  }
+
+  const status = await message.reply({ embeds: [new EmbedBuilder().setColor(0xFFAA00)
+    .setTitle("⏳ Running integrity cleanup…")
+    .setDescription("Comparing server against snapshot — removing duplicates and unrecognised channels…")]});
+
+  try {
+    const guild = message.guild;
+    const snap  = await loadSnapshot(guild.id);
+
+    if (!snap) {
+      await status.edit({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+        .setTitle("❌ No Snapshot Found")
+        .setDescription("Run `?copy` first to save a snapshot of this server.")]});
+      return;
+    }
+
+    await Promise.all([guild.channels.fetch(), guild.roles.fetch()]);
+
+    const toDelete: { id: string; name: string; kind: string }[] = [];
+
+    // ── Channels & categories ─────────────────────────────────────────────────
+    // Build a set of snapshot names+types for fast lookup
+    const snapChannelKeys = new Set(snap.channels.map(c => `${c.name.toLowerCase()}:${c.type}`));
+
+    // Track which names we've already decided to keep (first occurrence wins)
+    const kept = new Set<string>();
+
+    // Sort so categories come first, then by position, to keep the right ones
+    const allChannels = [...guild.channels.cache.values()].sort((a, b) => {
+      const pa = "position" in a ? (a.position as number) : 0;
+      const pb = "position" in b ? (b.position as number) : 0;
+      return pa - pb;
+    });
+
+    for (const ch of allChannels) {
+      const key = `${ch.name.toLowerCase()}:${ch.type}`;
+
+      // Not in snapshot at all → nuke spam, delete it
+      if (!snapChannelKeys.has(key)) {
+        toDelete.push({ id: ch.id, name: ch.name, kind: "channel" });
+        continue;
+      }
+
+      // In snapshot but we've already kept one with this name+type → duplicate
+      if (kept.has(key)) {
+        toDelete.push({ id: ch.id, name: ch.name, kind: "channel" });
+        continue;
+      }
+
+      kept.add(key);
+    }
+
+    // ── Delete collected items ────────────────────────────────────────────────
+    let deleted = 0;
+    let failed  = 0;
+
+    for (const item of toDelete) {
+      try {
+        const ch = guild.channels.cache.get(item.id);
+        if (ch) {
+          await ch.delete("?paste int — duplicate or unrecognised channel");
+          deleted++;
+          await sleep(400);
+        }
+      } catch {
+        failed++;
+      }
+    }
+
+    const takenAt = new Date(snap.takenAt).toLocaleString();
+
+    await status.edit({ embeds: [new EmbedBuilder()
+      .setColor(failed === 0 ? 0x00FFFF : 0xFFAA00)
+      .setTitle(failed === 0 ? "✅ Cleanup Done" : "⚠️ Cleanup Done (some failed)")
+      .setDescription(`Compared against snapshot from **${takenAt}**.`)
+      .addFields(
+        { name: "Removed",  value: `**${deleted}** channel(s) deleted`,                                              inline: true },
+        { name: "Failed",   value: failed > 0 ? `**${failed}** couldn't be deleted (check permissions)` : "None",   inline: true },
+        { name: "What was removed", value:
+            toDelete.length === 0
+              ? "*Nothing — server already matches the snapshot.*"
+              : toDelete.map(i => `• #${i.name}`).slice(0, 20).join("\n") +
+                (toDelete.length > 20 ? `\n…and ${toDelete.length - 20} more` : ""),
+          inline: false,
+        },
+      )
+      .setFooter({ text: "Only channels not in the ?copy snapshot were removed." })]});
+
+  } catch (err) {
+    console.error("[PASTE INT]", err);
+    await status.edit({ embeds: [new EmbedBuilder().setColor(0xFF4444)
+      .setTitle("❌ Cleanup Failed").setDescription(`${(err as Error).message}`)]});
+  }
+}
+
 // ── ?copy e — snapshot non-animated emojis from this server ──────────────────
 
 const EMOJI_SNAPSHOT_KEY = (guildId: string) => `emoji_snapshot:${guildId}`;
