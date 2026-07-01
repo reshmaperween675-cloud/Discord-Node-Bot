@@ -3,16 +3,8 @@ import { EmbedBuilder, TextChannel } from "discord.js";
 import { clearActions, getConfig } from "./store.js";
 import type { ActionType } from "./store.js";
 
-// Tracks guilds currently mid-quarantine to avoid re-entry
-const quarantineActive = new Set<string>(); // `${guildId}:${executorId}`
+const quarantineActive = new Set<string>();
 
-/**
- * Quarantine an offender.
- *
- * @param isBotExecutor  When true the executor is another bot — managed/integration
- *   roles cannot be stripped by other bots, so we always ban regardless of the
- *   guild's punishAction setting.
- */
 export async function quarantine(
   client: Client,
   guild: Guild,
@@ -24,129 +16,135 @@ export async function quarantine(
   const key = `${guild.id}:${executorId}`;
   if (quarantineActive.has(key)) return false;
   quarantineActive.add(key);
-
-  // ── Instant role strip — stops damage immediately before anything else ────
-  // Do this synchronously before any awaits so the offender loses permissions
-  // within the same event-loop tick that detection fired.
-  if (!isBotExecutor) {
-    try {
-      const member = await guild.members.fetch(executorId);
-      await member.roles.set([], "Anti-Nuke: instant permission strip on detection");
-    } catch { /* will retry properly below */ }
-  }
-
   clearActions(guild.id, executorId);
+
   console.warn(
-    `[ANTINUKE] 🚨 Quarantine | Guild: ${guild.name} (${guild.id}) | Executor: ${executorId} | Bot: ${isBotExecutor} | Action: ${action}`,
+    `[ANTINUKE] Quarantine | Guild: ${guild.name} (${guild.id}) | Executor: ${executorId} | Bot: ${isBotExecutor} | Action: ${action}`,
   );
 
   const config = await getConfig(guild.id);
-
-  // Bots are always banned — their permissions come from managed/integration
-  // roles which cannot be removed by another bot.
   const effectivePunish = isBotExecutor ? "ban" : config.punishAction;
-
   const actionsTaken: string[] = [];
 
-  // ── 1. Punish the executor ────────────────────────────────────────────────
+  // ── Punish ────────────────────────────────────────────────────────────────
   if (effectivePunish === "ban") {
-    try {
-      await guild.bans.create(executorId, {
-        reason: `Anti-Nuke: ${isBotExecutor ? "rogue bot" : "threshold exceeded"} — ${action}`,
-        deleteMessageSeconds: 0,
-      });
-      actionsTaken.push(`• **Banned** from server${isBotExecutor ? " (bot — always banned)" : ""}`);
-    } catch (e) {
-      console.error("[ANTINUKE] Ban failed:", (e as Error).message);
-      actionsTaken.push("• Ban failed — missing permissions or higher role");
+    // For bots: ban-only (managed roles can't be stripped by other bots).
+    // For humans on ban mode: strip roles AND ban concurrently — roles gone
+    // instantly while ban processes, stops damage as fast as possible.
+    if (isBotExecutor) {
+      try {
+        await guild.bans.create(executorId, {
+          reason: `Anti-Nuke: rogue bot — ${action}`,
+          deleteMessageSeconds: 0,
+        });
+        actionsTaken.push("• Banned (bot — instant ban)");
+      } catch (e) {
+        console.error("[ANTINUKE] Bot ban failed:", (e as Error).message);
+        actionsTaken.push("• Ban failed — check permissions / role hierarchy");
+      }
+    } else {
+      const member = guild.members.cache.get(executorId)
+        ?? await guild.members.fetch(executorId).catch(() => null);
+
+      await Promise.all([
+        member
+          ? member.roles.set([], "Anti-Nuke: roles stripped").catch(() => {})
+          : Promise.resolve(),
+        guild.bans.create(executorId, {
+          reason: `Anti-Nuke: threshold exceeded — ${action}`,
+          deleteMessageSeconds: 0,
+        }).catch((e) => {
+          console.error("[ANTINUKE] Ban failed:", (e as Error).message);
+        }),
+      ]);
+      actionsTaken.push("• Roles stripped + banned");
     }
 
   } else if (effectivePunish === "kick") {
-    try {
-      const member = await guild.members.fetch(executorId);
-      await member.kick(`Anti-Nuke: threshold exceeded — ${action}`);
-      actionsTaken.push("• **Kicked** from server");
-    } catch (e) {
-      console.error("[ANTINUKE] Kick failed:", (e as Error).message);
-      // Fallback: strip roles if kick fails (e.g. hierarchy)
-      try {
-        const member = await guild.members.fetch(executorId);
-        await member.roles.set([], "Anti-Nuke: kick failed, stripping roles as fallback");
-        actionsTaken.push("• Kick failed — stripped all roles as fallback");
-      } catch {
-        actionsTaken.push("• Kick + strip both failed — missing permissions");
-      }
+    const member = guild.members.cache.get(executorId)
+      ?? await guild.members.fetch(executorId).catch(() => null);
+
+    if (member) {
+      const stripped = member.roles.set([], "Anti-Nuke: instant strip before kick").catch(() => null);
+      await stripped;
+      await member.kick(`Anti-Nuke: threshold exceeded — ${action}`).catch(async () => {
+        await member.roles.set([], "Anti-Nuke: kick failed, stripping as fallback").catch(() => {});
+        actionsTaken.push("• Kick failed — stripped roles as fallback");
+        return;
+      });
+      actionsTaken.push("• Roles stripped + kicked");
+    } else {
+      actionsTaken.push("• Member not found");
     }
 
   } else {
-    // strip (default)
-    try {
-      const member = await guild.members.fetch(executorId);
-      await member.roles.set([], "Anti-Nuke: automated quarantine — roles stripped");
-      actionsTaken.push("• All **roles stripped**");
-    } catch (e) {
-      console.error("[ANTINUKE] Role strip failed:", (e as Error).message);
-      actionsTaken.push("• Role strip failed — executor may be a bot or have higher hierarchy");
+    // strip
+    const member = guild.members.cache.get(executorId)
+      ?? await guild.members.fetch(executorId).catch(() => null);
+
+    if (member) {
+      await member.roles.set([], "Anti-Nuke: automated quarantine — roles stripped").catch((e) => {
+        console.error("[ANTINUKE] Strip failed:", (e as Error).message);
+      });
+      actionsTaken.push("• All roles stripped");
+    } else {
+      actionsTaken.push("• Member not found");
     }
   }
 
-  // ── 2. Webhook cleanup (when trigger was webhookCreate) ───────────────────
+  // ── Webhook cleanup ───────────────────────────────────────────────────────
   if (action === "webhookCreate") {
     try {
-      const guildWebhooks = await guild.fetchWebhooks();
+      const all    = await guild.fetchWebhooks();
       const cutoff = Date.now() - 120_000;
-      const rogue  = guildWebhooks.filter(wh => wh.createdTimestamp > cutoff);
       let deleted  = 0;
-      for (const wh of rogue.values()) {
-        try {
-          await wh.delete("Anti-Nuke: rogue webhook cleanup");
+      for (const wh of all.values()) {
+        if (wh.createdTimestamp > cutoff) {
+          await wh.delete("Anti-Nuke: rogue webhook cleanup").catch(() => {});
           deleted++;
-        } catch { /* skip if already gone */ }
+        }
       }
-      if (deleted > 0) actionsTaken.push(`• Deleted **${deleted}** rogue webhook(s)`);
+      if (deleted > 0) actionsTaken.push(`• Deleted ${deleted} rogue webhook(s)`);
     } catch (e) {
       console.error("[ANTINUKE] Webhook cleanup failed:", e);
     }
   }
 
-  // ── 3. Build embed ────────────────────────────────────────────────────────
+  // ── Log + DM — fully async, never blocks punishment ──────────────────────
   const embed = new EmbedBuilder()
     .setColor(0xFF0000)
     .setTitle("A nigga tried nuking us😂")
     .addFields(
-      { name: "Who",          value: `<@${executorId}> (\`${executorId}\`)`, inline: false },
-      { name: "What they did", value: details,                                inline: false },
-      { name: "Punishment",   value: effectivePunish,                         inline: false },
+      { name: "Who",           value: `<@${executorId}> (\`${executorId}\`)`, inline: false },
+      { name: "What they did", value: details,                                 inline: false },
+      { name: "Punishment",    value: effectivePunish,                         inline: false },
     )
     .setFooter({ text: guild.name })
     .setTimestamp();
 
-  // ── 4. Send to log channel ────────────────────────────────────────────────
-  if (config.logChannelId) {
-    try {
-      const ch = await client.channels.fetch(config.logChannelId);
-      if (ch && !ch.isDMBased() && ch.isTextBased()) {
-        const pingIds = config.logPingIds ?? [];
-        const content = pingIds.length > 0 ? pingIds.map(id => `<@${id}>`).join(" ") : undefined;
-        await (ch as TextChannel).send({ content, embeds: [embed] });
+  void (async () => {
+    if (config.logChannelId) {
+      try {
+        const ch = await client.channels.fetch(config.logChannelId);
+        if (ch && !ch.isDMBased() && ch.isTextBased()) {
+          const pingIds = config.logPingIds ?? [];
+          const content = pingIds.length > 0 ? pingIds.map(id => `<@${id}>`).join(" ") : undefined;
+          await (ch as TextChannel).send({ content, embeds: [embed] });
+        }
+      } catch (e) {
+        console.error("[ANTINUKE] Log channel send failed:", (e as Error).message);
       }
-    } catch (e) {
-      console.error("[ANTINUKE] Log channel send failed:", (e as Error).message);
     }
-  }
 
-  // ── 5. DM server owner ────────────────────────────────────────────────────
-  try {
-    const owner = await guild.fetchOwner();
-    await owner.send({
-      content: `heads up — someone just got caught trying something in **${guild.name}**`,
-      embeds: [embed],
-    });
-  } catch (e) {
-    console.error("[ANTINUKE] Owner DM failed:", (e as Error).message);
-  }
+    try {
+      const owner = await guild.fetchOwner();
+      await owner.send({
+        content: `heads up — someone just got caught trying something in **${guild.name}**`,
+        embeds: [embed],
+      });
+    } catch { /* DMs closed */ }
+  })();
 
-  // Allow re-entry after 60 seconds
   setTimeout(() => quarantineActive.delete(key), 60_000);
   return true;
 }
