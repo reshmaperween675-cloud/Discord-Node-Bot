@@ -25,6 +25,16 @@ export async function quarantine(
   if (quarantineActive.has(key)) return false;
   quarantineActive.add(key);
 
+  // ── Instant role strip — stops damage immediately before anything else ────
+  // Do this synchronously before any awaits so the offender loses permissions
+  // within the same event-loop tick that detection fired.
+  if (!isBotExecutor) {
+    try {
+      const member = await guild.members.fetch(executorId);
+      await member.roles.set([], "Anti-Nuke: instant permission strip on detection");
+    } catch { /* will retry properly below */ }
+  }
+
   clearActions(guild.id, executorId);
   console.warn(
     `[ANTINUKE] 🚨 Quarantine | Guild: ${guild.name} (${guild.id}) | Executor: ${executorId} | Bot: ${isBotExecutor} | Action: ${action}`,
