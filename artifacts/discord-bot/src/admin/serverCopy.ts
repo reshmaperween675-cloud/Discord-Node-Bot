@@ -1,4 +1,4 @@
-import type { Message, Client, GuildChannel } from "discord.js";
+import type { Message, Client, GuildChannel, Guild } from "discord.js";
 import { EmbedBuilder, PermissionFlagsBits, ChannelType, OverwriteType } from "discord.js";
 import { getPool } from "../persistence.js";
 
@@ -587,6 +587,206 @@ export async function handlePasteCommand(message: Message, client: Client): Prom
     await status.edit({ embeds: [new EmbedBuilder().setColor(0xFF4444)
       .setTitle("❌ Restore Failed").setDescription(`${(err as Error).message}`)]});
   }
+}
+
+// ── Auto-restore (called by anti-nuke after quarantine) ──────────────────────
+//
+// Runs the same logic as ?paste but headlessly — no Message needed.
+// Returns an embed summarising the result so the caller can post it to the
+// anti-nuke log channel.
+
+export async function runPasteRestore(guild: Guild, client: Client): Promise<{ found: boolean; embed: EmbedBuilder }> {
+  void client;
+
+  const snap = await loadSnapshot(guild.id);
+  if (!snap) {
+    return {
+      found: false,
+      embed: new EmbedBuilder()
+        .setColor(0xFFAA00)
+        .setTitle("⚠️ No ?copy Snapshot Found")
+        .setDescription(
+          "The anti-nuke fired but there is no saved `?copy` snapshot to restore from.\n" +
+          "Run `?copy` after setting up your server so future nukes can be auto-restored.",
+        ),
+    };
+  }
+
+  const takenAt = new Date(snap.takenAt).toLocaleString();
+
+  let rolesCreated = 0,    rolesSkipped = 0;
+  let catsCreated  = 0,    catsSkipped  = 0;
+  let chCreated    = 0,    chSkipped    = 0;
+  let emojisCreated = 0,   emojisSkipped = 0;
+  let stickersCreated = 0, stickersSkipped = 0;
+  let soundsCreated = 0,   soundsSkipped = 0;
+  const errors: string[] = [];
+
+  await Promise.all([
+    guild.roles.fetch(),
+    guild.channels.fetch(),
+    guild.emojis.fetch(),
+    guild.stickers.fetch(),
+  ]);
+
+  const existingRoles    = new Map(guild.roles.cache.map(r => [r.name.toLowerCase(), r]));
+  const existingChannels = new Map(guild.channels.cache.map(c => [`${c.name.toLowerCase()}:${c.type}`, c]));
+  const existingEmojis   = new Map(guild.emojis.cache.map(e => [e.name?.toLowerCase() ?? "", e]));
+  const existingStickers = new Map(guild.stickers.cache.map(s => [s.name.toLowerCase(), s]));
+
+  const roleIdMap = new Map<string, string>();
+  roleIdMap.set(snap.guildId, guild.id);
+  for (const r of guild.roles.cache.values()) {
+    const match = snap.roles.find(sr => sr.name.toLowerCase() === r.name.toLowerCase());
+    if (match) roleIdMap.set(match.id, r.id);
+  }
+
+  // Step 1: Roles
+  const rolesToCreate = snap.roles
+    .filter(r => !r.isEveryone && !r.managed)
+    .sort((a, b) => a.position - b.position);
+
+  for (const r of rolesToCreate) {
+    const existing = existingRoles.get(r.name.toLowerCase());
+    if (existing) { roleIdMap.set(r.id, existing.id); rolesSkipped++; continue; }
+    try {
+      let icon: Buffer | undefined;
+      if (r.iconURL) { try { icon = await downloadBuffer(r.iconURL); } catch { /* optional */ } }
+      const created = await guild.roles.create({
+        name: r.name, color: r.color, hoist: r.hoist, mentionable: r.mentionable,
+        permissions: BigInt(r.permissions), reason: "Anti-Nuke auto-restore (?copy snapshot)",
+        ...(icon ? { icon } : {}), ...(r.unicodeEmoji ? { unicodeEmoji: r.unicodeEmoji } : {}),
+      });
+      roleIdMap.set(r.id, created.id);
+      existingRoles.set(r.name.toLowerCase(), created);
+      rolesCreated++;
+      await sleep(DELAY);
+    } catch (e) { errors.push(`Role "${r.name}": ${(e as Error).message}`); }
+  }
+
+  // Step 2: Categories
+  const categoryIdMap = new Map<string, string>();
+  for (const ch of guild.channels.cache.values()) {
+    if (ch.type !== ChannelType.GuildCategory) continue;
+    const match = snap.channels.find(sc => sc.type === ChannelType.GuildCategory && sc.name.toLowerCase() === ch.name.toLowerCase());
+    if (match) categoryIdMap.set(match.id, ch.id);
+  }
+
+  const snapCats = snap.channels.filter(c => c.type === ChannelType.GuildCategory).sort((a, b) => a.position - b.position);
+  for (const cat of snapCats) {
+    const key = `${cat.name.toLowerCase()}:${cat.type}`;
+    const existing = existingChannels.get(key);
+    if (existing) { categoryIdMap.set(cat.id, existing.id); catsSkipped++; continue; }
+    try {
+      const created = await guild.channels.create({
+        name: cat.name, type: ChannelType.GuildCategory, position: cat.position,
+        permissionOverwrites: remapOverwrites(cat.permissionOverwrites, roleIdMap),
+        reason: "Anti-Nuke auto-restore (?copy snapshot)",
+      });
+      categoryIdMap.set(cat.id, created.id);
+      existingChannels.set(key, created);
+      catsCreated++;
+      await sleep(DELAY);
+    } catch (e) { errors.push(`Category "${cat.name}": ${(e as Error).message}`); }
+  }
+
+  // Step 3: Channels
+  const snapChannels = snap.channels.filter(c => c.type !== ChannelType.GuildCategory).sort((a, b) => a.position - b.position);
+  for (const ch of snapChannels) {
+    const key = `${ch.name.toLowerCase()}:${ch.type}`;
+    if (existingChannels.has(key)) { chSkipped++; continue; }
+    try {
+      const parentId = ch.parentId ? (categoryIdMap.get(ch.parentId) ?? null) : null;
+      const opts: Parameters<typeof guild.channels.create>[0] = {
+        name: ch.name, type: ch.type as ChannelType.GuildText, position: ch.position,
+        permissionOverwrites: remapOverwrites(ch.permissionOverwrites, roleIdMap),
+        reason: "Anti-Nuke auto-restore (?copy snapshot)",
+        ...(parentId ? { parent: parentId } : {}),
+        ...(ch.topic ? { topic: ch.topic } : {}),
+        ...(ch.nsfw ? { nsfw: true } : {}),
+        ...(ch.rateLimitPerUser ? { rateLimitPerUser: ch.rateLimitPerUser } : {}),
+        ...(ch.bitrate !== null ? { bitrate: ch.bitrate } : {}),
+        ...(ch.userLimit !== null && ch.userLimit > 0 ? { userLimit: ch.userLimit } : {}),
+        ...(ch.defaultAutoArchiveDuration !== null ? { defaultAutoArchiveDuration: ch.defaultAutoArchiveDuration } : {}),
+      };
+      const created = await guild.channels.create(opts);
+      existingChannels.set(key, created);
+      chCreated++;
+      await sleep(DELAY);
+    } catch (e) { errors.push(`Channel #${ch.name}: ${(e as Error).message}`); }
+  }
+
+  // Step 4: Emojis
+  for (const emoji of snap.emojis) {
+    if (existingEmojis.has(emoji.name.toLowerCase())) { emojisSkipped++; continue; }
+    try {
+      const image = await downloadBuffer(emoji.imageURL);
+      const roles = emoji.roleIds.map(id => roleIdMap.get(id) ?? id).filter(Boolean);
+      await guild.emojis.create({
+        attachment: image, name: emoji.name, reason: "Anti-Nuke auto-restore (?copy snapshot)",
+        ...(roles.length > 0 ? { roles } : {}),
+      });
+      emojisCreated++;
+      await sleep(DELAY);
+    } catch (e) { errors.push(`Emoji :${emoji.name}:: ${(e as Error).message}`); }
+  }
+
+  // Step 5: Stickers
+  for (const sticker of snap.stickers) {
+    if (existingStickers.has(sticker.name.toLowerCase())) { stickersSkipped++; continue; }
+    try {
+      const ext  = sticker.format === 3 ? "json" : "png";
+      const file = await downloadBuffer(sticker.url);
+      await guild.stickers.create({
+        file: { attachment: file, name: `sticker.${ext}` }, name: sticker.name,
+        tags: sticker.tags, description: sticker.description ?? "",
+        reason: "Anti-Nuke auto-restore (?copy snapshot)",
+      });
+      stickersCreated++;
+      await sleep(DELAY);
+    } catch (e) { errors.push(`Sticker "${sticker.name}": ${(e as Error).message}`); }
+  }
+
+  // Step 6: Soundboard
+  try {
+    const currentSounds  = await guild.soundboardSounds.fetch();
+    const existingSounds = new Map(currentSounds.map(s => [s.name.toLowerCase(), s]));
+    for (const sound of snap.soundboard) {
+      if (existingSounds.has(sound.name.toLowerCase())) { soundsSkipped++; continue; }
+      try {
+        const file   = await downloadBuffer(sound.url);
+        const base64 = `data:audio/ogg;base64,${file.toString("base64")}`;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (guild.soundboardSounds as any).create({
+          name: sound.name, sound: base64, volume: sound.volume,
+          ...(sound.emojiId   ? { emojiId: sound.emojiId }     : {}),
+          ...(sound.emojiName ? { emojiName: sound.emojiName } : {}),
+        });
+        soundsCreated++;
+        await sleep(DELAY);
+      } catch (e) { errors.push(`Sound "${sound.name}": ${(e as Error).message}`); }
+    }
+  } catch { /* soundboard optional */ }
+
+  const embed = new EmbedBuilder()
+    .setColor(errors.length === 0 ? 0x00FF99 : 0xFFAA00)
+    .setTitle(errors.length === 0 ? "✅ Auto-Restore Complete" : "⚠️ Auto-Restore Complete (with errors)")
+    .setDescription(`Automatically restored from \`?copy\` snapshot taken **${takenAt}**.`)
+    .addFields(
+      { name: "🎭 Roles",      value: `✅ ${rolesCreated} created\n⏭️ ${rolesSkipped} existed`,    inline: true },
+      { name: "📁 Categories", value: `✅ ${catsCreated} created\n⏭️ ${catsSkipped} existed`,     inline: true },
+      { name: "💬 Channels",   value: `✅ ${chCreated} created\n⏭️ ${chSkipped} existed`,         inline: true },
+      { name: "😀 Emojis",    value: `✅ ${emojisCreated} created\n⏭️ ${emojisSkipped} existed`,  inline: true },
+      { name: "🎨 Stickers",  value: `✅ ${stickersCreated} created\n⏭️ ${stickersSkipped} existed`, inline: true },
+      { name: "🔊 Soundboard", value: `✅ ${soundsCreated} created\n⏭️ ${soundsSkipped} existed`, inline: true },
+    );
+
+  if (errors.length > 0) {
+    const errText = errors.slice(0, 8).join("\n") + (errors.length > 8 ? `\n…and ${errors.length - 8} more` : "");
+    embed.addFields({ name: `❌ Errors (${errors.length})`, value: `\`\`\`\n${errText}\n\`\`\``, inline: false });
+  }
+
+  return { found: true, embed };
 }
 
 // ── ?copy e — snapshot non-animated emojis from this server ──────────────────

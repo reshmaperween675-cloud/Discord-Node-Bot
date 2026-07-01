@@ -5,6 +5,7 @@ import type { ActionType } from "./store.js";
 import { quarantine } from "./mitigation.js";
 import { recordChannelSnap, recordRoleSnap, recordBanSnap } from "./snapshot.js";
 import { postAntiNukeLog } from "./logger.js";
+import { runPasteRestore } from "../admin/serverCopy.js";
 
 // ── Webhook message spam tracking (per webhookId) ──────────────────────────────
 // Separate from audit-log detection — message spam doesn't appear in audit logs.
@@ -98,10 +99,30 @@ async function handleAction(
       (isBotExecutor
         ? "The bot has been permanently **banned** from the server."
         : `Punishment: \`${config.punishAction}\`. Use \`?antinuke restore <@${executorId}>\` if strip was applied.`
-      ),
+      ) +
+      "\n\n🔄 **Auto-restoring server from `?copy` snapshot…**",
     )
     .setTimestamp();
   await postAntiNukeLog(client, guild, alertEmbed);
+
+  // ── Auto-restore from ?copy snapshot ────────────────────────────────────────
+  // Runs in the background so quarantine is never delayed.
+  void (async () => {
+    try {
+      const { embed: restoreEmbed } = await runPasteRestore(guild, client);
+      restoreEmbed.setTimestamp();
+      await postAntiNukeLog(client, guild, restoreEmbed);
+    } catch (err) {
+      console.error("[ANTINUKE] Auto-restore failed:", err);
+      const errEmbed = new EmbedBuilder()
+        .setColor(0xFF4444)
+        .setTitle("❌ Auto-Restore Error")
+        .setDescription(`The auto-restore from \`?copy\` snapshot failed:\n\`\`\`\n${(err as Error).message}\n\`\`\``)
+        .setTimestamp();
+      await postAntiNukeLog(client, guild, errEmbed).catch(() => {});
+    }
+  })();
+
   return true;
 }
 
