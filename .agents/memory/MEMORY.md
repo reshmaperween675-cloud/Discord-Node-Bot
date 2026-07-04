@@ -1,3 +1,4 @@
 - [Drizzle async-store migration](drizzle-migration.md) — all JSON/bot_kv stores replaced with async Drizzle ORM; callers must await every store function.
+- [Control Center backend](control-center-backend.md) — dashboard auth (Discord OAuth2+CSRF state), bot_kv key conventions, audit log table, file explorer security rules.
 - [lib/db must export compiled JS](lib-db-build.md) — workspace package must build to dist/ with esbuild; exporting .ts source breaks pnpm symlink resolution in Docker.
 - [Leveling PostgreSQL migration](leveling-pg-migration.md) — leveling/db.ts fully migrated from JSON file to pg pool; all 5 callers (engine, weekly, commands, dashboard, universalLeaderboard) updated to await async functions.

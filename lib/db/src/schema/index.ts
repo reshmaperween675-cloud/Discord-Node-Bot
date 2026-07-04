@@ -308,6 +308,24 @@ export const lowoEmojiOverridesTable = pgTable("lowo_emoji_overrides", {
   overrides: jsonb("overrides").notNull().default({}),
 });
 
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+
+export const dashboardAuditLogsTable = pgTable("dashboard_audit_logs", {
+  id: text("id").primaryKey(),
+  action: text("action").notNull(),
+  userId: text("user_id").notNull(),
+  username: text("username").notNull().default(""),
+  before: jsonb("before").notNull().default({}),
+  after: jsonb("after").notNull().default({}),
+  metadata: jsonb("metadata").notNull().default({}),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const insertDashboardAuditLogSchema = createInsertSchema(dashboardAuditLogsTable);
+export const selectDashboardAuditLogSchema = createSelectSchema(dashboardAuditLogsTable);
+export type DashboardAuditLog = z.infer<typeof selectDashboardAuditLogSchema>;
+export type InsertDashboardAuditLog = z.infer<typeof insertDashboardAuditLogSchema>;
+
 // ── Drizzle-Zod schemas (existing tables) ─────────────────────────────────────
 
 export const insertBotKvSchema = createInsertSchema(botKvTable);

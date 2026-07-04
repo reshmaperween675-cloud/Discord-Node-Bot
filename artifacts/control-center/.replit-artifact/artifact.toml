@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Control Center"
+version = "1.0.0"
+id = "artifacts/control-center"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19463
+
+[services.development]
+run = "pnpm --filter @workspace/control-center run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/control-center", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/control-center/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19463"
+BASE_PATH = "/"

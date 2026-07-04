@@ -3,20 +3,42 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Lowo Control Center API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Dashboard authentication
+  - name: stats
+    description: Bot statistics
+  - name: commands
+    description: Command management
+  - name: embeds
+    description: Embed management
+  - name: modules
+    description: Module management
+  - name: botcontrol
+    description: Bot control operations
+  - name: files
+    description: Safe file explorer
+  - name: database
+    description: Database management
+  - name: audit
+    description: Audit logs
+  - name: search
+    description: Universal search
+  - name: assistant
+    description: AI assistant
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +46,1053 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ── Auth ──────────────────────────────────────────────────────────────────
+
+  /dashboard/auth/me:
+    get:
+      operationId: getAuthMe
+      tags: [auth]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: Authenticated user info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /dashboard/auth/logout:
+    post:
+      operationId: authLogout
+      tags: [auth]
+      summary: Log out
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  # ── Stats ──────────────────────────────────────────────────────────────────
+
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [stats]
+      summary: Get bot and system statistics
+      responses:
+        "200":
+          description: Bot statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /dashboard/stats/activity:
+    get:
+      operationId: getDashboardActivity
+      tags: [stats]
+      summary: Get recent activity feed
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityEntry"
+
+  # ── Commands ──────────────────────────────────────────────────────────────
+
+  /dashboard/commands:
+    get:
+      operationId: listCommands
+      tags: [commands]
+      summary: List all bot commands
+      responses:
+        "200":
+          description: Command list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BotCommand"
+
+  /dashboard/commands/{name}:
+    get:
+      operationId: getCommand
+      tags: [commands]
+      summary: Get a command with its override
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Command detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BotCommand"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateCommand
+      tags: [commands]
+      summary: Update a command override
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommandOverride"
+      responses:
+        "200":
+          description: Updated command
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BotCommand"
+
+  /dashboard/commands/{name}/toggle:
+    post:
+      operationId: toggleCommand
+      tags: [commands]
+      summary: Enable or disable a command
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToggleInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /dashboard/commands/{name}/history:
+    get:
+      operationId: getCommandHistory
+      tags: [commands]
+      summary: Get command edit history
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: History entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HistoryEntry"
+
+  # ── Embeds ────────────────────────────────────────────────────────────────
+
+  /dashboard/embeds:
+    get:
+      operationId: listEmbeds
+      tags: [embeds]
+      summary: List all embed overrides
+      responses:
+        "200":
+          description: Embed list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmbedEntry"
+
+  /dashboard/embeds/{id}:
+    get:
+      operationId: getEmbed
+      tags: [embeds]
+      summary: Get a single embed override
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Embed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmbedEntry"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateEmbed
+      tags: [embeds]
+      summary: Update an embed override
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmbedData"
+      responses:
+        "200":
+          description: Updated embed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmbedEntry"
+    delete:
+      operationId: deleteEmbed
+      tags: [embeds]
+      summary: Reset embed to default (delete override)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  # ── Modules ───────────────────────────────────────────────────────────────
+
+  /dashboard/modules:
+    get:
+      operationId: listModules
+      tags: [modules]
+      summary: List all bot modules
+      responses:
+        "200":
+          description: Module list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BotModule"
+
+  /dashboard/modules/{name}:
+    get:
+      operationId: getModule
+      tags: [modules]
+      summary: Get a module
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Module
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BotModule"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /dashboard/modules/{name}/toggle:
+    post:
+      operationId: toggleModule
+      tags: [modules]
+      summary: Enable or disable a module
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToggleInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /dashboard/modules/{name}/settings:
+    get:
+      operationId: getModuleSettings
+      tags: [modules]
+      summary: Get module settings
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModuleSettings"
+    patch:
+      operationId: updateModuleSettings
+      tags: [modules]
+      summary: Update module settings
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ModuleSettingsInput"
+      responses:
+        "200":
+          description: Updated settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModuleSettings"
+
+  # ── Bot Control ───────────────────────────────────────────────────────────
+
+  /dashboard/bot/presence:
+    get:
+      operationId: getBotPresence
+      tags: [botcontrol]
+      summary: Get current bot presence
+      responses:
+        "200":
+          description: Presence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BotPresence"
+    put:
+      operationId: setBotPresence
+      tags: [botcontrol]
+      summary: Set bot presence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BotPresenceInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /dashboard/bot/action:
+    post:
+      operationId: botAction
+      tags: [botcontrol]
+      summary: Execute a bot control action
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BotActionInput"
+      responses:
+        "200":
+          description: Action result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  # ── Files ─────────────────────────────────────────────────────────────────
+
+  /dashboard/files/tree:
+    get:
+      operationId: getFileTree
+      tags: [files]
+      summary: Get safe project file tree
+      responses:
+        "200":
+          description: File tree
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FileNode"
+
+  /dashboard/files/content:
+    get:
+      operationId: getFileContent
+      tags: [files]
+      summary: Get file content (secrets redacted)
+      parameters:
+        - name: path
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileContent"
+        "403":
+          description: Forbidden path
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /dashboard/files/search:
+    get:
+      operationId: searchFiles
+      tags: [files]
+      summary: Search file content
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FileSearchResult"
+
+  # ── Database ──────────────────────────────────────────────────────────────
+
+  /dashboard/db/tables:
+    get:
+      operationId: listDbTables
+      tags: [database]
+      summary: List all database tables with counts
+      responses:
+        "200":
+          description: Tables
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DbTable"
+
+  /dashboard/db/tables/{tableName}/rows:
+    get:
+      operationId: getDbTableRows
+      tags: [database]
+      summary: Get rows from a table
+      parameters:
+        - name: tableName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: Table rows
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DbTableRows"
+
+  # ── Audit Logs ────────────────────────────────────────────────────────────
+
+  /dashboard/audit-logs:
+    get:
+      operationId: listAuditLogs
+      tags: [audit]
+      summary: List audit log entries
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: action
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Audit logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuditLog"
+
+  # ── Search ────────────────────────────────────────────────────────────────
+
+  /dashboard/search:
+    get:
+      operationId: universalSearch
+      tags: [search]
+      summary: Universal search across commands, embeds, modules, files
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResults"
+
+  # ── Assistant ─────────────────────────────────────────────────────────────
+
+  /dashboard/assistant:
+    post:
+      operationId: askAssistant
+      tags: [assistant]
+      summary: Ask the assistant a question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssistantQuestion"
+      responses:
+        "200":
+          description: Assistant response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssistantAnswer"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
+    SuccessResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+        message:
+          type: ["string", "null"]
+
+    AuthUser:
+      type: object
+      required: [id, username, avatar, accessLevel]
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        globalName:
+          type: ["string", "null"]
+        avatar:
+          type: ["string", "null"]
+        accessLevel:
+          type: string
+        permissions:
+          type: string
+
+    DashboardStats:
+      type: object
+      required: [bot, system]
+      properties:
+        bot:
+          $ref: "#/components/schemas/BotStats"
+        system:
+          $ref: "#/components/schemas/SystemStats"
+
+    BotStats:
+      type: object
+      required: [status, uptime, ping, servers, users, memoryMb, cpuPercent]
+      properties:
+        status:
+          type: string
+        uptime:
+          type: integer
+        ping:
+          type: ["integer", "null"]
+        servers:
+          type: integer
+        users:
+          type: integer
+        memoryMb:
+          type: number
+        cpuPercent:
+          type: number
+
+    SystemStats:
+      type: object
+      required: [dbStatus, activeModules, loadedCommands, recentErrorCount]
+      properties:
+        dbStatus:
+          type: string
+        activeModules:
+          type: integer
+        loadedCommands:
+          type: integer
+        recentErrorCount:
+          type: integer
+        nodeVersion:
+          type: string
+
+    ActivityEntry:
+      type: object
+      required: [id, type, message, timestamp]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    BotCommand:
+      type: object
+      required: [name, description, category, type, enabled, isSlash]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        type:
+          type: string
+        enabled:
+          type: boolean
+        isSlash:
+          type: boolean
+        overrideName:
+          type: ["string", "null"]
+        overrideDescription:
+          type: ["string", "null"]
+        cooldown:
+          type: ["integer", "null"]
+        hidden:
+          type: boolean
+        fileLocation:
+          type: ["string", "null"]
+        usageCount:
+          type: integer
+
+    CommandOverride:
+      type: object
+      properties:
+        description:
+          type: string
+        cooldown:
+          type: ["integer", "null"]
+        hidden:
+          type: boolean
+
+    HistoryEntry:
+      type: object
+      required: [id, changedBy, changedByUsername, before, after, timestamp]
+      properties:
+        id:
+          type: string
+        changedBy:
+          type: string
+        changedByUsername:
+          type: string
+        before:
+          type: object
+          additionalProperties: true
+        after:
+          type: object
+          additionalProperties: true
+        timestamp:
+          type: string
+
+    EmbedEntry:
+      type: object
+      required: [id, module, title, description]
+      properties:
+        id:
+          type: string
+        module:
+          type: string
+        title:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        color:
+          type: ["integer", "null"]
+        footer:
+          type: ["string", "null"]
+        thumbnail:
+          type: ["string", "null"]
+        image:
+          type: ["string", "null"]
+        fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmbedField"
+        isDefault:
+          type: boolean
+        lastModified:
+          type: ["string", "null"]
+        lastModifiedBy:
+          type: ["string", "null"]
+
+    EmbedField:
+      type: object
+      required: [name, value, inline]
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        inline:
+          type: boolean
+
+    EmbedData:
+      type: object
+      properties:
+        title:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        color:
+          type: ["integer", "null"]
+        footer:
+          type: ["string", "null"]
+        thumbnail:
+          type: ["string", "null"]
+        image:
+          type: ["string", "null"]
+        fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmbedField"
+
+    BotModule:
+      type: object
+      required: [name, displayName, description, enabled, commandCount, category]
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        enabled:
+          type: boolean
+        commandCount:
+          type: integer
+        category:
+          type: string
+        errorCount:
+          type: integer
+        lastError:
+          type: ["string", "null"]
+
+    ModuleSettings:
+      type: object
+      required: [moduleName, settings]
+      properties:
+        moduleName:
+          type: string
+        settings:
+          type: object
+          additionalProperties: true
+
+    ModuleSettingsInput:
+      type: object
+      required: [settings]
+      properties:
+        settings:
+          type: object
+          additionalProperties: true
+
+    BotPresence:
+      type: object
+      required: [status, activityType, activityText]
+      properties:
+        status:
+          type: string
+        activityType:
+          type: string
+        activityText:
+          type: string
+        customStatus:
+          type: ["string", "null"]
+
+    BotPresenceInput:
+      type: object
+      required: [status, activityType, activityText]
+      properties:
+        status:
+          type: string
+        activityType:
+          type: string
+        activityText:
+          type: string
+
+    BotActionInput:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+        params:
+          type: object
+          additionalProperties: true
+
+    ToggleInput:
+      type: object
+      required: [enabled]
+      properties:
+        enabled:
+          type: boolean
+
+    FileNode:
+      type: object
+      required: [name, path, type]
+      properties:
+        name:
+          type: string
+        path:
+          type: string
+        type:
+          type: string
+        size:
+          type: ["integer", "null"]
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/FileNode"
+
+    FileContent:
+      type: object
+      required: [path, content, lines]
+      properties:
+        path:
+          type: string
+        content:
+          type: string
+        lines:
+          type: integer
+        language:
+          type: string
+
+    FileSearchResult:
+      type: object
+      required: [path, line, content]
+      properties:
+        path:
+          type: string
+        line:
+          type: integer
+        content:
+          type: string
+        matchStart:
+          type: integer
+        matchEnd:
+          type: integer
+
+    DbTable:
+      type: object
+      required: [name, rowCount, sizeBytes]
+      properties:
+        name:
+          type: string
+        rowCount:
+          type: integer
+        sizeBytes:
+          type: integer
+        columns:
+          type: array
+          items:
+            $ref: "#/components/schemas/DbColumn"
+
+    DbColumn:
+      type: object
+      required: [name, type, nullable]
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        nullable:
+          type: boolean
+
+    DbTableRows:
+      type: object
+      required: [rows, total, columns]
+      properties:
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        total:
+          type: integer
+        columns:
+          type: array
+          items:
+            type: string
+
+    AuditLog:
+      type: object
+      required: [id, action, userId, username, timestamp]
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+        userId:
+          type: string
+        username:
+          type: string
+        before:
+          type: object
+          additionalProperties: true
+        after:
+          type: object
+          additionalProperties: true
+        timestamp:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+
+    SearchResults:
+      type: object
+      required: [commands, embeds, modules, files]
+      properties:
+        commands:
+          type: array
+          items:
+            $ref: "#/components/schemas/BotCommand"
+        embeds:
+          type: array
+          items:
+            $ref: "#/components/schemas/EmbedEntry"
+        modules:
+          type: array
+          items:
+            $ref: "#/components/schemas/BotModule"
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/FileSearchResult"
+
+    AssistantQuestion:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+        context:
+          type: ["string", "null"]
+
+    AssistantAnswer:
+      type: object
+      required: [reply]
+      properties:
+        reply:
+          type: string
+        sources:
+          type: array
+          items:
+            type: string
