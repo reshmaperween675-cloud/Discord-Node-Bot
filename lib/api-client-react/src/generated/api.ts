@@ -84,11 +84,11 @@ export const getHealthCheckQueryOptions = <
   TData = Awaited<ReturnType<typeof healthCheck>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof healthCheck>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -119,11 +119,11 @@ export function useHealthCheck<
   TData = Awaited<ReturnType<typeof healthCheck>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof healthCheck>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getHealthCheckQueryOptions(options);
@@ -157,7 +157,7 @@ export const getGetAuthMeQueryOptions = <
   TData = Awaited<ReturnType<typeof getAuthMe>>,
   TError = ErrorType<ErrorResponse>,
 >(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<typeof getAuthMe>>, TError, TData>;
+  query?: Omit<UseQueryOptions<Awaited<ReturnType<typeof getAuthMe>>, TError, TData>, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -188,7 +188,7 @@ export function useGetAuthMe<
   TData = Awaited<ReturnType<typeof getAuthMe>>,
   TError = ErrorType<ErrorResponse>,
 >(options?: {
-  query?: UseQueryOptions<Awaited<ReturnType<typeof getAuthMe>>, TError, TData>;
+  query?: Omit<UseQueryOptions<Awaited<ReturnType<typeof getAuthMe>>, TError, TData>, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetAuthMeQueryOptions(options);
@@ -305,11 +305,11 @@ export const getGetDashboardStatsQueryOptions = <
   TData = Awaited<ReturnType<typeof getDashboardStats>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getDashboardStats>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -340,11 +340,11 @@ export function useGetDashboardStats<
   TData = Awaited<ReturnType<typeof getDashboardStats>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getDashboardStats>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetDashboardStatsQueryOptions(options);
@@ -380,11 +380,11 @@ export const getGetDashboardActivityQueryOptions = <
   TData = Awaited<ReturnType<typeof getDashboardActivity>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getDashboardActivity>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -415,11 +415,11 @@ export function useGetDashboardActivity<
   TData = Awaited<ReturnType<typeof getDashboardActivity>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getDashboardActivity>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetDashboardActivityQueryOptions(options);
@@ -455,11 +455,11 @@ export const getListCommandsQueryOptions = <
   TData = Awaited<ReturnType<typeof listCommands>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof listCommands>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -490,11 +490,11 @@ export function useListCommands<
   TData = Awaited<ReturnType<typeof listCommands>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof listCommands>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListCommandsQueryOptions(options);
@@ -533,11 +533,11 @@ export const getGetCommandQueryOptions = <
 >(
   name: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getCommand>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -576,11 +576,11 @@ export function useGetCommand<
 >(
   name: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getCommand>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -794,11 +794,11 @@ export const getGetCommandHistoryQueryOptions = <
 >(
   name: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getCommandHistory>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -837,11 +837,11 @@ export function useGetCommandHistory<
 >(
   name: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getCommandHistory>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -878,11 +878,11 @@ export const getListEmbedsQueryOptions = <
   TData = Awaited<ReturnType<typeof listEmbeds>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof listEmbeds>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -913,11 +913,11 @@ export function useListEmbeds<
   TData = Awaited<ReturnType<typeof listEmbeds>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof listEmbeds>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListEmbedsQueryOptions(options);
@@ -956,11 +956,11 @@ export const getGetEmbedQueryOptions = <
 >(
   id: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getEmbed>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -997,11 +997,11 @@ export function useGetEmbed<
 >(
   id: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getEmbed>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -1209,11 +1209,11 @@ export const getListModulesQueryOptions = <
   TData = Awaited<ReturnType<typeof listModules>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof listModules>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -1244,11 +1244,11 @@ export function useListModules<
   TData = Awaited<ReturnType<typeof listModules>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof listModules>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListModulesQueryOptions(options);
@@ -1287,11 +1287,11 @@ export const getGetModuleQueryOptions = <
 >(
   name: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getModule>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -1328,11 +1328,11 @@ export function useGetModule<
 >(
   name: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getModule>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -1459,11 +1459,11 @@ export const getGetModuleSettingsQueryOptions = <
 >(
   name: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getModuleSettings>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -1502,11 +1502,11 @@ export function useGetModuleSettings<
 >(
   name: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getModuleSettings>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -1630,11 +1630,11 @@ export const getGetBotPresenceQueryOptions = <
   TData = Awaited<ReturnType<typeof getBotPresence>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getBotPresence>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -1665,11 +1665,11 @@ export function useGetBotPresence<
   TData = Awaited<ReturnType<typeof getBotPresence>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getBotPresence>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetBotPresenceQueryOptions(options);
@@ -1877,11 +1877,11 @@ export const getGetFileTreeQueryOptions = <
   TData = Awaited<ReturnType<typeof getFileTree>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getFileTree>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -1912,11 +1912,11 @@ export function useGetFileTree<
   TData = Awaited<ReturnType<typeof getFileTree>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getFileTree>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetFileTreeQueryOptions(options);
@@ -1967,11 +1967,11 @@ export const getGetFileContentQueryOptions = <
 >(
   params: GetFileContentParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getFileContent>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -2005,11 +2005,11 @@ export function useGetFileContent<
 >(
   params: GetFileContentParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getFileContent>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -2061,11 +2061,11 @@ export const getSearchFilesQueryOptions = <
 >(
   params: SearchFilesParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof searchFiles>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -2099,11 +2099,11 @@ export function useSearchFiles<
 >(
   params: SearchFilesParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof searchFiles>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -2140,11 +2140,11 @@ export const getListDbTablesQueryOptions = <
   TData = Awaited<ReturnType<typeof listDbTables>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof listDbTables>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -2175,11 +2175,11 @@ export function useListDbTables<
   TData = Awaited<ReturnType<typeof listDbTables>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: Omit<UseQueryOptions<
     Awaited<ReturnType<typeof listDbTables>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey };
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListDbTablesQueryOptions(options);
@@ -2241,11 +2241,11 @@ export const getGetDbTableRowsQueryOptions = <
   tableName: string,
   params?: GetDbTableRowsParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getDbTableRows>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -2286,11 +2286,11 @@ export function useGetDbTableRows<
   tableName: string,
   params?: GetDbTableRowsParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getDbTableRows>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -2346,11 +2346,11 @@ export const getListAuditLogsQueryOptions = <
 >(
   params?: ListAuditLogsParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof listAuditLogs>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -2384,11 +2384,11 @@ export function useListAuditLogs<
 >(
   params?: ListAuditLogsParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof listAuditLogs>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -2440,11 +2440,11 @@ export const getUniversalSearchQueryOptions = <
 >(
   params: UniversalSearchParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof universalSearch>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -2478,11 +2478,11 @@ export function useUniversalSearch<
 >(
   params: UniversalSearchParams,
   options?: {
-    query?: UseQueryOptions<
+    query?: Omit<UseQueryOptions<
       Awaited<ReturnType<typeof universalSearch>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey };
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useUniversalSearch } from "@workspace/api-client-react";
+import { useUniversalSearch, BotCommand, BotModule, EmbedEntry, FileSearchResult } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Search as SearchIcon, Terminal, Box, Activity, FileCode2, Command } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -54,7 +54,7 @@ export default function SearchPage() {
                 <Terminal className="w-3.5 h-3.5" /> Commands ({results.commands.length})
               </h3>
               <div className="grid gap-2">
-                {results.commands.map(cmd => (
+                {results.commands.map((cmd: BotCommand) => (
                   <Link key={cmd.name} href="/commands">
                     <Card className="bg-card/40 border-white/5 hover:border-primary/50 hover:bg-card/80 transition-colors cursor-pointer group">
                       <CardContent className="p-4 flex justify-between items-center">
@@ -79,7 +79,7 @@ export default function SearchPage() {
                 <Activity className="w-3.5 h-3.5" /> Modules ({results.modules.length})
               </h3>
               <div className="grid gap-2">
-                {results.modules.map(mod => (
+                {results.modules.map((mod: BotModule) => (
                   <Link key={mod.name} href="/modules">
                     <Card className="bg-card/40 border-white/5 hover:border-primary/50 hover:bg-card/80 transition-colors cursor-pointer group">
                       <CardContent className="p-4 flex justify-between items-center">
@@ -106,7 +106,7 @@ export default function SearchPage() {
                 <Box className="w-3.5 h-3.5" /> Embeds ({results.embeds.length})
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {results.embeds.map(embed => (
+                {results.embeds.map((embed: EmbedEntry) => (
                   <Link key={embed.id} href="/embeds">
                     <Card className="bg-card/40 border-white/5 hover:border-primary/50 hover:bg-card/80 transition-colors cursor-pointer group">
                       <CardContent className="p-4 flex items-center gap-3">
@@ -131,7 +131,7 @@ export default function SearchPage() {
                 <FileCode2 className="w-3.5 h-3.5" /> Files ({results.files.length})
               </h3>
               <div className="grid gap-2">
-                {results.files.map((file, i) => (
+                {results.files.map((file: FileSearchResult, i: number) => (
                   <Link key={i} href="/files">
                     <Card className="bg-card/40 border-white/5 hover:border-primary/50 hover:bg-card/80 transition-colors cursor-pointer group overflow-hidden">
                       <CardContent className="p-0">

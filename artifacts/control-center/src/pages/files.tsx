@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useGetFileTree, useGetFileContent, useSearchFiles } from "@workspace/api-client-react";
-import { FileNode } from "@workspace/api-client-react/src/generated/api.schemas";
+import { FileNode, FileSearchResult } from "@workspace/api-client-react";
 import { Folder, FolderOpen, File as FileIcon, FileCode2, Search, Loader2, ChevronRight, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
@@ -37,7 +37,10 @@ export default function FilesPage() {
             <div className="flex items-center justify-center p-8"><Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /></div>
           ) : (
             <div className="font-mono text-sm">
-              {tree && <TreeNode node={tree} onSelect={setSelectedPath} selectedPath={selectedPath} level={0} />}
+              {tree && Array.isArray(tree) && (tree as FileNode[]).map((node: FileNode, i: number) => (
+                <TreeNode key={i} node={node} onSelect={setSelectedPath} selectedPath={selectedPath} level={0} />
+              ))}
+              {tree && !Array.isArray(tree) && <TreeNode node={tree as FileNode} onSelect={setSelectedPath} selectedPath={selectedPath} level={0} />}
             </div>
           )}
         </div>
@@ -49,7 +52,7 @@ export default function FilesPage() {
           <div className="flex-1 overflow-y-auto p-6">
             <h3 className="text-sm font-mono text-muted-foreground mb-4 border-b border-white/10 pb-2">Search Results for "{searchQuery}"</h3>
             <div className="space-y-4">
-              {searchResults?.map((res, i) => (
+              {searchResults?.map((res: FileSearchResult, i: number) => (
                 <div key={i} className="bg-black/30 border border-white/5 rounded-md p-4 cursor-pointer hover:border-primary/50" onClick={() => setSelectedPath(res.path)}>
                   <div className="text-xs font-mono text-primary mb-2">{res.path}:{res.line}</div>
                   <pre className="text-xs font-mono text-white/80 overflow-x-auto whitespace-pre-wrap">{res.content}</pre>
@@ -89,7 +92,7 @@ function TreeNode({ node, onSelect, selectedPath, level }: { node: FileNode, onS
           {isOpen ? <FolderOpen className="w-3.5 h-3.5 mr-1.5 text-primary/70" /> : <Folder className="w-3.5 h-3.5 mr-1.5 text-primary/70" />}
           <span className="truncate">{node.name}</span>
         </div>
-        {isOpen && node.children?.map((child, i) => (
+        {isOpen && node.children?.map((child: FileNode, i: number) => (
           <TreeNode key={i} node={child} onSelect={onSelect} selectedPath={selectedPath} level={level + 1} />
         ))}
       </div>
@@ -134,7 +137,7 @@ function FileViewer({ path }: { path: string }) {
           <pre className="font-mono text-[13px] leading-relaxed text-[#d4d4d4] w-full">
             <code>
               {/* Very basic syntax coloring approximation - a real app would use Prism/Monaco */}
-              {file.content.split('\n').map((line, i) => (
+              {file.content.split('\n').map((line: string, i: number) => (
                 <div key={i} className="flex hover:bg-white/[0.02]">
                   <span className="w-10 shrink-0 text-right pr-4 text-[#858585] select-none">{i + 1}</span>
                   <span className="whitespace-pre break-all">{line}</span>

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect } from "react";
 import { useGetAuthMe } from "@workspace/api-client-react";
-import { AuthUser } from "@workspace/api-client-react/src/generated/api.schemas";
+import { AuthUser } from "@workspace/api-client-react";
 import { useLocation } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 

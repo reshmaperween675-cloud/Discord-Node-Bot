@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useListEmbeds, useGetEmbed, useUpdateEmbed, useDeleteEmbed, getListEmbedsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { EmbedEntry } from "@workspace/api-client-react/src/generated/api.schemas";
+import { EmbedEntry } from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

@@ -7,6 +7,9 @@ import { sessionMiddleware } from "./lib/session.js";
 
 const app: Express = express();
 
+// Trust the Replit/Railway reverse proxy so secure session cookies are set correctly
+app.set("trust proxy", 1);
+
 app.use(
   pinoHttp({
     logger,

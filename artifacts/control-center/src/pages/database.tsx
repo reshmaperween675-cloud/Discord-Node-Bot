@@ -96,7 +96,7 @@ function TableViewer({ tableName }: { tableName: string }) {
   const { data: tableData, isLoading, isFetching } = useGetDbTableRows(
     tableName, 
     { limit, offset: page * limit },
-    { query: { enabled: !!tableName, keepPreviousData: true } }
+    { query: { enabled: !!tableName } }
   );
 
   // Reset page when table changes

@@ -10,7 +10,7 @@ export default function AuditLogsPage() {
   
   const { data: logs, isLoading } = useListAuditLogs(
     { limit, offset: page * limit },
-    { query: { keepPreviousData: true } }
+    { query: {} }
   );
 
   return (

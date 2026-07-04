@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useListModules, useGetModule, useToggleModule, useGetModuleSettings, useUpdateModuleSettings, getListModulesQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BotModule } from "@workspace/api-client-react/src/generated/api.schemas";
+import { BotModule } from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -30,7 +30,7 @@ export default function ModulesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {modules?.map(mod => (
+          {modules?.map((mod: BotModule) => (
             <ModuleCard 
               key={mod.name} 
               module={mod} 

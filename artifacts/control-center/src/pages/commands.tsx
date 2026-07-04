@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useListCommands, useGetCommand, useUpdateCommand, useToggleCommand, useGetCommandHistory, getListCommandsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BotCommand } from "@workspace/api-client-react/src/generated/api.schemas";
+import { BotCommand } from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
