@@ -34,7 +34,7 @@ import { handleActivityCheck, handleKickInactive, handleUnverifyInactive } from 
 import { handleSetupVerification, handleAddAuthPlayers, handleEmergencyLockdown, handleBackupStats } from "../verification/commands.js";
 import { handleHelp67 } from "../help67.js";
 import { handleAddRoleToAllChannels } from "../admin/commands.js";
-import { handleAbcdAdmin } from "../admin/panel.js";
+import { handleAbcdAdmin, handleEditPCommand } from "../admin/panel.js";
 import { handleDmCommand } from "../admin/dm.js";
 import { handleRoleAllCandc } from "../admin/roleAllChannels.js";
 import { handleAntiNukeCommand } from "../antinuke/index.js";
@@ -457,6 +457,9 @@ export function registerLifecycleEvents(
         return;
       case "?abcdadmin":
         handleAbcdAdmin(message).catch((err) => console.error("[ADMIN] Unhandled error:", err));
+        return;
+      case "?edit":
+        handleEditPCommand(message).catch((err) => console.error("[EDIT] Unhandled error:", err));
         return;
       case "?dm":
         handleDmCommand(message).catch((err) => console.error("[DM] Unhandled error:", err));

@@ -448,6 +448,54 @@ export async function handleAdminPanel(
   res.end(html);
 }
 
+// ── ?edit p <password> — DM the Lowo owner with the Control Center link ──────
+
+const EDIT_PASSWORD: string = process.env.DASHBOARD_PANEL_PASSWORD ?? "";
+
+function passwordValid(supplied: string): boolean {
+  if (!EDIT_PASSWORD) return false;
+  try {
+    const a = Buffer.from(supplied.padEnd(EDIT_PASSWORD.length));
+    const b = Buffer.from(EDIT_PASSWORD);
+    if (a.length !== b.length) return false;
+    return timingSafeEqual(a, b);
+  } catch { return false; }
+}
+
+export async function handleEditPCommand(message: Message): Promise<void> {
+  // Only accept DMs or any channel — owner check done via password
+  const args = message.content.trim().split(/\s+/);
+  // args: ["?edit", "p", "<password>"]
+  const supplied = args[2] ?? "";
+
+  if (!passwordValid(supplied)) {
+    // Delete the attempt silently so the password isn't visible in chat
+    await message.delete().catch(() => {});
+    return;
+  }
+
+  // Delete the triggering message immediately so the password isn't visible
+  await message.delete().catch(() => {});
+
+  const dashboardUrl =
+    process.env.DASHBOARD_URL ??
+    `https://${process.env.RAILWAY_PUBLIC_DOMAIN ?? "localhost"}`;
+
+  try {
+    await message.author.send(
+      [
+        "**Control Center — Direct Access**",
+        "",
+        dashboardUrl,
+        "",
+        "Login with Discord when prompted. Only your account can access it.",
+      ].join("\n"),
+    );
+  } catch {
+    // DMs closed — silently fail; message was already deleted
+  }
+}
+
 export async function handleAbcdAdmin(message: Message): Promise<void> {
   if (!message.guild || !message.member) return;
   if (!requireLowoOwnerMessage(message)) return;
