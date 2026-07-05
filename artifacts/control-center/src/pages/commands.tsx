@@ -14,24 +14,57 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
-// Category display config
+// Category display config — keyed to real category names from the API
 const CATEGORY_META: Record<string, { color: string; prefix: string; emoji: string }> = {
-  "Leveling":      { color: "bg-blue-500/15 text-blue-300 border-blue-500/30",     prefix: "/",     emoji: "⭐" },
-  "Utility":       { color: "bg-sky-500/15 text-sky-300 border-sky-500/30",         prefix: "/",     emoji: "🔧" },
-  "Moderation":    { color: "bg-orange-500/15 text-orange-300 border-orange-500/30", prefix: "/",    emoji: "🛡️" },
-  "Server":        { color: "bg-slate-500/15 text-slate-300 border-slate-500/30",   prefix: "/",     emoji: "🏠" },
-  "Raids":         { color: "bg-red-500/15 text-red-300 border-red-500/30",          prefix: "/",    emoji: "⚔️" },
-  "General":       { color: "bg-zinc-500/15 text-zinc-300 border-zinc-500/30",       prefix: "/",   emoji: "💬" },
-  "Lowo":          { color: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30", prefix: "lowo ", emoji: "🦁" },
-  "Mewo Fun":      { color: "bg-pink-500/15 text-pink-300 border-pink-500/30",       prefix: "mewo ", emoji: "🎉" },
-  "Mewo AI":       { color: "bg-violet-500/15 text-violet-300 border-violet-500/30", prefix: "mewo ", emoji: "🤖" },
-  "Mewo Utility":  { color: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30", prefix: "mewo ", emoji: "⚙️" },
-  "Mewo Games":    { color: "bg-yellow-500/15 text-yellow-300 border-yellow-500/30", prefix: "mewo ", emoji: "🎮" },
-  "Mewo Roleplay": { color: "bg-rose-500/15 text-rose-300 border-rose-500/30",       prefix: "mewo ", emoji: "💞" },
-  "Mewo Search":   { color: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",       prefix: "mewo ", emoji: "🔍" },
-  "Mewo Tags":     { color: "bg-teal-500/15 text-teal-300 border-teal-500/30",       prefix: "mewo ", emoji: "🏷️" },
-  "Mewo Wallet":   { color: "bg-amber-500/15 text-amber-300 border-amber-500/30",    prefix: "mewo ", emoji: "💰" },
-  "Mewo":          { color: "bg-purple-500/15 text-purple-300 border-purple-500/30", prefix: "mewo ", emoji: "✨" },
+  // Slash — system
+  "Leveling":            { color: "bg-blue-500/15 text-blue-300 border-blue-500/30",       prefix: "/", emoji: "⭐" },
+  "Economy":             { color: "bg-amber-500/15 text-amber-300 border-amber-500/30",     prefix: "/", emoji: "💰" },
+  "Moderation":          { color: "bg-orange-500/15 text-orange-300 border-orange-500/30",  prefix: "/", emoji: "🛡️" },
+  "Server":              { color: "bg-slate-500/15 text-slate-300 border-slate-500/30",     prefix: "/", emoji: "🏠" },
+  "Raids":               { color: "bg-red-500/15 text-red-300 border-red-500/30",           prefix: "/", emoji: "⚔️" },
+  "General":             { color: "bg-zinc-500/15 text-zinc-300 border-zinc-500/30",        prefix: "/", emoji: "💬" },
+  "Lowo Admin":          { color: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30", prefix: "/", emoji: "👑" },
+  // Slash — fun groups
+  "Slash Social":        { color: "bg-pink-500/15 text-pink-300 border-pink-500/30",        prefix: "/social ", emoji: "🤗" },
+  "Slash Troll":         { color: "bg-red-400/15 text-red-300 border-red-400/30",           prefix: "/troll ",  emoji: "🔥" },
+  "Slash Relationship":  { color: "bg-rose-500/15 text-rose-300 border-rose-500/30",        prefix: "/relationship ", emoji: "💘" },
+  "Slash Answer":        { color: "bg-violet-500/15 text-violet-300 border-violet-500/30",  prefix: "/answer ", emoji: "🎱" },
+  "Slash Meme":          { color: "bg-purple-500/15 text-purple-300 border-purple-500/30",  prefix: "/meme ",  emoji: "😂" },
+  "Slash Game":          { color: "bg-yellow-500/15 text-yellow-300 border-yellow-500/30",  prefix: "/game ",  emoji: "🎮" },
+  "Slash LS":            { color: "bg-emerald-600/15 text-emerald-300 border-emerald-600/30", prefix: "/ls ", emoji: "🏴" },
+  "Slash Bonus":         { color: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",        prefix: "/bonus ", emoji: "✨" },
+  // Lowo prefix
+  "Lowo Economy":        { color: "bg-yellow-500/15 text-yellow-300 border-yellow-500/30",  prefix: "lowo ", emoji: "💰" },
+  "Lowo Hunt":           { color: "bg-green-500/15 text-green-300 border-green-500/30",     prefix: "lowo ", emoji: "🎯" },
+  "Lowo Fishing":        { color: "bg-sky-500/15 text-sky-300 border-sky-500/30",           prefix: "lowo ", emoji: "🎣" },
+  "Lowo Mining":         { color: "bg-stone-500/15 text-stone-300 border-stone-500/30",     prefix: "lowo ", emoji: "⛏️" },
+  "Lowo Battle":         { color: "bg-red-500/15 text-red-300 border-red-500/30",           prefix: "lowo ", emoji: "⚔️" },
+  "Lowo Gear":           { color: "bg-orange-500/15 text-orange-300 border-orange-500/30",  prefix: "lowo ", emoji: "🗡️" },
+  "Lowo Pets":           { color: "bg-violet-500/15 text-violet-300 border-violet-500/30",  prefix: "lowo ", emoji: "🐾" },
+  "Lowo Gambling":       { color: "bg-amber-600/15 text-amber-300 border-amber-600/30",     prefix: "lowo ", emoji: "🎰" },
+  "Lowo Shop":           { color: "bg-teal-500/15 text-teal-300 border-teal-500/30",        prefix: "lowo ", emoji: "🛒" },
+  "Lowo Profile":        { color: "bg-blue-500/15 text-blue-300 border-blue-500/30",        prefix: "lowo ", emoji: "👤" },
+  "Lowo Quests":         { color: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30",  prefix: "lowo ", emoji: "📋" },
+  "Lowo Market":         { color: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30", prefix: "lowo ", emoji: "🛒" },
+  "Lowo Void":           { color: "bg-gray-800/40 text-gray-300 border-gray-600/30",        prefix: "lowo ", emoji: "🕳️" },
+  "Lowo Social":         { color: "bg-pink-500/15 text-pink-300 border-pink-500/30",        prefix: "lowo ", emoji: "💕" },
+  "Lowo Emotes":         { color: "bg-rose-400/15 text-rose-300 border-rose-400/30",        prefix: "lowo ", emoji: "😊" },
+  "Lowo Actions":        { color: "bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30", prefix: "lowo ", emoji: "👊" },
+  "Lowo Memes":          { color: "bg-lime-500/15 text-lime-300 border-lime-500/30",        prefix: "lowo ", emoji: "📸" },
+  "Lowo Minigames":      { color: "bg-cyan-600/15 text-cyan-300 border-cyan-600/30",        prefix: "lowo ", emoji: "🎲" },
+  "Lowo Utility":        { color: "bg-slate-400/15 text-slate-300 border-slate-400/30",     prefix: "lowo ", emoji: "🔧" },
+  // Mewo prefix
+  "Mewo Fun":            { color: "bg-pink-500/15 text-pink-300 border-pink-500/30",        prefix: "mewo ", emoji: "🎉" },
+  "Mewo AI":             { color: "bg-violet-500/15 text-violet-300 border-violet-500/30",  prefix: "mewo ", emoji: "🤖" },
+  "Mewo Utility":        { color: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30",  prefix: "mewo ", emoji: "⚙️" },
+  "Mewo Games":          { color: "bg-yellow-500/15 text-yellow-300 border-yellow-500/30",  prefix: "mewo ", emoji: "🎮" },
+  "Mewo Roleplay":       { color: "bg-rose-500/15 text-rose-300 border-rose-500/30",        prefix: "mewo ", emoji: "💞" },
+  "Mewo Search":         { color: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",        prefix: "mewo ", emoji: "🔍" },
+  "Mewo Social":         { color: "bg-blue-400/15 text-blue-300 border-blue-400/30",        prefix: "mewo ", emoji: "🕵️" },
+  "Mewo Fake":           { color: "bg-purple-400/15 text-purple-300 border-purple-400/30",  prefix: "mewo ", emoji: "🎭" },
+  "Mewo Tags":           { color: "bg-teal-500/15 text-teal-300 border-teal-500/30",        prefix: "mewo ", emoji: "🏷️" },
+  "Mewo Wallet":         { color: "bg-amber-500/15 text-amber-300 border-amber-500/30",     prefix: "mewo ", emoji: "💰" },
+  "Mewo":                { color: "bg-purple-500/15 text-purple-300 border-purple-500/30",  prefix: "mewo ", emoji: "✨" },
 };
 
 function getCategoryMeta(cat: string) {
@@ -39,14 +72,19 @@ function getCategoryMeta(cat: string) {
 }
 
 // Group categories into sections for the tab bar
+const SLASH_SYSTEM = ["Leveling", "Economy", "Moderation", "Server", "Raids", "General", "Lowo Admin"];
+const SLASH_FUN = ["Slash Social", "Slash Troll", "Slash Relationship", "Slash Answer", "Slash Meme", "Slash Game", "Slash LS", "Slash Bonus"];
+const LOWO_ALL = ["Lowo Economy", "Lowo Hunt", "Lowo Fishing", "Lowo Mining", "Lowo Battle", "Lowo Gear", "Lowo Pets", "Lowo Gambling", "Lowo Shop", "Lowo Profile", "Lowo Quests", "Lowo Market", "Lowo Void", "Lowo Social", "Lowo Emotes", "Lowo Actions", "Lowo Memes", "Lowo Minigames", "Lowo Utility"];
+const MEWO_ALL = ["Mewo Fun", "Mewo AI", "Mewo Utility", "Mewo Games", "Mewo Roleplay", "Mewo Search", "Mewo Social", "Mewo Fake", "Mewo Tags", "Mewo Wallet", "Mewo"];
+
 const TAB_GROUPS: Record<string, string[]> = {
   "All":        [],
-  "Slash":      ["Leveling", "Utility", "Moderation", "Server", "Raids", "General"],
-  "Lowo":       ["Lowo"],
-  "Mewo Fun":   ["Mewo Fun"],
+  "Slash":      [...SLASH_SYSTEM, ...SLASH_FUN],
+  "Slash Fun":  SLASH_FUN,
+  "Lowo":       LOWO_ALL,
+  "Lowo Social": ["Lowo Social", "Lowo Emotes", "Lowo Actions", "Lowo Memes", "Lowo Minigames"],
+  "Mewo":       MEWO_ALL,
   "Mewo AI":    ["Mewo AI"],
-  "Mewo Games": ["Mewo Games", "Mewo Wallet", "Mewo Roleplay"],
-  "Mewo Other": ["Mewo Utility", "Mewo Search", "Mewo Tags", "Mewo"],
 };
 
 export default function CommandsPage() {
@@ -64,8 +102,7 @@ export default function CommandsPage() {
       cmd.category.toLowerCase().includes(search.toLowerCase());
     const matchTab =
       tab === "All" ||
-      (TAB_GROUPS[tab]?.includes(cmd.category)) ||
-      (tab === "Mewo Other" && ["Mewo Utility", "Mewo Search", "Mewo Tags", "Mewo"].includes(cmd.category));
+      (TAB_GROUPS[tab]?.includes(cmd.category));
     return matchSearch && matchTab;
   });
 
