@@ -93,6 +93,13 @@ export function startHttpServer(port: number): void {
       return;
     }
 
+    // Railway / uptime healthcheck — must respond before the Discord gateway connects.
+    if (path === "/api/healthz") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ status: "ok" }));
+      return;
+    }
+
     // Proxy the Control Center dashboard and its API routes to the internal api-server.
     if (path?.startsWith("/dashboard") || path?.startsWith("/api/dashboard")) {
       proxyToApiServer(req, res);
