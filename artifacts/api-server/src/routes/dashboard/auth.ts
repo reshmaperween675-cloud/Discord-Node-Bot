@@ -33,28 +33,21 @@ router.post("/login", async (req, res): Promise<void> => {
     return;
   }
 
-  // Regenerate session ID before storing auth data to prevent session fixation.
-  req.session.regenerate((err) => {
-    if (err) {
-      logger.error({ err }, "Session regenerate failed");
+  // Store auth data in session and persist immediately.
+  req.session.userId = id;
+  req.session.username = id;
+  req.session.globalName = null;
+  req.session.avatar = null;
+  req.session.accessLevel = "Lowo Owner";
+
+  req.session.save((saveErr) => {
+    if (saveErr) {
+      logger.error({ saveErr }, "Session save failed");
       res.status(500).json({ error: "Login failed — session error." });
       return;
     }
-    req.session.userId = id;
-    req.session.username = id;
-    req.session.globalName = null;
-    req.session.avatar = null;
-    req.session.accessLevel = "Lowo Owner";
-
-    req.session.save((saveErr) => {
-      if (saveErr) {
-        logger.error({ saveErr }, "Session save failed");
-        res.status(500).json({ error: "Login failed — session error." });
-        return;
-      }
-      logger.info({ discordId: id }, "Successful dashboard login");
-      res.json({ ok: true });
-    });
+    logger.info({ discordId: id }, "Successful dashboard login");
+    res.json({ ok: true });
   });
 });
 
