@@ -1,4 +1,4 @@
-import app, { initSession } from "./app";
+import app from "./app";
 import { logger } from "./lib/logger";
 
 // Prevent any unhandled promise rejection or uncaught exception from killing
@@ -24,19 +24,10 @@ if (Number.isNaN(port) || port <= 0) {
 
 const listenPort = (Number.isNaN(port) || port <= 0) ? 8080 : port;
 
-// Probe the session store (Postgres) before accepting traffic.
-// Falls back to MemoryStore automatically if DB is unreachable.
-initSession()
-  .then(() => {
-    app.listen(listenPort, (err) => {
-      if (err) {
-        logger.error({ err }, "Failed to bind port — exiting");
-        process.exit(1);
-      }
-      logger.info({ port: listenPort }, "API server listening");
-    });
-  })
-  .catch((err) => {
-    logger.error({ err }, "Fatal error during session init — exiting");
+app.listen(listenPort, (err) => {
+  if (err) {
+    logger.error({ err }, "Failed to bind port — exiting");
     process.exit(1);
-  });
+  }
+  logger.info({ port: listenPort }, "API server listening");
+});
