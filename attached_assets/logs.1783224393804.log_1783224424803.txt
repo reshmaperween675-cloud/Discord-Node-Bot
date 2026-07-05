@@ -1,0 +1,1064 @@
+2026-07-05T03:54:40.244675968Z [inf]  > node dist/index.mjs
+2026-07-05T03:54:40.244680408Z [inf]  
+2026-07-05T03:54:40.301872448Z [inf]  Starting Container
+2026-07-05T03:54:40.617122755Z [inf]  [ANTINUKE] Events registered (GuildAuditLogEntryCreate + snapshot + webhook-spam).
+2026-07-05T03:54:40.617127395Z [inf]  [PERSISTENCE] Initializing Postgres-backed persistence...
+2026-07-05T03:54:40.623000945Z [inf]  [KEEP-ALIVE] HTTP server running on port 8080
+2026-07-05T03:54:40.670524599Z [inf]  [PERSISTENCE] Schema ready.
+2026-07-05T03:54:41.325974171Z [inf]  [READY] Logged in as EoN Management Bot#0533
+2026-07-05T03:54:41.325978720Z [inf]  [READY] Guilds in cache: 20
+2026-07-05T03:54:41.337418759Z [inf]  [READY] REST connection pre-warmed.
+2026-07-05T03:54:41.531064953Z [inf]  [READY] Cleared global commands (using per-guild registration).
+2026-07-05T03:54:41.885692988Z [inf]  [READY] Registered 99 commands to guild: 1122802372960321578
+2026-07-05T03:54:42.228352393Z [inf]  [READY] Registered 99 commands to guild: 1371028067627171880
+2026-07-05T03:54:42.416931761Z [inf]  [READY] Registered 99 commands to guild: 1454713289446785057
+2026-07-05T03:54:42.706048955Z [inf]  [READY] Registered 99 commands to guild: 1475861320938160220
+2026-07-05T03:54:43.035497912Z [inf]  [READY] Registered 99 commands to guild: 1475878010715508746
+2026-07-05T03:54:43.312596067Z [inf]  [READY] Registered 99 commands to guild: 1479910330669990025
+2026-07-05T03:54:43.577536226Z [inf]  [READY] Registered 99 commands to guild: 1492667977504526476
+2026-07-05T03:54:43.778503076Z [inf]  [READY] Registered 99 commands to guild: 1499320220450295878
+2026-07-05T03:54:44.229573485Z [inf]  [READY] Registered 99 commands to guild: 1511354334191812618
+2026-07-05T03:54:44.348537501Z [inf]  [READY] Registered 99 commands to guild: 1512021132218208396
+2026-07-05T03:54:44.558499371Z [inf]  [READY] Registered 99 commands to guild: 1514944305402216509
+2026-07-05T03:54:45.221024886Z [inf]  [READY] Registered 99 commands to guild: 1515228143001145405
+2026-07-05T03:54:45.355372014Z [inf]  [READY] Registered 99 commands to guild: 1519797029046325399
+2026-07-05T03:54:45.616327680Z [inf]  [READY] Registered 99 commands to guild: 1520493829428351109
+2026-07-05T03:54:45.843638350Z [inf]  [READY] Registered 99 commands to guild: 1521772134798721085
+2026-07-05T03:54:46.064249641Z [inf]  [READY] Registered 99 commands to guild: 1521827316710379631
+2026-07-05T03:54:46.279438055Z [inf]  [READY] Registered 99 commands to guild: 1521902661048205462
+2026-07-05T03:54:46.507482472Z [inf]  [READY] Registered 99 commands to guild: 1521912478022238399
+2026-07-05T03:54:46.759334651Z [inf]  [READY] Registered 99 commands to guild: 1522204904637337700
+2026-07-05T03:54:46.945720739Z [inf]  Stopping Container
+2026-07-05T03:54:47.007990123Z [inf]  [READY] Registered 99 commands to guild: 1522298846917693592
+2026-07-05T03:54:47.007994073Z [inf]  [READY] Kill leaderboard refreshed.
+2026-07-05T03:54:47.010167067Z [inf]  [MIGRATE] leaderboard.json → leaderboard_players (0 rows)
+2026-07-05T03:54:47.010172246Z [inf]  [MIGRATE] lowo_channels.json → lowo_guild_settings
+2026-07-05T03:54:47.010175266Z [inf]  [READY] JSON→DB migration completed.
+2026-07-05T03:54:47.010178766Z [inf]  [ADMIN] Auto-generated panel token: 5a57a0ddc34154b45a2c4565a4699d272d82fdf4142675a78a8fde8fc60752c1
+2026-07-05T03:54:47.010181696Z [inf]  [ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.
+2026-07-05T03:54:47.021385679Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggeer" (extended vowel (ee)) via compound: niger (dedup in "niggeer")
+2026-07-05T03:54:47.026344035Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggerrr" (extended consonant (rrr)) via compound: niger (dedup in "niggerrr")
+2026-07-05T03:54:47.026360015Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckslang" (compound: fuck prefix) via compound: fuck (dedup in "fuckslang")
+2026-07-05T03:54:47.026362965Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckface" (compound: fuck prefix) via compound: fuckface (dedup in "fuckface")
+2026-07-05T03:54:47.026367955Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Choicefuck" (compound: fuck suffix) via compound: fuck (dedup in "choicefuck")
+2026-07-05T03:54:47.026370895Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-05T03:54:47.026373775Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-05T03:54:47.026376184Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-05T03:54:47.026378624Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T03:54:47.026381574Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T03:54:47.026384384Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-05T03:54:47.026387984Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-05T03:54:47.026390934Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-05T03:54:47.026394034Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-05T03:54:47.026397914Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-05T03:54:47.026400744Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-05T03:54:47.027158082Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-05T03:54:47.027162722Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-05T03:54:47.027168962Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-05T03:54:47.027172322Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-05T03:54:47.027175411Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-05T03:54:47.027178361Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-05T03:54:47.255206499Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-05T03:54:55.063409848Z [err]  2026-07-05 03:54:45.889 UTC [146528] LOG:  SSL error: unexpected eof while reading
+2026-07-05T03:54:55.063414868Z [err]  2026-07-05 03:54:45.889 UTC [146528] LOG:  could not receive data from client: Connection reset by peer
+2026-07-05T03:54:55.063419588Z [err]  2026-07-05 03:54:45.889 UTC [146529] LOG:  SSL error: unexpected eof while reading
+2026-07-05T03:54:55.063423868Z [err]  2026-07-05 03:54:45.889 UTC [146529] LOG:  could not receive data from client: Connection reset by peer
+2026-07-05T03:54:55.299263643Z [inf]  /app/artifacts/discord-bot:
+2026-07-05T03:54:55.299267053Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `node dist/index.mjs`
+2026-07-05T03:54:55.299270503Z [inf]  Command failed with signal "SIGTERM"
+2026-07-05T03:57:27.637257322Z [err]  [PROXY] Control Center request failed: 
+2026-07-05T03:57:55.886357494Z [err]  2026-07-05 03:57:48.271 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T03:57:55.886363114Z [err]  2026-07-05 03:57:50.897 UTC [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.610 s, sync=0.005 s, total=2.626 s; sync files=23, longest=0.004 s, average=0.001 s; distance=154 kB, estimate=154 kB; lsn=0/654D0AD0, redo lsn=0/654D0A78
+2026-07-05T04:04:12.510011853Z [inf]  Starting Container
+2026-07-05T04:04:13.422127085Z [inf]  
+2026-07-05T04:04:13.422130335Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-07-05T04:04:13.422133285Z [inf]  > node dist/index.mjs
+2026-07-05T04:04:13.422136385Z [inf]  
+2026-07-05T04:04:13.422139445Z [inf]  [ANTINUKE] Events registered (GuildAuditLogEntryCreate + snapshot + webhook-spam).
+2026-07-05T04:04:13.422142355Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:13.422145165Z [inf]  [PERSISTENCE] Initializing Postgres-backed persistence...
+2026-07-05T04:04:13.422148115Z [inf]  [KEEP-ALIVE] HTTP server running on port 8080
+2026-07-05T04:04:13.422150925Z [inf]  [PERSISTENCE] Schema ready.
+2026-07-05T04:04:13.422156715Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:13.422159855Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:13.422163565Z [err]                  ^
+2026-07-05T04:04:13.422166665Z [err]  
+2026-07-05T04:04:13.422169665Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:13.422172914Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:13.422175884Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:13.422178734Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:13.422181394Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:13.422184644Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:13.422187804Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:13.422190914Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:13.422436472Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:13.422438562Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:13.422441442Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:13.422443562Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:13.422446252Z [err]  }
+2026-07-05T04:04:13.422449032Z [err]  
+2026-07-05T04:04:13.422451492Z [err]  Node.js v22.23.1
+2026-07-05T04:04:13.422454192Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:14.002364975Z [inf]  [READY] Logged in as EoN Management Bot#0533
+2026-07-05T04:04:14.002367605Z [inf]  [READY] Guilds in cache: 20
+2026-07-05T04:04:14.014663536Z [inf]  [READY] REST connection pre-warmed.
+2026-07-05T04:04:14.142622580Z [inf]  [READY] Cleared global commands (using per-guild registration).
+2026-07-05T04:04:14.460171975Z [inf]  [READY] Registered 99 commands to guild: 1122802372960321578
+2026-07-05T04:04:14.610016115Z [inf]  [READY] Registered 99 commands to guild: 1371028067627171880
+2026-07-05T04:04:14.824865383Z [inf]  [READY] Registered 99 commands to guild: 1454713289446785057
+2026-07-05T04:04:15.032797577Z [inf]  [READY] Registered 99 commands to guild: 1475861320938160220
+2026-07-05T04:04:15.266177566Z [inf]  [READY] Registered 99 commands to guild: 1475878010715508746
+2026-07-05T04:04:15.545587217Z [inf]  [READY] Registered 99 commands to guild: 1479910330669990025
+2026-07-05T04:04:15.817972625Z [inf]  [READY] Registered 99 commands to guild: 1492667977504526476
+2026-07-05T04:04:16.018641816Z [inf]  [READY] Registered 99 commands to guild: 1499320220450295878
+2026-07-05T04:04:16.206386392Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:16.286912047Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:16.286915377Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:16.286918037Z [err]                  ^
+2026-07-05T04:04:16.286920617Z [err]  
+2026-07-05T04:04:16.286923157Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:16.286927157Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:16.286929347Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:16.286931517Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:16.286933667Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:16.286936027Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:16.286938287Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:16.286941037Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:16.286943847Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:16.286945997Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:16.286948067Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:16.286950087Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:16.286952257Z [err]  }
+2026-07-05T04:04:16.286955117Z [err]  
+2026-07-05T04:04:16.286957376Z [err]  Node.js v22.23.1
+2026-07-05T04:04:16.291782787Z [inf]  [READY] Registered 99 commands to guild: 1511354334191812618
+2026-07-05T04:04:16.313030517Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:16.579400452Z [inf]  [READY] Registered 99 commands to guild: 1512021132218208396
+2026-07-05T04:04:16.797998271Z [inf]  [READY] Registered 99 commands to guild: 1514944305402216509
+2026-07-05T04:04:17.012500462Z [inf]  [READY] Registered 99 commands to guild: 1515228143001145405
+2026-07-05T04:04:17.303474761Z [inf]  [READY] Registered 99 commands to guild: 1519797029046325399
+2026-07-05T04:04:17.536030528Z [inf]  [READY] Registered 99 commands to guild: 1520493829428351109
+2026-07-05T04:04:17.766059844Z [inf]  [READY] Registered 99 commands to guild: 1521772134798721085
+2026-07-05T04:04:17.985670655Z [inf]  [READY] Registered 99 commands to guild: 1521827316710379631
+2026-07-05T04:04:18.234139734Z [inf]  [READY] Registered 99 commands to guild: 1521902661048205462
+2026-07-05T04:04:18.530611568Z [inf]  [READY] Registered 99 commands to guild: 1521912478022238399
+2026-07-05T04:04:18.737103505Z [inf]  [READY] Registered 99 commands to guild: 1522204904637337700
+2026-07-05T04:04:18.988603299Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggerrr" (extended consonant (rrr)) via compound: niger (dedup in "niggerrr")
+2026-07-05T04:04:18.988613219Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckslang" (compound: fuck prefix) via compound: fuck (dedup in "fuckslang")
+2026-07-05T04:04:18.988618169Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckface" (compound: fuck prefix) via compound: fuckface (dedup in "fuckface")
+2026-07-05T04:04:18.988621699Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Choicefuck" (compound: fuck suffix) via compound: fuck (dedup in "choicefuck")
+2026-07-05T04:04:18.988625069Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-05T04:04:18.988631049Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-05T04:04:18.988635719Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-05T04:04:18.988639059Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T04:04:18.988642199Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T04:04:18.988698458Z [inf]  [READY] Registered 99 commands to guild: 1522298846917693592
+2026-07-05T04:04:18.988701908Z [inf]  [READY] Kill leaderboard refreshed.
+2026-07-05T04:04:18.988705108Z [inf]  [MIGRATE] leaderboard.json → leaderboard_players (0 rows)
+2026-07-05T04:04:18.988708138Z [inf]  [MIGRATE] lowo_channels.json → lowo_guild_settings
+2026-07-05T04:04:18.988711358Z [inf]  [READY] JSON→DB migration completed.
+2026-07-05T04:04:18.988721998Z [inf]  [ADMIN] Auto-generated panel token: ee3ea27a82353821feefafc58f3e3036984569816b411ec3a7b49a1273f04043
+2026-07-05T04:04:18.988759098Z [inf]  [ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.
+2026-07-05T04:04:18.988762598Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggeer" (extended vowel (ee)) via compound: niger (dedup in "niggeer")
+2026-07-05T04:04:18.989575621Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-05T04:04:18.989579681Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-05T04:04:18.989582531Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-05T04:04:18.989586661Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-05T04:04:18.989589841Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-05T04:04:18.989593031Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-05T04:04:18.989596071Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-05T04:04:18.989599821Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-05T04:04:18.989618411Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-05T04:04:18.989620871Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-05T04:04:18.989624761Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-05T04:04:18.989627951Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-05T04:04:19.187561416Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-05T04:04:19.310298202Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:19.430070287Z [inf]  /app/artifacts/discord-bot:
+2026-07-05T04:04:19.430072837Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `node dist/index.mjs`
+2026-07-05T04:04:19.430075607Z [inf]  Command failed with signal "SIGTERM"
+2026-07-05T04:04:19.547666501Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:19.547677281Z [err]  }
+2026-07-05T04:04:19.547682451Z [err]  
+2026-07-05T04:04:19.547686611Z [err]  Node.js v22.23.1
+2026-07-05T04:04:19.547690150Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:19.547797789Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:19.547801569Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:19.547805079Z [err]                  ^
+2026-07-05T04:04:19.547808859Z [err]  
+2026-07-05T04:04:19.547812289Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:19.547815599Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:19.547818959Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:19.547822689Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:19.547825859Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:19.547829519Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:19.547834839Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:19.547838739Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:19.547842419Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:19.547845489Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:19.547848979Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:19.616012898Z [inf]  Stopping Container
+2026-07-05T04:04:22.541578489Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:22.541582149Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:22.541585539Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:22.541588709Z [err]                  ^
+2026-07-05T04:04:22.541592109Z [err]  
+2026-07-05T04:04:22.541595619Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:22.541598649Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:22.541601709Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:22.541604619Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:22.541608689Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:22.541611359Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:22.541614068Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:22.541616698Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:22.541618908Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:22.541621218Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:22.541623528Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:22.541626068Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:22.541628328Z [err]  }
+2026-07-05T04:04:22.541630458Z [err]  
+2026-07-05T04:04:22.541632968Z [err]  Node.js v22.23.1
+2026-07-05T04:04:22.541635008Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:25.613131820Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:25.634213401Z [err]  }
+2026-07-05T04:04:25.634221691Z [err]  
+2026-07-05T04:04:25.634223901Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:25.634227481Z [err]  Node.js v22.23.1
+2026-07-05T04:04:25.634232891Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:25.634236151Z [err]                  ^
+2026-07-05T04:04:25.634239321Z [err]  
+2026-07-05T04:04:25.634242171Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:25.634244861Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:25.634247801Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:25.634251111Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:25.634253771Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:25.634256521Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:25.634259001Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:25.634261521Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:25.634264021Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:25.634266831Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:25.634269541Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:25.634272561Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:25.657195356Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:28.660577430Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:28.763080469Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:28.763090219Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:28.763096389Z [err]                  ^
+2026-07-05T04:04:28.763102499Z [err]  
+2026-07-05T04:04:28.763105929Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:28.763109519Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:28.763114539Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:28.763117839Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:28.763120909Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:28.763124279Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:28.763128969Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:28.763131979Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:28.763135249Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:28.763138258Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:28.763142668Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:28.763145508Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:28.763148418Z [err]  }
+2026-07-05T04:04:28.763153738Z [err]  
+2026-07-05T04:04:28.763156778Z [err]  Node.js v22.23.1
+2026-07-05T04:04:28.783849143Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:31.782297271Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:31.875778913Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:31.875783363Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:31.875786133Z [err]                  ^
+2026-07-05T04:04:31.875789683Z [err]  
+2026-07-05T04:04:31.875793093Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:31.875799173Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:31.875801623Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:31.875804793Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:31.875807013Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:31.875809503Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:31.875812613Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:31.875814873Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:31.875818412Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:31.875820622Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:31.875822782Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:31.875825132Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:31.875827602Z [err]  }
+2026-07-05T04:04:31.875830092Z [err]  
+2026-07-05T04:04:31.875832502Z [err]  Node.js v22.23.1
+2026-07-05T04:04:31.896793404Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:34.905515776Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:35.043062205Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:35.043065085Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:35.043075675Z [err]                  ^
+2026-07-05T04:04:35.043078315Z [err]  
+2026-07-05T04:04:35.043080725Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:35.043083225Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:35.043085415Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:35.043088625Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:35.043091585Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:35.043093914Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:35.043096094Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:35.043098344Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:35.043101544Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:35.043103624Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:35.043105844Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:35.043108224Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:35.043110564Z [err]  }
+2026-07-05T04:04:35.043112774Z [err]  
+2026-07-05T04:04:35.043115914Z [err]  Node.js v22.23.1
+2026-07-05T04:04:35.043118154Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:38.019600810Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:38.107218469Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:38.107223569Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:38.107226959Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:38.107230649Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:38.107233829Z [err]  }
+2026-07-05T04:04:38.107236948Z [err]  
+2026-07-05T04:04:38.107240408Z [err]  Node.js v22.23.1
+2026-07-05T04:04:38.107256778Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:38.107274408Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:38.107279928Z [err]                  ^
+2026-07-05T04:04:38.107285158Z [err]  
+2026-07-05T04:04:38.107291278Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:38.107296998Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:38.107307828Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:38.107312188Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:38.107316448Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:38.107320728Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:38.107325178Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:38.107330468Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:38.129332141Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:41.157262740Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:41.229987358Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:41.229992148Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:41.229995048Z [err]                  ^
+2026-07-05T04:04:41.229997688Z [err]  
+2026-07-05T04:04:41.230000278Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:41.230002708Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:41.230005648Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:41.230008008Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:41.230010378Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:41.230012728Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:41.230014878Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:41.230017328Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:41.230019638Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:41.230021868Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:41.230024488Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:41.230028238Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:41.230030698Z [err]  }
+2026-07-05T04:04:41.230033078Z [err]  
+2026-07-05T04:04:41.230035418Z [err]  Node.js v22.23.1
+2026-07-05T04:04:41.250868881Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:44.252007049Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:44.347584845Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:44.347590135Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:44.347593125Z [err]                  ^
+2026-07-05T04:04:44.347596155Z [err]  
+2026-07-05T04:04:44.347598945Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:44.347601625Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:44.347604095Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:44.347607575Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:44.347610965Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:44.347613695Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:44.347616465Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:44.347619035Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:44.347621795Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:44.347624575Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:44.347627555Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:44.347630025Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:44.347632475Z [err]  }
+2026-07-05T04:04:44.347635094Z [err]  
+2026-07-05T04:04:44.347638204Z [err]  Node.js v22.23.1
+2026-07-05T04:04:44.374059744Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:47.389286764Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:47.460357466Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:47.460359786Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:47.460363336Z [err]                  ^
+2026-07-05T04:04:47.460366086Z [err]  
+2026-07-05T04:04:47.460368586Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:47.460370926Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:47.460373086Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:47.460376006Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:47.460378366Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:47.460381496Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:47.460384036Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:47.460386516Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:47.460388836Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:47.460391286Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:47.460394756Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:47.460396986Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:47.460399416Z [err]  }
+2026-07-05T04:04:47.460401826Z [err]  
+2026-07-05T04:04:47.460404006Z [err]  Node.js v22.23.1
+2026-07-05T04:04:47.482684108Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:50.488824506Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:50.589918169Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:50.589922669Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:50.589925449Z [err]                  ^
+2026-07-05T04:04:50.589931138Z [err]  
+2026-07-05T04:04:50.589933568Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:50.589935768Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:50.589938068Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:50.589940458Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:50.589942868Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:50.589946238Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:50.589948458Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:50.589950708Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:50.589953168Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:50.589955458Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:50.589957868Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:50.589960028Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:50.589964228Z [err]  }
+2026-07-05T04:04:50.589967118Z [err]  
+2026-07-05T04:04:50.589970338Z [err]  Node.js v22.23.1
+2026-07-05T04:04:50.594682591Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:53.600324079Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:53.715240410Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:53.715244550Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:53.715248030Z [err]                  ^
+2026-07-05T04:04:53.715251910Z [err]  
+2026-07-05T04:04:53.715256690Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:53.715259740Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:53.715263050Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:53.715266250Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:53.715269460Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:53.715273020Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:53.715275870Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:53.715278870Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:53.715281450Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:53.715284130Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:53.715287160Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:53.715290210Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:53.715293630Z [err]  }
+2026-07-05T04:04:53.715296450Z [err]  
+2026-07-05T04:04:53.715300660Z [err]  Node.js v22.23.1
+2026-07-05T04:04:53.715303940Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:56.717275702Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:56.861910977Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:56.861913797Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:56.861917017Z [err]                  ^
+2026-07-05T04:04:56.861920167Z [err]  
+2026-07-05T04:04:56.861923307Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:56.861926437Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:56.861929437Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:56.861932477Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:56.861936037Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:56.861939717Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:56.861942647Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:56.861945657Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:56.861948517Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:56.861951737Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:56.861954687Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:56.861957737Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:56.861960707Z [err]  }
+2026-07-05T04:04:56.861966637Z [err]  
+2026-07-05T04:04:56.861969817Z [err]  Node.js v22.23.1
+2026-07-05T04:04:56.861973016Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:04:59.901049169Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:04:59.939535401Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:04:59.939538751Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:04:59.939541691Z [err]                  ^
+2026-07-05T04:04:59.939544691Z [err]  
+2026-07-05T04:04:59.939547611Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:04:59.939550781Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:04:59.939557351Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:04:59.939560411Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:04:59.939563580Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:04:59.939566640Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:04:59.939569870Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:04:59.939573040Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:04:59.939575810Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:04:59.939578740Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:04:59.939581590Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:04:59.939585010Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:04:59.939587990Z [err]  }
+2026-07-05T04:04:59.939591430Z [err]  
+2026-07-05T04:04:59.939594430Z [err]  Node.js v22.23.1
+2026-07-05T04:04:59.943659178Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:02.948170351Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:03.052510017Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:03.052520377Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:03.052524657Z [err]                  ^
+2026-07-05T04:05:03.052527377Z [err]  
+2026-07-05T04:05:03.052529617Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:03.052532197Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:03.052534617Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:03.052537137Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:03.052539387Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:03.052541677Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:03.052544057Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:03.052546277Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:03.052548387Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:03.052550807Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:03.052553497Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:03.052555947Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:03.052558307Z [err]  }
+2026-07-05T04:05:03.052560717Z [err]  
+2026-07-05T04:05:03.052562867Z [err]  Node.js v22.23.1
+2026-07-05T04:05:03.062802815Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:06.066266461Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:06.162765381Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:06.162767721Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:06.162770031Z [err]                  ^
+2026-07-05T04:05:06.162772501Z [err]  
+2026-07-05T04:05:06.162775081Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:06.162777901Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:06.162780281Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:06.162782731Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:06.162785841Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:06.162790551Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:06.162793491Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:06.162796401Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:06.162798571Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:06.162801371Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:06.162803651Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:06.162805821Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:06.162809031Z [err]  }
+2026-07-05T04:05:06.162811531Z [err]  
+2026-07-05T04:05:06.162813971Z [err]  Node.js v22.23.1
+2026-07-05T04:05:06.217483434Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:09.220346551Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:09.331241676Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:09.331244496Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:09.331246796Z [err]                  ^
+2026-07-05T04:05:09.331250516Z [err]  
+2026-07-05T04:05:09.331253056Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:09.331255226Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:09.331257696Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:09.331260106Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:09.331263646Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:09.331266186Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:09.331268356Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:09.331270776Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:09.331272906Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:09.331275206Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:09.331277336Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:09.331279916Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:09.331282556Z [err]  }
+2026-07-05T04:05:09.331284676Z [err]  
+2026-07-05T04:05:09.331287076Z [err]  Node.js v22.23.1
+2026-07-05T04:05:09.342336686Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:12.340192279Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:12.443788582Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:12.443790902Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:12.443793032Z [err]                  ^
+2026-07-05T04:05:12.443795542Z [err]  
+2026-07-05T04:05:12.443797992Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:12.443800362Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:12.443803082Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:12.443805332Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:12.443807572Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:12.443809802Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:12.443812262Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:12.443814532Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:12.443816802Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:12.443818891Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:12.443821171Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:12.443824131Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:12.443826951Z [err]  }
+2026-07-05T04:05:12.443829001Z [err]  
+2026-07-05T04:05:12.443831721Z [err]  Node.js v22.23.1
+2026-07-05T04:05:12.464478086Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:15.516104764Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:15.570904897Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:15.570908677Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:15.570911366Z [err]                  ^
+2026-07-05T04:05:15.570914006Z [err]  
+2026-07-05T04:05:15.570917866Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:15.570920356Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:15.570922656Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:15.570925106Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:15.570927286Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:15.570930356Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:15.570933016Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:15.570935466Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:15.570938116Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:15.570940796Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:15.570942986Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:15.570945106Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:15.570947236Z [err]  }
+2026-07-05T04:05:15.570949976Z [err]  
+2026-07-05T04:05:15.570952776Z [err]  Node.js v22.23.1
+2026-07-05T04:05:15.575767068Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:18.575953651Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:18.689259927Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:18.689263207Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:18.689265777Z [err]                  ^
+2026-07-05T04:05:18.689268087Z [err]  
+2026-07-05T04:05:18.689270346Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:18.689273156Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:18.689275266Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:18.689277506Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:18.689280256Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:18.689282426Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:18.689285406Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:18.689288586Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:18.689291676Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:18.689295096Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:18.689298006Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:18.689300766Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:18.689304116Z [err]  }
+2026-07-05T04:05:18.689307336Z [err]  
+2026-07-05T04:05:18.689357917Z [err]  Node.js v22.23.1
+2026-07-05T04:05:18.693431984Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:21.700877154Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:21.797028087Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:21.797035837Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:21.797040167Z [err]                  ^
+2026-07-05T04:05:21.797043867Z [err]  
+2026-07-05T04:05:21.797047297Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:21.797053357Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:21.797058707Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:21.797062316Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:21.797065856Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:21.797069486Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:21.797075156Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:21.797078286Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:21.797081816Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:21.797085226Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:21.797088806Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:21.797092096Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:21.797095776Z [err]  }
+2026-07-05T04:05:21.797099256Z [err]  
+2026-07-05T04:05:21.797102516Z [err]  Node.js v22.23.1
+2026-07-05T04:05:21.825627479Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:24.838347883Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:24.930737125Z [err]  Node.js v22.23.1
+2026-07-05T04:05:24.930746165Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:24.930750405Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:24.930753885Z [err]                  ^
+2026-07-05T04:05:24.930756995Z [err]  
+2026-07-05T04:05:24.930760195Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:24.930763635Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:24.930767445Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:24.930770895Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:24.930773785Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:24.930776475Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:24.930780185Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:24.930784995Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:24.930796965Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:24.930802505Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:24.930806925Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:24.930812235Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:24.930816594Z [err]  }
+2026-07-05T04:05:24.930826924Z [err]  
+2026-07-05T04:05:25.044508958Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:28.038031149Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:28.049429309Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:28.049435409Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:28.049438759Z [err]                  ^
+2026-07-05T04:05:28.049444359Z [err]  
+2026-07-05T04:05:28.049447819Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:28.049453609Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:28.049456709Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:28.049459668Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:28.049462778Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:28.049465828Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:28.049469818Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:28.049472868Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:28.049475798Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:28.049478628Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:28.049481418Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:28.049484778Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:28.049488088Z [err]  }
+2026-07-05T04:05:28.049491398Z [err]  
+2026-07-05T04:05:28.049497388Z [err]  Node.js v22.23.1
+2026-07-05T04:05:28.074200301Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:31.075819853Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:31.172969249Z [err]  Node.js v22.23.1
+2026-07-05T04:05:31.172977408Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:31.172980448Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:31.172980568Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:31.172987148Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:31.172991838Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:31.172993118Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:31.172995008Z [err]  }
+2026-07-05T04:05:31.172999578Z [err]                  ^
+2026-07-05T04:05:31.173002248Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:31.173002778Z [err]  
+2026-07-05T04:05:31.173006888Z [err]  
+2026-07-05T04:05:31.173007748Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:31.173010468Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:31.173012678Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:31.173014108Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:31.173017598Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:31.173017818Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:31.173021358Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:31.194720825Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:34.193484464Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:34.292693073Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:34.292697393Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:34.292701443Z [err]                  ^
+2026-07-05T04:05:34.292706413Z [err]  
+2026-07-05T04:05:34.292711933Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:34.292715862Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:34.292719472Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:34.292723192Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:34.292726382Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:34.292729392Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:34.292733562Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:34.292736622Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:34.292743712Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:34.292747462Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:34.292751452Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:34.292754702Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:34.292758192Z [err]  }
+2026-07-05T04:05:34.292762632Z [err]  
+2026-07-05T04:05:34.292766532Z [err]  Node.js v22.23.1
+2026-07-05T04:05:34.318940994Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:37.325345378Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:37.417667821Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:37.417671691Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:37.417674561Z [err]                  ^
+2026-07-05T04:05:37.417677761Z [err]  
+2026-07-05T04:05:37.417680361Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:37.417682751Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:37.417684961Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:37.417687571Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:37.417690041Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:37.417692531Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:37.417695131Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:37.417698061Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:37.417700821Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:37.417703201Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:37.417706101Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:37.417708841Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:37.417711261Z [err]  }
+2026-07-05T04:05:37.417713881Z [err]  
+2026-07-05T04:05:37.417716301Z [err]  Node.js v22.23.1
+2026-07-05T04:05:37.434479448Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:38.756649203Z [err]  [PROXY] Control Center request failed: 
+2026-07-05T04:05:40.437278044Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:40.531195847Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:40.531200487Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:40.531201217Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:40.531203917Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:40.531204957Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:40.531206736Z [err]                  ^
+2026-07-05T04:05:40.531208316Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:40.531209426Z [err]  
+2026-07-05T04:05:40.531210806Z [err]  }
+2026-07-05T04:05:40.531212156Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:40.531214796Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:40.531215236Z [err]  
+2026-07-05T04:05:40.531217316Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:40.531218096Z [err]  Node.js v22.23.1
+2026-07-05T04:05:40.531219626Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:40.531221916Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:40.531224256Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:40.531226976Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:40.531229406Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:40.554175083Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:43.575309489Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:43.659680446Z [err]                  ^
+2026-07-05T04:05:43.659690117Z [err]  
+2026-07-05T04:05:43.659696387Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:43.659700227Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:43.659703227Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:43.659706937Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:43.659710177Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:43.659713497Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:43.659717027Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:43.659720337Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:43.659728617Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:43.659732247Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:43.659735357Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:43.659738557Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:43.659741597Z [err]  }
+2026-07-05T04:05:43.659744937Z [err]  
+2026-07-05T04:05:43.659748017Z [err]  Node.js v22.23.1
+2026-07-05T04:05:43.660230002Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:43.660232742Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:43.677180688Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:45.924151452Z [err]  [PROXY] Control Center request failed: 
+2026-07-05T04:05:46.691460253Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:46.780351604Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:46.780361294Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:46.780365284Z [err]                  ^
+2026-07-05T04:05:46.780369564Z [err]  
+2026-07-05T04:05:46.780373124Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:46.780376994Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:46.780380204Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:46.780383894Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:46.780390414Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:46.780394004Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:46.780397614Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:46.780404794Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:46.780408094Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:46.780411224Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:46.780414903Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:46.780420073Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:46.780423313Z [err]  }
+2026-07-05T04:05:46.780426873Z [err]  
+2026-07-05T04:05:46.780430063Z [err]  Node.js v22.23.1
+2026-07-05T04:05:46.800393405Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:49.403186171Z [err]  [PROXY] Control Center request failed: 
+2026-07-05T04:05:49.800018582Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:49.924796347Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:49.924798977Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:49.924801537Z [err]                  ^
+2026-07-05T04:05:49.924803887Z [err]  
+2026-07-05T04:05:49.924807047Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:49.924809567Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:49.924812088Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:49.924814438Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:49.924816758Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:49.924819218Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:49.924821838Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:49.924824358Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:49.924826578Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:49.924828908Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:49.924831208Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:49.924833848Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:49.924837478Z [err]  }
+2026-07-05T04:05:49.924840018Z [err]  
+2026-07-05T04:05:49.924842328Z [err]  Node.js v22.23.1
+2026-07-05T04:05:49.926206646Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:52.924753776Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:53.176253304Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:53.176271164Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:53.176272704Z [err]                  ^
+2026-07-05T04:05:53.176276324Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:53.176276834Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:53.176282004Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:53.176282164Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:53.176285024Z [err]  
+2026-07-05T04:05:53.176288894Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:53.176293444Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:53.176423472Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:53.176433702Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:53.176438802Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:53.176442202Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:53.176445232Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:53.176448662Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:53.176453092Z [err]  }
+2026-07-05T04:05:53.176456992Z [err]  
+2026-07-05T04:05:53.176461592Z [err]  Node.js v22.23.1
+2026-07-05T04:05:53.176465012Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:56.178238791Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:56.178241681Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:56.178244451Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:56.178247701Z [err]                  ^
+2026-07-05T04:05:56.178250511Z [err]  
+2026-07-05T04:05:56.178253101Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:56.178255341Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:56.178257761Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:56.178260271Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:56.178263081Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:56.178266821Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:56.178269041Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:56.178272061Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:56.178274871Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:56.178277441Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:56.178279961Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:56.178282281Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:56.178285611Z [err]  }
+2026-07-05T04:05:56.178288201Z [err]  
+2026-07-05T04:05:56.178290541Z [err]  Node.js v22.23.1
+2026-07-05T04:05:56.178293071Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:05:59.180933348Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:05:59.281501417Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:05:59.281513067Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:05:59.281518247Z [err]                  ^
+2026-07-05T04:05:59.281523847Z [err]  
+2026-07-05T04:05:59.281529017Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:05:59.281535067Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:05:59.281539667Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:05:59.281543867Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:05:59.281550387Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:05:59.281555627Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:05:59.281560777Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:05:59.281564217Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:05:59.281567667Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:05:59.281571027Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:05:59.281575677Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:05:59.281579257Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:05:59.281582537Z [err]  }
+2026-07-05T04:05:59.281586517Z [err]  
+2026-07-05T04:05:59.281652296Z [err]  Node.js v22.23.1
+2026-07-05T04:05:59.302287112Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:02.302445452Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:02.409396562Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:02.409400812Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:02.409403672Z [err]                  ^
+2026-07-05T04:06:02.409406172Z [err]  
+2026-07-05T04:06:02.409408532Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:02.409411402Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:02.409414592Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:02.409417742Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:02.409420712Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:02.409423232Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:02.409425672Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:02.409428011Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:02.409430661Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:02.409433141Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:02.409435331Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:02.409437581Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:02.409439951Z [err]  }
+2026-07-05T04:06:02.409442441Z [err]  
+2026-07-05T04:06:02.409444831Z [err]  Node.js v22.23.1
+2026-07-05T04:06:02.430889731Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:05.439341420Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:05.533893698Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:05.533897388Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:05.533897658Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:05.533900668Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:05.533903278Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:05.533903598Z [err]  }
+2026-07-05T04:06:05.533906368Z [err]  
+2026-07-05T04:06:05.533907328Z [err]                  ^
+2026-07-05T04:06:05.533909448Z [err]  Node.js v22.23.1
+2026-07-05T04:06:05.533911318Z [err]  
+2026-07-05T04:06:05.533914328Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:05.533915908Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:05.533917708Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:05.533920718Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:05.533920758Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:05.533923748Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:05.533924478Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:05.533926898Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:05.533929828Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:05.554977700Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:08.558595123Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:08.650368543Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:08.650370963Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:08.650373723Z [err]                  ^
+2026-07-05T04:06:08.650376163Z [err]  
+2026-07-05T04:06:08.650379023Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:08.650381673Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:08.650384343Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:08.650386953Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:08.650389353Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:08.650391603Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:08.650394083Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:08.650396593Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:08.650400643Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:08.650402823Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:08.650405053Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:08.650407273Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:08.650409553Z [err]  }
+2026-07-05T04:06:08.650411843Z [err]  
+2026-07-05T04:06:08.650414373Z [err]  Node.js v22.23.1
+2026-07-05T04:06:08.673055283Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:11.674597916Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:11.767344189Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:11.767348319Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:11.767350829Z [err]                  ^
+2026-07-05T04:06:11.767353299Z [err]  
+2026-07-05T04:06:11.767355919Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:11.767358528Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:11.767361118Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:11.767363868Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:11.767366428Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:11.767368658Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:11.767370688Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:11.767373818Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:11.767376289Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:11.767378789Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:11.767381249Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:11.767383309Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:11.767385589Z [err]  }
+2026-07-05T04:06:11.767387909Z [err]  
+2026-07-05T04:06:11.767390789Z [err]  Node.js v22.23.1
+2026-07-05T04:06:11.790322266Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:14.795184018Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:14.911299825Z [err]  
+2026-07-05T04:06:14.911304705Z [err]  Node.js v22.23.1
+2026-07-05T04:06:14.911309005Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:14.911312055Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:14.911315905Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:14.911318975Z [err]                  ^
+2026-07-05T04:06:14.911321805Z [err]  
+2026-07-05T04:06:14.911324224Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:14.911326764Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:14.911329434Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:14.911332464Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:14.911335204Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:14.911337714Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:14.911340104Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:14.911342644Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:14.911344814Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:14.911347284Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:14.911349684Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:14.911352014Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:14.911354594Z [err]  }
+2026-07-05T04:06:17.906480518Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:17.998316718Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:17.998318928Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:17.998321878Z [err]                  ^
+2026-07-05T04:06:17.998324258Z [err]  
+2026-07-05T04:06:17.998326568Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:17.998329288Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:17.998332448Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:17.998335328Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:17.998338178Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:17.998340618Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:17.998342778Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:17.998345118Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:17.998347248Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:17.998349848Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:17.998352278Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:17.998354548Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:17.998357048Z [err]  }
+2026-07-05T04:06:17.998359488Z [err]  
+2026-07-05T04:06:17.998362088Z [err]  Node.js v22.23.1
+2026-07-05T04:06:18.021397375Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:21.023908084Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:21.126775677Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:21.126782547Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:21.126786677Z [err]                  ^
+2026-07-05T04:06:21.126790757Z [err]  
+2026-07-05T04:06:21.126794537Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:21.126798907Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:21.126802207Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:21.126805327Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:21.126810307Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:21.126813927Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:21.126817057Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:21.126820087Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:21.126824327Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:21.126827346Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:21.126830686Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:21.126834136Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:21.126837046Z [err]  }
+2026-07-05T04:06:21.126840326Z [err]  
+2026-07-05T04:06:21.126843106Z [err]  Node.js v22.23.1
+2026-07-05T04:06:21.259459682Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:24.317616865Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:24.317625804Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:24.317630614Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:24.317634174Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:24.317637624Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:24.317641414Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:24.317644854Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:24.317647964Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:24.317651654Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:24.317656424Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:24.317661344Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:24.317666124Z [err]  }
+2026-07-05T04:06:24.317670654Z [err]  
+2026-07-05T04:06:24.317673994Z [err]  Node.js v22.23.1
+2026-07-05T04:06:24.317677794Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s
+2026-07-05T04:06:24.317725654Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:24.317728624Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:24.317731464Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:24.317734284Z [err]                  ^
+2026-07-05T04:06:24.317738063Z [err]  
+2026-07-05T04:06:24.317742443Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:27.289329227Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T04:06:27.377638665Z [err]  file:///app/artifacts/api-server/dist/index.mjs:19933
+2026-07-05T04:06:27.377643055Z [err]            throw new PathError(`Missing parameter name at index ${index}`, str);
+2026-07-05T04:06:27.377646345Z [err]                  ^
+2026-07-05T04:06:27.377649005Z [err]  
+2026-07-05T04:06:27.377651545Z [err]  PathError [TypeError]: Missing parameter name at index 11: /dashboard*; visit https://git.new/pathToRegexpError for info
+2026-07-05T04:06:27.377654175Z [err]      at name2 (file:///app/artifacts/api-server/dist/index.mjs:19933:17)
+2026-07-05T04:06:27.377656585Z [err]      at parse3 (file:///app/artifacts/api-server/dist/index.mjs:19947:66)
+2026-07-05T04:06:27.377659055Z [err]      at pathToRegexp (file:///app/artifacts/api-server/dist/index.mjs:20089:58)
+2026-07-05T04:06:27.377661235Z [err]      at Object.match (file:///app/artifacts/api-server/dist/index.mjs:20059:32)
+2026-07-05T04:06:27.377663985Z [err]      at matcher (file:///app/artifacts/api-server/dist/index.mjs:20261:27)
+2026-07-05T04:06:27.377666325Z [err]      at new Layer (file:///app/artifacts/api-server/dist/index.mjs:20268:68)
+2026-07-05T04:06:27.377668765Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:20693:21)
+2026-07-05T04:06:27.377671415Z [err]      at Function.route (file:///app/artifacts/api-server/dist/index.mjs:21002:26)
+2026-07-05T04:06:27.377673685Z [err]      at app2.<computed> [as get] (file:///app/artifacts/api-server/dist/index.mjs:21065:26)
+2026-07-05T04:06:27.377676345Z [err]      at file:///app/artifacts/api-server/dist/index.mjs:62171:7 {
+2026-07-05T04:06:27.377679075Z [err]    originalPath: '/dashboard*'
+2026-07-05T04:06:27.377681605Z [err]  }
+2026-07-05T04:06:27.377683775Z [err]  
+2026-07-05T04:06:27.377685925Z [err]  Node.js v22.23.1
+2026-07-05T04:06:27.399219704Z [err]  [API] api-server exited (code=1, signal=null) — restarting in 3s

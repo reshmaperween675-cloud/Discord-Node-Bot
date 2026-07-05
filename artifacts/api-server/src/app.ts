@@ -149,7 +149,7 @@ if (process.env.NODE_ENV === "production" && process.env.CONTROL_CENTER_STATIC) 
   app.use("/dashboard", express.static(staticDir));
   // SPA fallback — any unmatched /dashboard/* route serves index.html so
   // React Router handles client-side navigation.
-  app.get("/dashboard*", (_req: Request, res: Response) => {
+  app.get("/dashboard/*path", (_req: Request, res: Response) => {
     res.sendFile(path.join(staticDir, "index.html"));
   });
 }
