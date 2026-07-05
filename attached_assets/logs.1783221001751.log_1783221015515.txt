@@ -1,0 +1,172 @@
+2026-07-05T03:06:54.775814688Z [inf]  scheduling build on Metal builder "builder-rzviqx"
+2026-07-05T03:07:03.523599356Z [inf]  unpacking archive
+2026-07-05T03:07:03.724887007Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T03:07:03.725160457Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T03:07:03.725370222Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T03:07:03.755109302Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T03:07:03.763325099Z [inf]  [internal] load metadata for docker.io/library/node:22-bookworm-slim
+2026-07-05T03:07:03.912958038Z [inf]  [internal] load metadata for docker.io/library/node:22-bookworm-slim
+2026-07-05T03:07:03.913763406Z [inf]  [internal] load .dockerignore
+2026-07-05T03:07:03.913987993Z [inf]  [internal] load .dockerignore
+2026-07-05T03:07:03.914203326Z [inf]  [internal] load .dockerignore
+2026-07-05T03:07:03.942764489Z [inf]  [internal] load .dockerignore
+2026-07-05T03:07:03.955845325Z [inf]  [11/26] COPY lib/api-spec/package.json             ./lib/api-spec/
+2026-07-05T03:07:03.955850153Z [inf]  [10/26] COPY lib/api-client-react/package.json     ./lib/api-client-react/
+2026-07-05T03:07:03.955851745Z [inf]  [17/26] COPY lib/api-zod         ./lib/api-zod
+2026-07-05T03:07:03.955852326Z [inf]  [ 6/26] COPY artifacts/discord-bot/package.json    ./artifacts/discord-bot/
+2026-07-05T03:07:03.955852786Z [inf]  [16/26] COPY lib/db              ./lib/db
+2026-07-05T03:07:03.955853267Z [inf]  [13/26] COPY lib/db/package.json                   ./lib/db/
+2026-07-05T03:07:03.955853778Z [inf]  [15/26] RUN pnpm install --frozen-lockfile     --filter "@workspace/discord-bot..."     --filter "@workspace/api-server..."     --filter "@workspace/control-center..."
+2026-07-05T03:07:03.955854279Z [inf]  [internal] load build context
+2026-07-05T03:07:03.955854800Z [inf]  [ 4/26] RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
+2026-07-05T03:07:03.955855250Z [inf]  [ 3/26] WORKDIR /app
+2026-07-05T03:07:03.955855761Z [inf]  [ 2/26] RUN apt-get update  && apt-get install -y --no-install-recommends fonts-dejavu-core fontconfig  && rm -rf /var/lib/apt/lists/*  && fc-cache -f
+2026-07-05T03:07:03.955856262Z [inf]  [12/26] COPY lib/api-zod/package.json              ./lib/api-zod/
+2026-07-05T03:07:03.955856743Z [inf]  [14/26] COPY scripts/package.json                  ./scripts/
+2026-07-05T03:07:03.955857213Z [inf]  [ 5/26] COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc tsconfig.base.json ./
+2026-07-05T03:07:03.955857664Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T03:07:03.955858235Z [inf]  [ 7/26] COPY artifacts/api-server/package.json     ./artifacts/api-server/
+2026-07-05T03:07:03.955858695Z [inf]  [ 9/26] COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+2026-07-05T03:07:03.955859156Z [inf]  [ 8/26] COPY artifacts/control-center/package.json ./artifacts/control-center/
+2026-07-05T03:07:03.955875350Z [inf]  [26/26] RUN chmod +x ./start.sh
+2026-07-05T03:07:03.955877073Z [inf]  [25/26] COPY start.sh ./start.sh
+2026-07-05T03:07:03.955877764Z [inf]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T03:07:03.955878235Z [inf]  [23/26] RUN pnpm --filter @workspace/api-server run build
+2026-07-05T03:07:03.955878695Z [inf]  [22/26] RUN pnpm --filter @workspace/discord-bot run build
+2026-07-05T03:07:03.955881740Z [inf]  [21/26] COPY artifacts/control-center  ./artifacts/control-center
+2026-07-05T03:07:03.955882511Z [inf]  [20/26] COPY artifacts/api-server      ./artifacts/api-server
+2026-07-05T03:07:03.955883002Z [inf]  [19/26] COPY artifacts/discord-bot     ./artifacts/discord-bot
+2026-07-05T03:07:03.955883463Z [inf]  [18/26] COPY lib/api-client-react ./lib/api-client-react
+2026-07-05T03:07:03.956118295Z [inf]  [internal] load build context
+2026-07-05T03:07:03.956653488Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T03:07:03.972832503Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T03:07:03.973779704Z [inf]  [internal] load build context
+2026-07-05T03:07:04.108037644Z [inf]  [internal] load build context
+2026-07-05T03:07:04.141505939Z [inf]  [ 2/26] RUN apt-get update  && apt-get install -y --no-install-recommends fonts-dejavu-core fontconfig  && rm -rf /var/lib/apt/lists/*  && fc-cache -f
+2026-07-05T03:07:04.141506921Z [inf]  [ 3/26] WORKDIR /app
+2026-07-05T03:07:04.141507452Z [inf]  [ 4/26] RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
+2026-07-05T03:07:04.141508022Z [inf]  [ 5/26] COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc tsconfig.base.json ./
+2026-07-05T03:07:04.141508563Z [inf]  [ 6/26] COPY artifacts/discord-bot/package.json    ./artifacts/discord-bot/
+2026-07-05T03:07:04.141509014Z [inf]  [ 7/26] COPY artifacts/api-server/package.json     ./artifacts/api-server/
+2026-07-05T03:07:04.141509504Z [inf]  [ 8/26] COPY artifacts/control-center/package.json ./artifacts/control-center/
+2026-07-05T03:07:04.141509995Z [inf]  [ 9/26] COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+2026-07-05T03:07:04.141510456Z [inf]  [10/26] COPY lib/api-client-react/package.json     ./lib/api-client-react/
+2026-07-05T03:07:04.141510977Z [inf]  [11/26] COPY lib/api-spec/package.json             ./lib/api-spec/
+2026-07-05T03:07:04.141511438Z [inf]  [12/26] COPY lib/api-zod/package.json              ./lib/api-zod/
+2026-07-05T03:07:04.141514182Z [inf]  [13/26] COPY lib/db/package.json                   ./lib/db/
+2026-07-05T03:07:04.141514723Z [inf]  [14/26] COPY scripts/package.json                  ./scripts/
+2026-07-05T03:07:04.141515223Z [inf]  [15/26] RUN pnpm install --frozen-lockfile     --filter "@workspace/discord-bot..."     --filter "@workspace/api-server..."     --filter "@workspace/control-center..."
+2026-07-05T03:07:04.141515674Z [inf]  [16/26] COPY lib/db              ./lib/db
+2026-07-05T03:07:04.141516134Z [inf]  [17/26] COPY lib/api-zod         ./lib/api-zod
+2026-07-05T03:07:04.141516695Z [inf]  [18/26] COPY lib/api-client-react ./lib/api-client-react
+2026-07-05T03:07:04.141517146Z [inf]  [19/26] COPY artifacts/discord-bot     ./artifacts/discord-bot
+2026-07-05T03:07:04.141524747Z [inf]  [20/26] COPY artifacts/api-server      ./artifacts/api-server
+2026-07-05T03:07:04.855836596Z [inf]  [20/26] COPY artifacts/api-server      ./artifacts/api-server
+2026-07-05T03:07:04.862287775Z [inf]  [21/26] COPY artifacts/control-center  ./artifacts/control-center
+2026-07-05T03:07:04.961004509Z [inf]  [21/26] COPY artifacts/control-center  ./artifacts/control-center
+2026-07-05T03:07:04.968086295Z [inf]  [22/26] RUN pnpm --filter @workspace/discord-bot run build
+2026-07-05T03:07:05.5876002Z [inf]  
+> @workspace/discord-bot@0.0.0 build /app/artifacts/discord-bot
+> node build.mjs
+
+
+2026-07-05T03:07:06.121051667Z [inf]  
+  dist/index.mjs       6.5mb ⚠️
+  dist/index.mjs.map  12.2mb
+
+⚡ Done in 479ms
+
+2026-07-05T03:07:06.318613257Z [inf]  [22/26] RUN pnpm --filter @workspace/discord-bot run build
+2026-07-05T03:07:06.324948072Z [inf]  [23/26] RUN pnpm --filter @workspace/api-server run build
+2026-07-05T03:07:06.814109526Z [inf]  
+> @workspace/api-server@0.0.0 build /app/artifacts/api-server
+> node ./build.mjs
+
+
+2026-07-05T03:07:07.146002356Z [inf]  
+  dist/index.mjs                       2.4mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.0kb
+  dist/pino-pretty.mjs               114.6kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.0mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.9kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 255ms
+
+2026-07-05T03:07:07.207965435Z [inf]  [23/26] RUN pnpm --filter @workspace/api-server run build
+2026-07-05T03:07:07.215120130Z [inf]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T03:07:07.685978422Z [inf]  
+> @workspace/control-center@0.0.0 build /app/artifacts/control-center
+> vite build --config vite.config.ts
+
+
+2026-07-05T03:07:08.125907048Z [inf]  vite v7.3.1 building client environment for production...
+
+2026-07-05T03:07:08.212140362Z [inf]  transforming...
+
+2026-07-05T03:07:08.662289393Z [inf]  src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+2026-07-05T03:07:09.029983499Z [inf]  src/components/ui/command.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+2026-07-05T03:07:09.061984143Z [inf]  src/components/ui/label.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+2026-07-05T03:07:09.064177373Z [inf]  src/components/ui/sheet.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+2026-07-05T03:07:09.200818398Z [inf]  src/components/ui/select.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+2026-07-05T03:07:09.70247435Z [inf]  src/components/ui/avatar.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+2026-07-05T03:07:09.705918026Z [inf]  src/components/ui/sidebar.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+2026-07-05T03:07:11.057240442Z [inf]  uploading snapshot
+2026-07-05T03:07:12.829297124Z [inf]  ✓ 2484 modules transformed.
+
+2026-07-05T03:07:13.49658585Z [inf]  rendering chunks...
+
+2026-07-05T03:07:13.512022521Z [inf]  computing gzip size...
+
+2026-07-05T03:07:13.566396493Z [inf]  dist/public/index.html                   1.43 kB │ gzip:   0.55 kB
+dist/public/assets/index-DVyNnZpC.css  124.73 kB │ gzip:  19.46 kB
+dist/public/assets/index-DUlBYkWu.js   915.94 kB │ gzip: 267.94 kB
+
+2026-07-05T03:07:13.566513248Z [inf]  
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+2026-07-05T03:07:13.566937365Z [inf]  ✓ built in 5.39s
+
+2026-07-05T03:07:14.062592462Z [inf]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T03:07:14.070009150Z [inf]  [25/26] COPY start.sh ./start.sh
+2026-07-05T03:07:14.149523583Z [inf]  [25/26] COPY start.sh ./start.sh
+2026-07-05T03:07:14.157254152Z [inf]  [26/26] RUN chmod +x ./start.sh
+2026-07-05T03:07:14.357755683Z [inf]  [26/26] RUN chmod +x ./start.sh
+2026-07-05T03:07:14.367056548Z [inf]  exporting to docker image format
+2026-07-05T03:07:15.556356276Z [inf]  exporting to docker image format
+2026-07-05T03:07:15.613376238Z [inf]  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6ZDUyMzljYmFiZGE2MGIwMjA4ZTYxMTM0MjgwZGRjM2NmODMwYjAyNmQwMzljZmQzMzg5Njc4N2FmYzkzMjc1MCIsInNpemUiOjU5ODUsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0wNVQwMzowNzoxNFoifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
+2026-07-05T03:07:15.613379703Z [inf]  containerimage.config.digest: sha256:9bfe6c530d85dfd25eb21aad50b0de9d250db2503fab4460f129b5800845abb2
+2026-07-05T03:07:15.613382668Z [inf]  containerimage.digest: sha256:d5239cbabda60b0208e61134280ddc3cf830b026d039cfd33896787afc932750
+2026-07-05T03:07:31.797555354Z [inf]  image push
+2026-07-05T03:07:31.797587302Z [inf]  image push
+2026-07-05T03:07:43.285931908Z [inf]  
+2026-07-05T03:07:43.285934773Z [inf]  [35m====================
+Starting Healthcheck
+====================
+[0m
+2026-07-05T03:07:43.285935503Z [inf]  [37mPath: /api/healthz[0m
+2026-07-05T03:07:43.285936236Z [inf]  [37mRetry window: 1m0s[0m
+2026-07-05T03:07:43.285936889Z [inf]  
+2026-07-05T03:07:44.395539759Z [inf]  [93mAttempt #1 failed with service unavailable. Continuing to retry for 58s[0m
+2026-07-05T03:07:45.448005429Z [inf]  [93mAttempt #2 failed with service unavailable. Continuing to retry for 57s[0m
+2026-07-05T03:07:47.497539396Z [inf]  [93mAttempt #3 failed with service unavailable. Continuing to retry for 55s[0m
+2026-07-05T03:07:51.544814438Z [inf]  [93mAttempt #4 failed with service unavailable. Continuing to retry for 51s[0m
+2026-07-05T03:07:59.591269531Z [inf]  [93mAttempt #5 failed with service unavailable. Continuing to retry for 43s[0m
+2026-07-05T03:08:15.641240527Z [inf]  [93mAttempt #6 failed with service unavailable. Continuing to retry for 27s[0m
+2026-07-05T03:08:15.689876069Z [inf]  
+2026-07-05T03:08:15.689878585Z [inf]  [91m1/1 replicas never became healthy![0m
+2026-07-05T03:08:15.689880199Z [inf]  [91mHealthcheck failed![0m

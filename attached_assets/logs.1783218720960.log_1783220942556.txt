@@ -1,0 +1,179 @@
+2026-07-05T02:31:31.173909247Z [inf]  scheduling build on Metal builder "builder-rzviqx"
+2026-07-05T02:31:39.966578017Z [inf]  unpacking archive
+2026-07-05T02:31:40.159855750Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T02:31:40.159910542Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T02:31:40.160466056Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T02:31:40.189579848Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T02:31:40.197631198Z [inf]  [internal] load metadata for docker.io/library/node:22-bookworm-slim
+2026-07-05T02:31:40.358835919Z [inf]  [internal] load metadata for docker.io/library/node:22-bookworm-slim
+2026-07-05T02:31:40.359556420Z [inf]  [internal] load .dockerignore
+2026-07-05T02:31:40.359885133Z [inf]  [internal] load .dockerignore
+2026-07-05T02:31:40.359904943Z [inf]  [internal] load .dockerignore
+2026-07-05T02:31:40.388939125Z [inf]  [internal] load .dockerignore
+2026-07-05T02:31:40.439453036Z [inf]  [ 8/26] COPY artifacts/control-center/package.json ./artifacts/control-center/
+2026-07-05T02:31:40.439454608Z [inf]  [11/26] COPY lib/api-spec/package.json             ./lib/api-spec/
+2026-07-05T02:31:40.439454909Z [inf]  [internal] load build context
+2026-07-05T02:31:40.439455139Z [inf]  [16/26] COPY lib/db              ./lib/db
+2026-07-05T02:31:40.439455389Z [inf]  [12/26] COPY lib/api-zod/package.json              ./lib/api-zod/
+2026-07-05T02:31:40.439455630Z [inf]  [ 4/26] RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
+2026-07-05T02:31:40.439455860Z [inf]  [17/26] COPY lib/api-zod         ./lib/api-zod
+2026-07-05T02:31:40.439456081Z [inf]  [ 2/26] RUN apt-get update  && apt-get install -y --no-install-recommends fonts-dejavu-core fontconfig  && rm -rf /var/lib/apt/lists/*  && fc-cache -f
+2026-07-05T02:31:40.439456311Z [inf]  [20/26] COPY artifacts/api-server      ./artifacts/api-server
+2026-07-05T02:31:40.439456541Z [inf]  [ 5/26] COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+2026-07-05T02:31:40.439456782Z [inf]  [15/26] RUN pnpm install --frozen-lockfile     --filter "@workspace/discord-bot..."     --filter "@workspace/api-server..."     --filter "@workspace/control-center..."
+2026-07-05T02:31:40.439457002Z [inf]  [13/26] COPY lib/db/package.json                   ./lib/db/
+2026-07-05T02:31:40.439457232Z [inf]  [ 7/26] COPY artifacts/api-server/package.json     ./artifacts/api-server/
+2026-07-05T02:31:40.439457463Z [inf]  [ 6/26] COPY artifacts/discord-bot/package.json    ./artifacts/discord-bot/
+2026-07-05T02:31:40.439457693Z [inf]  [14/26] COPY scripts/package.json                  ./scripts/
+2026-07-05T02:31:40.439457913Z [inf]  [18/26] COPY lib/api-client-react ./lib/api-client-react
+2026-07-05T02:31:40.439458133Z [inf]  [ 3/26] WORKDIR /app
+2026-07-05T02:31:40.439458344Z [inf]  [ 9/26] COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+2026-07-05T02:31:40.439458564Z [inf]  [19/26] COPY artifacts/discord-bot     ./artifacts/discord-bot
+2026-07-05T02:31:40.439458794Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T02:31:40.439459015Z [inf]  [10/26] COPY lib/api-client-react/package.json     ./lib/api-client-react/
+2026-07-05T02:31:40.439467958Z [inf]  [21/26] COPY artifacts/control-center  ./artifacts/control-center
+2026-07-05T02:31:40.439486676Z [inf]  [26/26] RUN chmod +x ./start.sh
+2026-07-05T02:31:40.439487107Z [inf]  [25/26] COPY start.sh ./start.sh
+2026-07-05T02:31:40.439487337Z [inf]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T02:31:40.439487638Z [inf]  [23/26] RUN pnpm --filter @workspace/api-server run build
+2026-07-05T02:31:40.439487848Z [inf]  [22/26] RUN pnpm --filter @workspace/discord-bot run build
+2026-07-05T02:31:40.440647939Z [inf]  [internal] load build context
+2026-07-05T02:31:40.440665565Z [inf]  [internal] load build context
+2026-07-05T02:31:40.440666046Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T02:31:40.453638460Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T02:31:40.454290948Z [inf]  [internal] load build context
+2026-07-05T02:31:40.542210923Z [inf]  [internal] load build context
+2026-07-05T02:31:40.580679581Z [inf]  [ 2/26] RUN apt-get update  && apt-get install -y --no-install-recommends fonts-dejavu-core fontconfig  && rm -rf /var/lib/apt/lists/*  && fc-cache -f
+2026-07-05T02:31:40.580681294Z [inf]  [ 3/26] WORKDIR /app
+2026-07-05T02:31:40.580681825Z [inf]  [ 4/26] RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
+2026-07-05T02:31:40.580682365Z [inf]  [ 5/26] COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+2026-07-05T02:31:40.580682816Z [inf]  [ 6/26] COPY artifacts/discord-bot/package.json    ./artifacts/discord-bot/
+2026-07-05T02:31:40.580683227Z [inf]  [ 7/26] COPY artifacts/api-server/package.json     ./artifacts/api-server/
+2026-07-05T02:31:40.580683647Z [inf]  [ 8/26] COPY artifacts/control-center/package.json ./artifacts/control-center/
+2026-07-05T02:31:40.580684068Z [inf]  [ 9/26] COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+2026-07-05T02:31:40.580684489Z [inf]  [10/26] COPY lib/api-client-react/package.json     ./lib/api-client-react/
+2026-07-05T02:31:40.580684909Z [inf]  [11/26] COPY lib/api-spec/package.json             ./lib/api-spec/
+2026-07-05T02:31:40.580685350Z [inf]  [12/26] COPY lib/api-zod/package.json              ./lib/api-zod/
+2026-07-05T02:31:40.580685741Z [inf]  [13/26] COPY lib/db/package.json                   ./lib/db/
+2026-07-05T02:31:40.580686161Z [inf]  [14/26] COPY scripts/package.json                  ./scripts/
+2026-07-05T02:31:40.580686672Z [inf]  [15/26] RUN pnpm install --frozen-lockfile     --filter "@workspace/discord-bot..."     --filter "@workspace/api-server..."     --filter "@workspace/control-center..."
+2026-07-05T02:31:40.580687092Z [inf]  [16/26] COPY lib/db              ./lib/db
+2026-07-05T02:31:40.580695015Z [inf]  [17/26] COPY lib/api-zod         ./lib/api-zod
+2026-07-05T02:31:41.007484136Z [inf]  [17/26] COPY lib/api-zod         ./lib/api-zod
+2026-07-05T02:31:41.018173304Z [inf]  [18/26] COPY lib/api-client-react ./lib/api-client-react
+2026-07-05T02:31:41.092463599Z [inf]  [18/26] COPY lib/api-client-react ./lib/api-client-react
+2026-07-05T02:31:41.102448900Z [inf]  [19/26] COPY artifacts/discord-bot     ./artifacts/discord-bot
+2026-07-05T02:31:41.210453269Z [inf]  [19/26] COPY artifacts/discord-bot     ./artifacts/discord-bot
+2026-07-05T02:31:41.219963849Z [inf]  [20/26] COPY artifacts/api-server      ./artifacts/api-server
+2026-07-05T02:31:41.300545053Z [inf]  [20/26] COPY artifacts/api-server      ./artifacts/api-server
+2026-07-05T02:31:41.311179378Z [inf]  [21/26] COPY artifacts/control-center  ./artifacts/control-center
+2026-07-05T02:31:41.399239403Z [inf]  [21/26] COPY artifacts/control-center  ./artifacts/control-center
+2026-07-05T02:31:41.409319026Z [inf]  [22/26] RUN pnpm --filter @workspace/discord-bot run build
+2026-07-05T02:31:41.942935111Z [inf]  
+> @workspace/discord-bot@0.0.0 build /app/artifacts/discord-bot
+> node build.mjs
+
+
+2026-07-05T02:31:42.040371363Z [inf]  ▲ [WARNING] Cannot find base config file "../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+2026-07-05T02:31:42.087566164Z [inf]  ▲ [WARNING] Cannot find base config file "../../tsconfig.base.json" [tsconfig.json]
+
+    ../../lib/db/tsconfig.json:2:13:
+      2 │   "extends": "../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+2026-07-05T02:31:42.524327538Z [inf]  2 warnings
+
+2026-07-05T02:31:42.524452335Z [inf]  
+  dist/index.mjs       6.5mb ⚠️
+  dist/index.mjs.map  12.2mb
+
+⚡ Done in 485ms
+
+2026-07-05T02:31:42.631459758Z [inf]  [22/26] RUN pnpm --filter @workspace/discord-bot run build
+2026-07-05T02:31:42.641492582Z [inf]  [23/26] RUN pnpm --filter @workspace/api-server run build
+2026-07-05T02:31:43.205306765Z [inf]  
+> @workspace/api-server@0.0.0 build /app/artifacts/api-server
+> node ./build.mjs
+
+
+2026-07-05T02:31:43.297800241Z [inf]  ▲ [WARNING] Cannot find base config file "../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+2026-07-05T02:31:43.319243375Z [inf]  ▲ [WARNING] Cannot find base config file "../../tsconfig.base.json" [tsconfig.json]
+
+    ../../lib/db/tsconfig.json:2:13:
+      2 │   "extends": "../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+2026-07-05T02:31:43.326066522Z [inf]  ▲ [WARNING] Cannot find base config file "../../tsconfig.base.json" [tsconfig.json]
+
+    ../../lib/api-zod/tsconfig.json:2:13:
+      2 │   "extends": "../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+2026-07-05T02:31:43.565773367Z [inf]  3 warnings
+
+2026-07-05T02:31:43.565963622Z [inf]  
+  dist/index.mjs                       2.4mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.0kb
+  dist/pino-pretty.mjs               114.6kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.0mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.9kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 272ms
+
+2026-07-05T02:31:43.636352162Z [inf]  [23/26] RUN pnpm --filter @workspace/api-server run build
+2026-07-05T02:31:43.646045306Z [inf]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T02:31:44.131058026Z [inf]  
+> @workspace/control-center@0.0.0 build /app/artifacts/control-center
+> vite build --config vite.config.ts
+
+
+2026-07-05T02:31:44.353109721Z [inf]  ▲ [WARNING] Cannot find base config file "../../tsconfig.base.json" [tsconfig.json]
+
+    tsconfig.json:2:13:
+      2 │   "extends": "../../tsconfig.base.json",
+        ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+2026-07-05T02:31:44.662515761Z [inf]  vite v7.3.1 building client environment for production...
+
+2026-07-05T02:31:44.745164467Z [inf]  ✓ 0 modules transformed.
+
+2026-07-05T02:31:44.748642786Z [inf]  ✗ Build failed in 34ms
+error during build:
+[vite:build-html] failed to resolve "extends":"../../tsconfig.base.json" in /app/artifacts/control-center/tsconfig.json
+file: /app/artifacts/control-center/index.html
+    at resolveExtends (file:///app/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:5809:8)
+    at parseExtends (file:///app/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:5775:71)
+    at parse$13 (file:///app/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:5677:23)
+    at async loadTsconfigJsonForFile (file:///app/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:6286:37)
+    at async transformWithEsbuild (file:///app/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:6086:55)
+    at async Object.transform (file:///app/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.5_jiti@2.6.1_lightningcss@1.31.1_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:6172:20)
+    at async transform (file:///app/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21269:16)
+    at async ModuleLoader.addModuleSource (file:///app/node_modules/.pnpm/rollup@4.59.0/node_modules/rollup/dist/es/shared/node-entry.js:21497:36)
+
+2026-07-05T02:31:44.795648423Z [inf]  /app/artifacts/control-center:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/control-center@0.0.0 build: `vite build --config vite.config.ts`
+Exit status 1
+
+2026-07-05T02:31:44.862260197Z [err]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T02:31:44.923018007Z [err]  Build Failed: build daemon returned an error < failed to solve: process "/bin/sh -c PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build" did not complete successfully: exit code: 1 >
