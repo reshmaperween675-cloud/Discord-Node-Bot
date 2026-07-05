@@ -7,6 +7,7 @@ import { registerInteractionHandler } from "./bot/interactions.js";
 import { startHttpServer } from "./bot/http.js";
 import { startWatchdog } from "./bot/watchdog.js";
 import { registerAntiNukeEvents } from "./antinuke/index.js";
+import { spawnApiServer } from "./bot/api-server.js";
 
 const token = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN;
 if (!token) {
@@ -33,6 +34,10 @@ const slashHandlers = buildSlashHandlers(client, reregister);
 registerAntiNukeEvents(client);
 registerLifecycleEvents(client, rest, BASE_COMMANDS);
 registerInteractionHandler(client, slashHandlers, BUTTON_HANDLERS, PUBLIC_COMMANDS);
+
+// Spawn the API server as a subprocess — ensures it runs regardless of how
+// Railway launches this process (direct node invocation or via start.sh).
+spawnApiServer();
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
 startHttpServer(PORT);
