@@ -12,7 +12,7 @@ ENV PATH=$PNPM_HOME:$PATH
 
 RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
 
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc tsconfig.base.json ./
 
 COPY artifacts/discord-bot/package.json    ./artifacts/discord-bot/
 COPY artifacts/api-server/package.json     ./artifacts/api-server/
