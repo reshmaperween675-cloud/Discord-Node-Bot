@@ -3,12 +3,15 @@
 # With set -e, any non-zero exit inside the while loop body kills the subshell,
 # meaning the api-server would never restart after its first crash.
 
+# Railway injects PORT at runtime. Fall back to 8080 for local runs.
+API_PORT="${PORT:-8080}"
+
 # ── API server supervisor ────────────────────────────────────────────────────
 # Runs in a background subshell. Restarts automatically on any crash.
 (
   while true; do
-    echo "[api] Starting api-server on :8080..." >&2
-    PORT=8080 node /app/artifacts/api-server/dist/index.mjs || \
+    echo "[api] Starting api-server on :${API_PORT}..." >&2
+    node /app/artifacts/api-server/dist/index.mjs || \
       echo "[api] Exited ($?), restarting in 3s..." >&2
     sleep 3
   done
@@ -21,7 +24,7 @@ i=0
 while [ $i -lt 20 ]; do
   if node -e "
     var h=require('http');
-    h.get('http://localhost:8080/api/healthz',function(r){
+    h.get('http://localhost:${API_PORT}/api/healthz',function(r){
       process.exit(r.statusCode<400?0:1);
     }).on('error',function(){process.exit(1)});
   " 2>/dev/null; then
