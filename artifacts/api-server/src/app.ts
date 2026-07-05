@@ -1,5 +1,6 @@
 import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import path from "node:path";
 import router from "./routes";
@@ -31,6 +32,7 @@ app.use(
   }),
 );
 app.use(cors({ origin: true, credentials: true }));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);

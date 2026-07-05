@@ -21,9 +21,18 @@ router.get("/login", (req, res): void => {
     res.status(500).json({ error: "DISCORD_CLIENT_ID not configured" });
     return;
   }
-  // Generate CSRF state token and store in session
+
+  // Generate CSRF state token and store in a short-lived httpOnly cookie.
+  // Cookie-based storage survives API server restarts (no session dependency)
+  // so the callback never sees a stale/missing state.
   const state = randomBytes(24).toString("hex");
-  req.session.oauthState = state;
+  const isProduction = process.env.NODE_ENV === "production";
+  res.cookie("_oauth_state", state, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: "lax",
+    maxAge: 10 * 60 * 1000, // 10 minutes — enough for any OAuth round-trip
+  });
 
   const redirectUri = encodeURIComponent(getRedirectUri(req));
   const scope = encodeURIComponent("identify");
@@ -35,14 +44,15 @@ router.get("/login", (req, res): void => {
 router.get("/callback", async (req, res): Promise<void> => {
   const { code, state } = req.query;
 
-  // Validate CSRF state
-  const expectedState = req.session.oauthState;
-  if (!state || !expectedState || state !== expectedState) {
+  // Validate CSRF state against the short-lived cookie (not session).
+  // This is resilient to API server restarts between login and callback.
+  const cookieState = (req.cookies as Record<string, string> | undefined)?._oauth_state;
+  if (!state || typeof state !== "string" || !cookieState || state !== cookieState) {
     res.status(400).send(authPage("Error", "Invalid OAuth state — possible CSRF attempt."));
     return;
   }
-  // Consume state — one use only
-  delete req.session.oauthState;
+  // Consume state cookie — one use only
+  res.clearCookie("_oauth_state");
 
   if (!code || typeof code !== "string") {
     res.status(400).send(authPage("Error", "No authorization code received."));

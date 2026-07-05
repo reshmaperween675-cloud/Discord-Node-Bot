@@ -48,6 +48,5 @@ declare module "express-session" {
     globalName: string | null;
     avatar: string | null;
     accessLevel: string;
-    oauthState?: string;
   }
 }
