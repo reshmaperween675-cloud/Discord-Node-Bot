@@ -1,11 +1,11 @@
-import express, { type Express, type Request, type Response } from "express";
+import express, { type Express, type Request, type Response, type RequestHandler } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import path from "node:path";
 import router from "./routes";
 import { logger } from "./lib/logger";
-import { sessionMiddleware } from "./lib/session.js";
+import { buildSessionMiddleware } from "./lib/session.js";
 
 const app: Express = express();
 
@@ -35,7 +35,20 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(sessionMiddleware);
+
+// Session middleware is attached at startup (see index.ts) after the store
+// async probe completes. The placeholder below is replaced before any request
+// is served, so this is safe.
+let _sessionMiddleware: RequestHandler | null = null;
+app.use((req, res, next) => {
+  if (_sessionMiddleware) return _sessionMiddleware(req, res, next);
+  next();
+});
+
+export async function initSession(): Promise<void> {
+  const mw = await buildSessionMiddleware();
+  _sessionMiddleware = mw;
+}
 
 // ── Legal pages (required by Discord Developer Portal) ────────────────────
 
