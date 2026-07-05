@@ -1,363 +1,702 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useListEmbeds, useGetEmbed, useUpdateEmbed, useDeleteEmbed, getListEmbedsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { EmbedEntry } from "@workspace/api-client-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Box, LayoutTemplate, Plus, Search, Palette, Type, Image as ImageIcon, Trash2, Save, Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, Plus, Save, Trash2, Loader2, RotateCcw, Pencil, Zap, Image as ImageIcon, Type, Hash } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 
-// Hex color to integer for Discord API
-const hexToInt = (hex: string) => parseInt(hex.replace('#', ''), 16);
-const intToHex = (int: number | null | undefined) => int ? `#${int.toString(16).padStart(6, '0')}` : '#2b2d31';
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+const hexToInt = (hex: string) => parseInt(hex.replace("#", ""), 16);
+const intToHex = (int: number | null | undefined): string =>
+  int != null ? `#${int.toString(16).padStart(6, "0")}` : "#5865f2";
 
+// ─── Trigger info per embed id ────────────────────────────────────────────────
+const EMBED_META: Record<string, { trigger: string; description: string }> = {
+  "leveling.rank":        { trigger: "/rank",              description: "User checks their XP rank card" },
+  "leveling.levelup":     { trigger: "Auto · Level Up",   description: "Bot auto-posts when someone levels up" },
+  "leveling.leaderboard": { trigger: "/leaderboard",       description: "User views the XP leaderboard" },
+  "utility.warn":         { trigger: "/warn @user",        description: "Moderator issues a warning" },
+  "utility.announce":     { trigger: "/announce",          description: "Staff makes an announcement" },
+  "utility.poll":         { trigger: "/poll",              description: "Creating a vote/poll" },
+  "utility.attendance":   { trigger: "/attendance",        description: "Marking attendance at an event" },
+  "raids.start":          { trigger: "/startraid",         description: "A raid is initiated against an opponent" },
+  "raids.end":            { trigger: "/endraid",           description: "A raid concludes with results" },
+  "training.end":         { trigger: "/training end",      description: "Training session wraps up" },
+  "tournament.open":      { trigger: "/tournament",        description: "Tournament bracket opens" },
+  "lowo.hunt":            { trigger: "lowo hunt",          description: "User hunts for animals" },
+  "lowo.battle":          { trigger: "lowo battle",        description: "User challenges another to battle" },
+  "lowo.profile":         { trigger: "lowo profile",       description: "User views their lowo profile" },
+  "lowo.slots":           { trigger: "lowo slots",         description: "User plays the slot machine" },
+  "mewo.ai":              { trigger: "mewo chatgpt / llama", description: "AI command response" },
+  "mewo.help":            { trigger: "mewo help",          description: "Mewo help panel" },
+  "antinuke.alert":       { trigger: "Auto · Anti-Nuke",  description: "Security system detects suspicious activity" },
+  "verification.success": { trigger: "Auto · Verify",     description: "User completes verification" },
+  "economy.balance":      { trigger: "/balance",           description: "User checks their economy balance" },
+};
+
+// ─── Preview placeholder substitutions (makes the preview look realistic) ────
+const PREVIEW: Record<string, string> = {
+  "{user}": "@Username",
+  "{username}": "Username",
+  "{user1}": "@Challenger",
+  "{user2}": "@Opponent",
+  "{level}": "12",
+  "{xp}": "1,234",
+  "{nextXp}": "2,000",
+  "{rank}": "#3",
+  "{balance}": "5,420",
+  "{wallet}": "1,200",
+  "{bank}": "4,220",
+  "{total}": "5,420",
+  "{server}": "Last Stand",
+  "{moderator}": "@Mod",
+  "{reason}": "Breaking server rules",
+  "{count}": "47",
+  "{animals}": "🦁 Lion  🐯 Tiger  🐻 Bear",
+  "{host}": "@HostUser",
+  "{duration}": "45 minutes",
+  "{mvp}": "@BestPlayer",
+  "{result}": "Victory 🏆",
+  "{opponent}": "Enemy Guild",
+  "{number}": "42",
+  "{performers}": "@Player1, @Player2",
+  "{author}": "@Author",
+  "{content}": "Important server announcement goes here.",
+  "{question}": "What is your favourite colour?",
+  "{event}": "Weekly Meeting",
+  "{date}": "July 15, 2026",
+  "{prize}": "100 Robux",
+  "{max}": "32",
+  "{about}": "Summer Tournament",
+  "{rules}": "No teaming. Best of 3 rounds wins.",
+  "{response}": "Here is the AI response to your question...",
+  "{model}": "GPT-4o",
+  "{page}": "1",
+  "{action}": "Mass Ban",
+  "{threshold}": "5",
+  "{payout}": "1,500",
+  "{wager}": "500",
+  "{winner}": "@Winner",
+};
+
+function applyPreview(text: string | null | undefined): string {
+  if (!text) return "";
+  return Object.entries(PREVIEW).reduce(
+    (s, [k, v]) => s.replaceAll(k, v),
+    text
+  );
+}
+
+// ─── Variable chips users can click to insert ────────────────────────────────
+const VARIABLE_GROUPS = [
+  { label: "User", vars: ["{user}", "{username}", "{user1}", "{user2}"] },
+  { label: "Leveling", vars: ["{level}", "{xp}", "{nextXp}", "{rank}"] },
+  { label: "Economy", vars: ["{balance}", "{wallet}", "{bank}", "{total}"] },
+  { label: "Lowo", vars: ["{animals}", "{count}", "{winner}"] },
+  { label: "Events", vars: ["{host}", "{duration}", "{mvp}", "{result}", "{opponent}", "{prize}"] },
+  { label: "Mod", vars: ["{moderator}", "{reason}", "{action}"] },
+  { label: "Other", vars: ["{server}", "{author}", "{page}", "{content}", "{response}", "{model}"] },
+];
+
+// ─── Module groups for filter tabs ───────────────────────────────────────────
+const MODULE_TABS = ["All", "Lowo", "Leveling", "Economy", "Mewo", "Utility", "Raids", "Moderation", "Other"];
+const MODULE_COLORS: Record<string, string> = {
+  Lowo:         "text-emerald-400",
+  Leveling:     "text-blue-400",
+  Economy:      "text-yellow-400",
+  Mewo:         "text-purple-400",
+  Utility:      "text-sky-400",
+  Raids:        "text-red-400",
+  "Anti-Nuke":  "text-red-400",
+  Moderation:   "text-orange-400",
+  Tournaments:  "text-yellow-400",
+  Training:     "text-cyan-400",
+  Verification: "text-green-400",
+};
+
+function getModuleTab(module: string): string {
+  if (["Lowo"].includes(module)) return "Lowo";
+  if (["Leveling"].includes(module)) return "Leveling";
+  if (["Economy"].includes(module)) return "Economy";
+  if (["Mewo"].includes(module)) return "Mewo";
+  if (["Utility"].includes(module)) return "Utility";
+  if (["Raids"].includes(module)) return "Raids";
+  if (["Moderation", "Anti-Nuke"].includes(module)) return "Moderation";
+  return "Other";
+}
+
+// ─── Main Page ────────────────────────────────────────────────────────────────
 export default function EmbedsPage() {
   const [search, setSearch] = useState("");
-  const [selectedEmbed, setSelectedEmbed] = useState<string | null>(null);
-  
+  const [tab, setTab] = useState("All");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
   const { data: embeds, isLoading } = useListEmbeds();
 
-  const filteredEmbeds = embeds?.filter(e => 
-    e.module.toLowerCase().includes(search.toLowerCase()) || 
-    (e.title && e.title.toLowerCase().includes(search.toLowerCase()))
-  );
+  const filtered = embeds?.filter((e) => {
+    const matchSearch =
+      !search ||
+      e.module.toLowerCase().includes(search.toLowerCase()) ||
+      (e.title ?? "").toLowerCase().includes(search.toLowerCase()) ||
+      e.id.toLowerCase().includes(search.toLowerCase());
+    const matchTab = tab === "All" || getModuleTab(e.module) === tab;
+    return matchSearch && matchTab;
+  });
+
+  // group by module
+  const groups = filtered
+    ? Array.from(new Set(filtered.map((e) => e.module))).map((mod) => ({
+        module: mod,
+        embeds: filtered.filter((e) => e.module === mod),
+      }))
+    : [];
 
   return (
     <div className="p-6 md:p-8 h-full flex flex-col gap-6 max-w-[1600px] mx-auto">
+      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight mb-1">Embed Library</h1>
-          <p className="text-muted-foreground font-mono text-sm">Visual templates for bot messages</p>
+          <p className="text-muted-foreground text-sm">
+            Click any embed to edit what users see in Discord — with live preview.
+          </p>
         </div>
-        
-        <div className="flex items-center gap-4 w-full md:w-auto">
+        <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="relative flex-1 md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search embeds..." 
-              className="pl-9 bg-card/50 border-white/10 font-mono text-sm h-10"
+            <Input
+              placeholder="Search embeds…"
+              className="pl-9 bg-card/50 border-white/10 h-10"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          {/* Action button disabled visually since creation isn't in API yet, but UI is requested */}
-          <Button variant="outline" className="border-primary text-primary hover:bg-primary/10 h-10 font-mono text-sm opacity-50 cursor-not-allowed">
-            <Plus className="w-4 h-4 mr-2" /> NEW_EMBED
-          </Button>
         </div>
       </div>
 
+      {/* Module filter tabs */}
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList className="bg-black/20 border border-white/10 h-10 gap-1 flex-wrap">
+          {MODULE_TABS.map((t) => (
+            <TabsTrigger key={t} value={t} className="text-xs font-mono data-[state=active]:bg-primary/20 data-[state=active]:text-primary h-7">
+              {t}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
+
+      {/* Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, i) => (
-            <Card key={i} className="bg-card/30 border-white/5 animate-pulse h-64"></Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(9)].map((_, i) => (
+            <div key={i} className="bg-[#313338] border border-white/5 rounded-xl h-64 animate-pulse" />
           ))}
         </div>
+      ) : groups.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground gap-3 py-20">
+          <Hash className="w-10 h-10 opacity-30" />
+          <p className="font-mono text-sm">No embeds found</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredEmbeds?.map(embed => (
-            <EmbedCard 
-              key={embed.id} 
-              embed={embed} 
-              onClick={() => setSelectedEmbed(embed.id)}
-            />
-          ))}
-          
-          {filteredEmbeds?.length === 0 && (
-            <div className="col-span-full text-center py-20 text-muted-foreground font-mono">
-              <LayoutTemplate className="w-8 h-8 mx-auto mb-4 opacity-50" />
-              NO_EMBEDS_FOUND
+        <div className="space-y-8">
+          {groups.map(({ module, embeds: groupEmbeds }) => (
+            <div key={module}>
+              <div className="flex items-center gap-3 mb-4">
+                <span className={cn("font-bold text-base", MODULE_COLORS[module] ?? "text-foreground")}>
+                  {module}
+                </span>
+                <div className="h-px flex-1 bg-white/5" />
+                <span className="text-xs font-mono text-muted-foreground">{groupEmbeds.length} embed{groupEmbeds.length !== 1 ? "s" : ""}</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {groupEmbeds.map((embed) => (
+                  <EmbedPreviewCard
+                    key={embed.id}
+                    embed={embed}
+                    onClick={() => setSelectedId(embed.id)}
+                  />
+                ))}
+              </div>
             </div>
-          )}
+          ))}
         </div>
       )}
 
-      <EmbedEditorPanel 
-        embedId={selectedEmbed} 
-        onClose={() => setSelectedEmbed(null)} 
+      {/* Editor dialog */}
+      <EmbedEditorDialog
+        embedId={selectedId}
+        onClose={() => setSelectedId(null)}
       />
     </div>
   );
 }
 
-function EmbedCard({ embed, onClick }: { embed: EmbedEntry, onClick: () => void }) {
+// ─── Discord-style preview card ───────────────────────────────────────────────
+function EmbedPreviewCard({ embed, onClick }: { embed: EmbedEntry; onClick: () => void }) {
   const colorHex = intToHex(embed.color);
-  
+  const meta = EMBED_META[embed.id];
+  const isModified = !embed.isDefault;
+
   return (
-    <div 
-      className="rounded-xl border border-white/10 bg-[#313338] overflow-hidden cursor-pointer hover:ring-2 ring-primary/50 transition-all group flex flex-col h-64"
+    <div
+      className="group cursor-pointer rounded-xl border border-white/10 bg-[#2b2d31] overflow-hidden hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 flex flex-col"
       onClick={onClick}
     >
-      <div className="p-2 bg-black/40 border-b border-white/5 flex items-center justify-between">
-        <span className="text-xs font-mono text-muted-foreground truncate">{embed.module}/{embed.id}</span>
-        {embed.isDefault && <span className="text-[9px] font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/70">DEFAULT</span>}
-      </div>
-      
-      <div className="p-4 flex-1 overflow-hidden relative flex">
-        <div className="w-1 rounded-sm shrink-0" style={{ backgroundColor: colorHex }} />
-        <div className="pl-3 flex-1 min-w-0">
-          {embed.title && <h3 className="text-white font-semibold text-sm mb-1 truncate">{embed.title}</h3>}
-          {embed.description && <p className="text-[#dbdee1] text-xs line-clamp-4 leading-relaxed">{embed.description}</p>}
-          
-          {!embed.title && !embed.description && (
-            <div className="h-full flex items-center justify-center text-white/20 italic text-xs">No text content</div>
-          )}
+      {/* Card header */}
+      <div className="px-4 pt-3 pb-2 border-b border-white/5 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-xs font-mono text-muted-foreground truncate">{embed.id}</span>
         </div>
-        {embed.thumbnail && (
-          <div className="ml-3 shrink-0">
-            <img src={embed.thumbnail} alt="" className="w-12 h-12 rounded bg-black/20 object-cover" />
-          </div>
-        )}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {isModified && (
+            <Badge className="bg-primary/20 text-primary border-primary/30 text-[9px] font-mono h-4 px-1.5">CUSTOM</Badge>
+          )}
+          <Pencil className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
       </div>
-      
-      <div className="p-3 bg-black/20 border-t border-white/5 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
-        <span className="text-[10px] font-mono text-primary flex items-center"><Box className="w-3 h-3 mr-1" /> EDIT_TEMPLATE</span>
+
+      {/* Trigger label */}
+      {meta && (
+        <div className="px-4 py-2 bg-black/20 border-b border-white/5">
+          <div className="flex items-center gap-1.5 text-[11px]">
+            <Zap className="w-3 h-3 text-yellow-400 shrink-0" />
+            <span className="text-muted-foreground">Used when:</span>
+            <code className="text-yellow-300 font-mono">{meta.trigger}</code>
+          </div>
+        </div>
+      )}
+
+      {/* Discord message mockup */}
+      <div className="p-4 flex gap-3 flex-1 min-h-0">
+        {/* Bot avatar */}
+        <div className="w-9 h-9 rounded-full bg-[#5865f2] shrink-0 flex items-center justify-center text-white font-bold text-sm mt-0.5">
+          L
+        </div>
+
+        <div className="flex-1 min-w-0">
+          {/* Username row */}
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-white font-semibold text-sm">Lowo</span>
+            <span className="bg-[#5865F2] text-white text-[9px] uppercase font-bold px-1.5 rounded-[3px] leading-4">BOT</span>
+            <span className="text-[#949ba4] text-[11px]">Today at 12:00</span>
+          </div>
+
+          {/* Embed */}
+          <div className="rounded-[4px] overflow-hidden border border-white/5 bg-[#2b2d31] flex max-w-full">
+            <div className="w-1 shrink-0" style={{ backgroundColor: colorHex }} />
+            <div className="p-3 flex-1 min-w-0 space-y-1.5">
+              {embed.title && (
+                <div className="text-white font-semibold text-sm leading-tight truncate">
+                  {applyPreview(embed.title)}
+                </div>
+              )}
+              {embed.description && (
+                <div className="text-[#dbdee1] text-xs leading-relaxed line-clamp-3">
+                  {applyPreview(embed.description)}
+                </div>
+              )}
+              {!embed.title && !embed.description && embed.fields && embed.fields.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {embed.fields.slice(0, 2).map((f, i) => (
+                    <div key={i}>
+                      <div className="text-white text-[11px] font-semibold">{f.name}</div>
+                      <div className="text-[#dbdee1] text-[11px]">{applyPreview(f.value)}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {embed.fields && embed.fields.length > 0 && (embed.title || embed.description) && (
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 pt-1">
+                  {embed.fields.slice(0, 2).map((f, i) => (
+                    <div key={i} className={f.inline ? "" : "col-span-2"}>
+                      <div className="text-white text-[10px] font-semibold">{f.name}</div>
+                      <div className="text-[#dbdee1] text-[10px]">{applyPreview(f.value)}</div>
+                    </div>
+                  ))}
+                  {embed.fields.length > 2 && (
+                    <div className="col-span-2 text-[9px] text-muted-foreground">+{embed.fields.length - 2} more fields</div>
+                  )}
+                </div>
+              )}
+            </div>
+            {embed.thumbnail && (
+              <img src={embed.thumbnail} className="w-14 h-14 object-cover rounded m-2 shrink-0" alt="thumbnail" />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Hover action */}
+      <div className="px-4 pb-3 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="text-[11px] text-primary font-medium flex items-center gap-1.5">
+          <Pencil className="w-3 h-3" />
+          Click to edit with live preview
+        </div>
       </div>
     </div>
   );
 }
 
-function EmbedEditorPanel({ embedId, onClose }: { embedId: string | null, onClose: () => void }) {
+// ─── Full-screen editor dialog ────────────────────────────────────────────────
+function EmbedEditorDialog({ embedId, onClose }: { embedId: string | null; onClose: () => void }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
-  const { data: embed, isLoading } = useGetEmbed(embedId || "", {
-    query: { enabled: !!embedId }
+
+  const { data: embed, isLoading } = useGetEmbed(embedId ?? "", {
+    query: { enabled: !!embedId },
   });
 
   const updateMut = useUpdateEmbed();
   const deleteMut = useDeleteEmbed();
 
-  const [formData, setFormData] = useState<Partial<EmbedEntry>>({});
+  const [form, setForm] = useState<Partial<EmbedEntry>>({});
+  const [activeField, setActiveField] = useState<"title" | "description" | "footer" | null>(null);
+  const titleRef = React.useRef<HTMLInputElement>(null);
+  const descRef = React.useRef<HTMLTextAreaElement>(null);
+  const footerRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    if (embed) {
-      setFormData(embed);
-    }
+    if (embed) setForm({ ...embed });
   }, [embed]);
+
+  const insertVar = useCallback((v: string) => {
+    if (activeField === "title") {
+      const el = titleRef.current;
+      if (!el) return;
+      const start = el.selectionStart ?? (form.title ?? "").length;
+      const end = el.selectionEnd ?? start;
+      const current = form.title ?? "";
+      const next = current.slice(0, start) + v + current.slice(end);
+      setForm((f) => ({ ...f, title: next }));
+      setTimeout(() => { el.setSelectionRange(start + v.length, start + v.length); el.focus(); }, 0);
+    } else if (activeField === "footer") {
+      const el = footerRef.current;
+      if (!el) return;
+      const start = el.selectionStart ?? (form.footer ?? "").length;
+      const end = el.selectionEnd ?? start;
+      const current = form.footer ?? "";
+      const next = current.slice(0, start) + v + current.slice(end);
+      setForm((f) => ({ ...f, footer: next }));
+      setTimeout(() => { el.setSelectionRange(start + v.length, start + v.length); el.focus(); }, 0);
+    } else {
+      // default to description
+      const el = descRef.current;
+      if (!el) return;
+      const start = el.selectionStart ?? (form.description ?? "").length;
+      const end = el.selectionEnd ?? start;
+      const current = form.description ?? "";
+      const next = current.slice(0, start) + v + current.slice(end);
+      setForm((f) => ({ ...f, description: next }));
+      setTimeout(() => { el.setSelectionRange(start + v.length, start + v.length); el.focus(); }, 0);
+    }
+  }, [activeField, form]);
 
   const handleSave = () => {
     if (!embedId) return;
-    
-    updateMut.mutate({
-      id: embedId,
-      data: {
-        title: formData.title,
-        description: formData.description,
-        color: formData.color ? formData.color : null,
-        footer: formData.footer,
-        thumbnail: formData.thumbnail,
-        image: formData.image
+    updateMut.mutate(
+      { id: embedId, data: { title: form.title, description: form.description, color: form.color ?? null, footer: form.footer, thumbnail: form.thumbnail, image: form.image } },
+      {
+        onSuccess: () => {
+          toast({ title: "✅ Embed saved", description: "Changes are now live." });
+          queryClient.invalidateQueries({ queryKey: getListEmbedsQueryKey() });
+        },
+        onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
       }
-    }, {
-      onSuccess: () => {
-        toast({ title: "Embed updated", description: "Changes saved to database." });
-        queryClient.invalidateQueries({ queryKey: getListEmbedsQueryKey() });
-      }
-    });
+    );
   };
 
-  const handleDelete = () => {
+  const handleReset = () => {
     if (!embedId) return;
-    if (!confirm("Reset to default? Custom overrides will be lost.")) return;
-    
-    deleteMut.mutate({ id: embedId }, {
-      onSuccess: () => {
-        toast({ title: "Embed reset", description: "Restored to default template." });
-        queryClient.invalidateQueries({ queryKey: getListEmbedsQueryKey() });
-        onClose();
+    if (!confirm("Reset to default? Your customizations will be lost.")) return;
+    deleteMut.mutate(
+      { id: embedId },
+      {
+        onSuccess: () => {
+          toast({ title: "Embed reset", description: "Restored to default." });
+          queryClient.invalidateQueries({ queryKey: getListEmbedsQueryKey() });
+          onClose();
+        },
       }
-    });
+    );
   };
 
-  if (!embedId) return null;
-
-  const previewColor = intToHex(formData.color);
+  const colorHex = intToHex(form.color);
+  const meta = embedId ? EMBED_META[embedId] : null;
+  const isModified = embed && !embed.isDefault;
 
   return (
-    <Sheet open={!!embedId} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="w-full sm:max-w-[1000px] sm:w-[90vw] border-l border-white/10 bg-background p-0 flex flex-col md:flex-row overflow-hidden">
-        
+    <Dialog open={!!embedId} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-[95vw] w-[1200px] h-[90vh] p-0 bg-background border-white/10 flex flex-col overflow-hidden">
         {isLoading || !embed ? (
           <div className="flex-1 flex items-center justify-center">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
-          <>
-            {/* Editor Sidebar */}
-            <div className="w-full md:w-[400px] border-r border-white/10 bg-sidebar/50 flex flex-col h-[50vh] md:h-full overflow-hidden shrink-0">
-              <SheetHeader className="p-6 border-b border-white/10 bg-black/20 shrink-0">
-                <SheetTitle className="font-mono text-lg flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-primary" />
-                  EDIT_EMBED
-                </SheetTitle>
-                <div className="text-xs font-mono text-muted-foreground mt-1">
-                  ID: {embed.id}
-                </div>
-              </SheetHeader>
+          <div className="flex flex-col md:flex-row flex-1 min-h-0">
 
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-mono text-muted-foreground flex items-center gap-2"><Type className="w-3 h-3" /> TITLE</Label>
-                    <Input 
-                      value={formData.title || ""} 
-                      onChange={e => setFormData({...formData, title: e.target.value})}
-                      className="bg-black/20 border-white/10 font-mono text-sm"
-                    />
+            {/* ── Left: Editor ───────────────────────────────────────── */}
+            <div className="w-full md:w-[420px] shrink-0 border-r border-white/10 flex flex-col h-[50vh] md:h-full">
+              {/* Header */}
+              <div className="p-5 border-b border-white/10 bg-black/20 shrink-0">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h2 className="font-bold text-lg leading-tight">{embed.module} — {embed.id.split(".")[1]}</h2>
+                    {meta && (
+                      <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
+                        <Zap className="w-3 h-3 text-yellow-400" />
+                        <code className="text-yellow-300">{meta.trigger}</code>
+                        <span>·</span>
+                        <span>{meta.description}</span>
+                      </div>
+                    )}
                   </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-mono text-muted-foreground flex items-center gap-2"><Type className="w-3 h-3" /> DESCRIPTION</Label>
-                    <Textarea 
-                      value={formData.description || ""} 
-                      onChange={e => setFormData({...formData, description: e.target.value})}
-                      className="bg-black/20 border-white/10 font-mono text-sm min-h-[150px]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-mono text-muted-foreground flex items-center gap-2"><Palette className="w-3 h-3" /> COLOR (HEX)</Label>
-                    <div className="flex gap-2">
-                      <div 
-                        className="w-10 h-10 rounded border border-white/20 shrink-0"
-                        style={{ backgroundColor: previewColor }}
-                      />
-                      <Input 
-                        value={intToHex(formData.color)} 
-                        onChange={e => {
-                          const val = e.target.value;
-                          if (/^#[0-9A-F]{6}$/i.test(val)) {
-                            setFormData({...formData, color: hexToInt(val)});
-                          }
-                        }}
-                        className="bg-black/20 border-white/10 font-mono text-sm uppercase"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-xs font-mono text-muted-foreground flex items-center gap-2"><ImageIcon className="w-3 h-3" /> THUMBNAIL URL</Label>
-                    <Input 
-                      value={formData.thumbnail || ""} 
-                      onChange={e => setFormData({...formData, thumbnail: e.target.value})}
-                      className="bg-black/20 border-white/10 font-mono text-sm"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-xs font-mono text-muted-foreground flex items-center gap-2"><ImageIcon className="w-3 h-3" /> IMAGE URL</Label>
-                    <Input 
-                      value={formData.image || ""} 
-                      onChange={e => setFormData({...formData, image: e.target.value})}
-                      className="bg-black/20 border-white/10 font-mono text-sm"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-xs font-mono text-muted-foreground flex items-center gap-2"><Type className="w-3 h-3" /> FOOTER TEXT</Label>
-                    <Input 
-                      value={formData.footer || ""} 
-                      onChange={e => setFormData({...formData, footer: e.target.value})}
-                      className="bg-black/20 border-white/10 font-mono text-sm"
-                    />
-                  </div>
+                  {isModified && <Badge className="bg-primary/20 text-primary border-primary/30 text-[10px] shrink-0">CUSTOM</Badge>}
                 </div>
               </div>
 
+              {/* Form */}
+              <div className="flex-1 overflow-y-auto p-5 space-y-5">
+                {/* Title */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider">
+                    <Type className="w-3 h-3" /> Title
+                  </Label>
+                  <Input
+                    ref={titleRef}
+                    value={form.title ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                    onFocus={() => setActiveField("title")}
+                    className="bg-black/20 border-white/10"
+                    placeholder="Embed title…"
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider">
+                    <Type className="w-3 h-3" /> Description
+                  </Label>
+                  <Textarea
+                    ref={descRef}
+                    value={form.description ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                    onFocus={() => setActiveField("description")}
+                    className="bg-black/20 border-white/10 min-h-[120px] resize-none font-mono text-sm"
+                    placeholder="Embed description… Use {user}, {level}, etc."
+                  />
+                </div>
+
+                {/* Variable chips */}
+                <div className="space-y-3">
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <Hash className="w-3 h-3" /> Variables
+                    <span className="normal-case font-normal text-[11px]">— click to insert into {activeField ?? "description"}</span>
+                  </Label>
+                  <div className="space-y-2.5">
+                    {VARIABLE_GROUPS.map((group) => (
+                      <div key={group.label}>
+                        <span className="text-[10px] font-mono text-muted-foreground/60 uppercase mb-1 block">{group.label}</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {group.vars.map((v) => (
+                            <button
+                              key={v}
+                              onClick={() => insertVar(v)}
+                              className="text-[11px] font-mono px-2 py-0.5 rounded border border-white/10 bg-black/20 hover:bg-primary/20 hover:border-primary/40 hover:text-primary text-muted-foreground transition-all"
+                            >
+                              {v}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Color */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sidebar Color</Label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      value={colorHex}
+                      onChange={(e) => setForm((f) => ({ ...f, color: hexToInt(e.target.value) }))}
+                      className="w-10 h-10 rounded border border-white/20 bg-transparent cursor-pointer"
+                    />
+                    <Input
+                      value={colorHex.toUpperCase()}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (/^#[0-9A-Fa-f]{6}$/.test(v)) setForm((f) => ({ ...f, color: hexToInt(v) }));
+                      }}
+                      className="bg-black/20 border-white/10 font-mono text-sm uppercase flex-1"
+                      placeholder="#5865F2"
+                    />
+                  </div>
+                </div>
+
+                {/* Thumbnail & Image */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <ImageIcon className="w-3 h-3" /> Thumbnail URL
+                  </Label>
+                  <Input
+                    value={form.thumbnail ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, thumbnail: e.target.value || undefined }))}
+                    className="bg-black/20 border-white/10 text-sm"
+                    placeholder="https://… (small image, top-right)"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <ImageIcon className="w-3 h-3" /> Large Image URL
+                  </Label>
+                  <Input
+                    value={form.image ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, image: e.target.value || undefined }))}
+                    className="bg-black/20 border-white/10 text-sm"
+                    placeholder="https://… (full-width image)"
+                  />
+                </div>
+
+                {/* Footer */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Footer Text</Label>
+                  <Input
+                    ref={footerRef}
+                    value={form.footer ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, footer: e.target.value || undefined }))}
+                    onFocus={() => setActiveField("footer")}
+                    className="bg-black/20 border-white/10 text-sm"
+                    placeholder="Footer text…"
+                  />
+                </div>
+              </div>
+
+              {/* Actions */}
               <div className="p-4 border-t border-white/10 bg-black/20 flex gap-2 shrink-0">
-                <Button 
-                  className="flex-1 font-mono" 
-                  onClick={handleSave}
-                  disabled={updateMut.isPending}
-                >
+                <Button className="flex-1" onClick={handleSave} disabled={updateMut.isPending}>
                   {updateMut.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                  SAVE
+                  Save Changes
                 </Button>
-                {!embed.isDefault && (
-                  <Button 
-                    variant="destructive" 
-                    size="icon"
-                    onClick={handleDelete}
-                    disabled={deleteMut.isPending}
-                  >
-                    <Trash2 className="w-4 h-4" />
+                {isModified && (
+                  <Button variant="outline" className="border-white/10" onClick={handleReset} disabled={deleteMut.isPending}>
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Reset
                   </Button>
                 )}
               </div>
             </div>
 
-            {/* Live Preview Area */}
-            <div className="flex-1 bg-[#2b2d31] p-8 flex items-center justify-center relative h-[50vh] md:h-full overflow-y-auto">
-              <div className="absolute top-4 left-4 text-xs font-mono text-white/30 tracking-widest">LIVE_PREVIEW</div>
-              
-              {/* Discord Message Mockup */}
-              <div className="w-full max-w-[520px] flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#5865F2] shrink-0 mt-1 flex items-center justify-center text-white">
-                  <LayoutTemplate className="w-5 h-5" />
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-white font-medium text-base">Lowo</span>
-                    <span className="bg-[#5865F2] text-white text-[10px] uppercase font-semibold px-1.5 rounded-[3px] leading-4 h-4">BOT</span>
-                    <span className="text-[#949ba4] text-xs">Today at 12:00 PM</span>
+            {/* ── Right: Live Preview ─────────────────────────────────── */}
+            <div className="flex-1 bg-[#313338] flex flex-col overflow-auto h-[40vh] md:h-full">
+              {/* Preview label */}
+              <div className="px-6 pt-4 pb-2 flex items-center gap-3 border-b border-white/5 shrink-0">
+                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <span className="text-xs font-mono text-white/40 tracking-widest uppercase">Live Preview</span>
+                <span className="text-xs text-muted-foreground ml-auto">Looks exactly like Discord</span>
+              </div>
+
+              {/* Discord message */}
+              <div className="flex-1 p-6 overflow-auto">
+                <div className="flex gap-3 max-w-[520px]">
+                  {/* Avatar */}
+                  <div className="w-10 h-10 rounded-full bg-[#5865f2] shrink-0 flex items-center justify-center text-white font-bold text-base mt-0.5">
+                    L
                   </div>
-                  
-                  {/* The actual embed preview */}
-                  <div className="mt-2 bg-[#2b2d31] border border-white/5 rounded-[4px] flex w-fit max-w-full overflow-hidden shadow-sm">
-                    <div className="w-1 shrink-0" style={{ backgroundColor: previewColor }} />
-                    <div className="p-4 flex flex-col gap-3 min-w-0 flex-1">
-                      
-                      <div className="flex gap-4">
-                        <div className="flex-1 min-w-0">
-                          {formData.title && (
-                            <div className="text-white font-semibold text-base mb-2 truncate">
-                              {formData.title}
+
+                  <div className="flex-1 min-w-0">
+                    {/* Username */}
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-white font-semibold">Lowo</span>
+                      <span className="bg-[#5865F2] text-white text-[10px] uppercase font-bold px-1.5 rounded-[3px] leading-4 h-4 flex items-center">BOT</span>
+                      <span className="text-[#949ba4] text-xs">Today at 12:00 PM</span>
+                    </div>
+
+                    {/* Embed */}
+                    <div className="mt-1 rounded-[4px] overflow-hidden border border-white/5 flex bg-[#2b2d31] w-fit max-w-full">
+                      <div className="w-1 shrink-0" style={{ backgroundColor: colorHex }} />
+                      <div className="flex-1 min-w-0">
+                        <div className="p-4 space-y-2">
+                          {/* Title & thumbnail row */}
+                          <div className="flex gap-4">
+                            <div className="flex-1 min-w-0 space-y-1.5">
+                              {form.title && (
+                                <div className="text-white font-semibold text-base leading-snug">
+                                  {applyPreview(form.title)}
+                                </div>
+                              )}
+                              {form.description && (
+                                <div className="text-[#dbdee1] text-sm whitespace-pre-wrap break-words leading-[1.375]">
+                                  {applyPreview(form.description)}
+                                </div>
+                              )}
                             </div>
-                          )}
-                          
-                          {formData.description && (
-                            <div className="text-[#dbdee1] text-[14px] whitespace-pre-wrap break-words leading-[1.375]">
-                              {formData.description}
-                            </div>
-                          )}
-                        </div>
-                        
-                        {formData.thumbnail && (
-                          <div className="shrink-0 w-20 h-20 rounded-[4px] overflow-hidden">
-                            <img src={formData.thumbnail} className="w-full h-full object-cover" alt="thumbnail" />
+                            {form.thumbnail && (
+                              <img
+                                src={form.thumbnail}
+                                className="w-20 h-20 rounded-[4px] object-cover shrink-0"
+                                alt="thumbnail"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                              />
+                            )}
                           </div>
-                        )}
+
+                          {/* Fields */}
+                          {embed.fields && embed.fields.length > 0 && (
+                            <div className="grid grid-cols-3 gap-x-4 gap-y-3 pt-1">
+                              {embed.fields.map((f, i) => (
+                                <div key={i} className={f.inline ? "" : "col-span-3"}>
+                                  <div className="text-white text-sm font-semibold mb-0.5">{f.name}</div>
+                                  <div className="text-[#dbdee1] text-sm">{applyPreview(f.value)}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Large image */}
+                          {form.image && (
+                            <div className="rounded-[4px] overflow-hidden mt-2 max-w-[420px]">
+                              <img
+                                src={form.image}
+                                className="w-full h-auto object-contain max-h-[240px]"
+                                alt="embed image"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                              />
+                            </div>
+                          )}
+
+                          {/* Footer */}
+                          {form.footer && (
+                            <div className="text-[#949ba4] text-xs pt-1 border-t border-white/5 mt-2">
+                              {applyPreview(form.footer)}
+                            </div>
+                          )}
+
+                          {/* Empty state */}
+                          {!form.title && !form.description && !form.image && !form.footer && !(embed.fields?.length) && (
+                            <div className="text-[#dbdee1]/30 text-sm italic py-6 text-center">
+                              Start typing to see your embed preview
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      
-                      {formData.image && (
-                        <div className="rounded-[4px] overflow-hidden mt-2 max-w-[400px]">
-                          <img src={formData.image} className="w-full h-auto object-contain max-h-[300px]" alt="embed image" />
-                        </div>
-                      )}
-                      
-                      {formData.footer && (
-                        <div className="text-[#dbdee1] text-xs flex items-center mt-2">
-                          {formData.footer}
-                        </div>
-                      )}
-                      
-                      {!formData.title && !formData.description && !formData.image && !formData.thumbnail && !formData.footer && (
-                        <div className="text-[#dbdee1]/50 text-sm italic py-4">Empty embed</div>
-                      )}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </>
+
+          </div>
         )}
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
