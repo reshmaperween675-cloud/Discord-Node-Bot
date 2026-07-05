@@ -38,6 +38,7 @@ import { handleAbcdAdmin, handleEditPCommand } from "../admin/panel.js";
 import { handleDmCommand } from "../admin/dm.js";
 import { handleRoleAllCandc } from "../admin/roleAllChannels.js";
 import { handleAntiNukeCommand } from "../antinuke/index.js";
+import { handleControlCenterCommand } from "../admin/controlCenter.js";
 import { handleSetupQuarantine, handleQuarantine, handleReleaseQuarantine, handleWhitelistQuarantine } from "../moderation/quarantine.js";
 import { runJsonMigration } from "../migrate-json.js";
 
@@ -457,6 +458,9 @@ export function registerLifecycleEvents(
         return;
       case "?abcdadmin":
         handleAbcdAdmin(message).catch((err) => console.error("[ADMIN] Unhandled error:", err));
+        return;
+      case "?editbot":
+        handleControlCenterCommand(message).catch((err) => console.error("[CONTROL_CENTER] Unhandled error:", err));
         return;
       case "?edit":
         handleEditPCommand(message).catch((err) => console.error("[EDIT] Unhandled error:", err));

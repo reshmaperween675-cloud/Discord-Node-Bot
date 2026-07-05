@@ -113,7 +113,7 @@ router.get("/callback", async (req, res): Promise<void> => {
     logger.info({ userId: user.id, username: user.username }, "Successful dashboard login");
 
     // Redirect to dashboard
-    res.redirect("/");
+    res.redirect("/dashboard");
   } catch (err) {
     logger.error({ err }, "OAuth callback error");
     res.status(500).send(authPage("Error", "Internal server error during authentication."));
@@ -148,7 +148,7 @@ function authPage(title: string, message: string): string {
   return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${title} — Control Center</title>
   <style>body{margin:0;background:#0a0a0f;color:#e0e0e0;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
   .box{text-align:center;padding:2rem}h1{color:#fff;font-size:1.5rem}p{color:#999;margin-top:.5rem}a{color:#5865f2;text-decoration:none}</style>
-  </head><body><div class="box"><h1>${title}</h1><p>${message}</p><p style="margin-top:1rem"><a href="/">Back to Control Center</a></p></div></body></html>`;
+  </head><body><div class="box"><h1>${title}</h1><p>${message}</p><p style="margin-top:1rem"><a href="/dashboard">Back to Control Center</a></p></div></body></html>`;
 }
 
 export default router;

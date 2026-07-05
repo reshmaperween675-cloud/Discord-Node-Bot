@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import path from "node:path";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { sessionMiddleware } from "./lib/session.js";
@@ -139,5 +140,18 @@ app.get("/privacy", (_req: Request, res: Response) => {
 });
 
 app.use("/api", router);
+
+// ── Control Center static files (production only) ─────────────────────────────
+// In Docker the control-center is built to CONTROL_CENTER_STATIC before startup.
+// This is not active in Replit dev — the control-center runs as its own Vite server there.
+if (process.env.NODE_ENV === "production" && process.env.CONTROL_CENTER_STATIC) {
+  const staticDir = process.env.CONTROL_CENTER_STATIC;
+  app.use("/dashboard", express.static(staticDir));
+  // SPA fallback — any unmatched /dashboard/* route serves index.html so
+  // React Router handles client-side navigation.
+  app.get("/dashboard*", (_req: Request, res: Response) => {
+    res.sendFile(path.join(staticDir, "index.html"));
+  });
+}
 
 export default app;
