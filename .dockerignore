@@ -19,17 +19,10 @@ attached_assets
 data
 replit.md
 
-artifacts/api-server/src
-artifacts/api-server/dist
-artifacts/api-server/build.mjs
 artifacts/mockup-sandbox/src
 artifacts/mockup-sandbox/public
 artifacts/mockup-sandbox/index.html
 
-lib/api-client-react/src
-lib/api-spec/src
-lib/api-spec/openapi.yaml
-lib/api-zod/src
 lib/db/drizzle.config.ts
 
 scripts/src
