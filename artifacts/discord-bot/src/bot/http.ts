@@ -9,7 +9,7 @@ const TERMS_HTML = readFileSync(new URL("./pages/terms.html", import.meta.url), 
 const PRIVACY_HTML = readFileSync(new URL("./pages/privacy.html", import.meta.url), "utf-8");
 
 const KEEP_ALIVE_INTERVAL_MS = 30_000;
-const API_SERVER_PORT = 8080;
+const API_SERVER_PORT = 8081;
 
 // Headers that must not be forwarded in a proxy (RFC 7230 §6.1 hop-by-hop).
 const HOP_BY_HOP = new Set([

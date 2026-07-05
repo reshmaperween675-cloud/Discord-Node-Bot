@@ -1,0 +1,63 @@
+2026-07-05T03:48:13.683267977Z [inf]  
+2026-07-05T03:48:13.683270927Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-07-05T03:48:13.683273397Z [inf]  > node dist/index.mjs
+2026-07-05T03:48:13.683275687Z [inf]  
+2026-07-05T03:48:13.916412355Z [inf]  Starting Container
+2026-07-05T03:48:13.938536925Z [inf]  [ANTINUKE] Events registered (GuildAuditLogEntryCreate + snapshot + webhook-spam).
+2026-07-05T03:48:13.938542545Z [inf]  [PERSISTENCE] Initializing Postgres-backed persistence...
+2026-07-05T03:48:13.972800211Z [inf]  [KEEP-ALIVE] HTTP server running on port 8080
+2026-07-05T03:48:14.026062442Z [inf]  [PERSISTENCE] Schema ready.
+2026-07-05T03:48:14.812240003Z [inf]  [READY] Logged in as EoN Management Bot#0533
+2026-07-05T03:48:14.812244843Z [inf]  [READY] Guilds in cache: 20
+2026-07-05T03:48:14.812250263Z [inf]  [READY] REST connection pre-warmed.
+2026-07-05T03:48:14.957272181Z [inf]  [READY] Cleared global commands (using per-guild registration).
+2026-07-05T03:48:15.187636921Z [inf]  [READY] Registered 99 commands to guild: 1122802372960321578
+2026-07-05T03:48:15.734211626Z [inf]  [READY] Registered 99 commands to guild: 1371028067627171880
+2026-07-05T03:48:15.734214386Z [inf]  [READY] Registered 99 commands to guild: 1454713289446785057
+2026-07-05T03:48:15.919790555Z [inf]  [READY] Registered 99 commands to guild: 1475861320938160220
+2026-07-05T03:48:16.144515189Z [inf]  [READY] Registered 99 commands to guild: 1475878010715508746
+2026-07-05T03:48:16.717346801Z [inf]  [READY] Registered 99 commands to guild: 1479910330669990025
+2026-07-05T03:48:16.717353961Z [inf]  [READY] Registered 99 commands to guild: 1492667977504526476
+2026-07-05T03:48:17.024622253Z [inf]  [READY] Registered 99 commands to guild: 1499320220450295878
+2026-07-05T03:48:17.301700194Z [inf]  [READY] Registered 99 commands to guild: 1511354334191812618
+2026-07-05T03:48:17.678099537Z [inf]  [READY] Registered 99 commands to guild: 1512021132218208396
+2026-07-05T03:48:17.754326629Z [inf]  [READY] Registered 99 commands to guild: 1514944305402216509
+2026-07-05T03:48:18.091722466Z [inf]  [READY] Registered 99 commands to guild: 1515228143001145405
+2026-07-05T03:48:18.323660700Z [inf]  [READY] Registered 99 commands to guild: 1519797029046325399
+2026-07-05T03:48:18.704749036Z [inf]  [READY] Registered 99 commands to guild: 1520493829428351109
+2026-07-05T03:48:18.788279909Z [inf]  [READY] Registered 99 commands to guild: 1521772134798721085
+2026-07-05T03:48:19.192725060Z [inf]  [READY] Registered 99 commands to guild: 1521827316710379631
+2026-07-05T03:48:19.362385032Z [inf]  [READY] Registered 99 commands to guild: 1521902661048205462
+2026-07-05T03:48:19.798870655Z [inf]  [READY] Registered 99 commands to guild: 1521912478022238399
+2026-07-05T03:48:19.881493713Z [inf]  [READY] Registered 99 commands to guild: 1522204904637337700
+2026-07-05T03:48:20.121850300Z [inf]  [READY] Registered 99 commands to guild: 1522298846917693592
+2026-07-05T03:48:20.121855439Z [inf]  [READY] Kill leaderboard refreshed.
+2026-07-05T03:48:20.121858589Z [inf]  [MIGRATE] leaderboard.json → leaderboard_players (0 rows)
+2026-07-05T03:48:20.121861319Z [inf]  [MIGRATE] lowo_channels.json → lowo_guild_settings
+2026-07-05T03:48:20.121863989Z [inf]  [READY] JSON→DB migration completed.
+2026-07-05T03:48:20.121866449Z [inf]  [ADMIN] Auto-generated panel token: dda5c9c7af8b61de00f84f29844c81f3be444547a5fbfa77990cf323714b8b5e
+2026-07-05T03:48:20.121869179Z [inf]  [ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.
+2026-07-05T03:48:20.123709079Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggeer" (extended vowel (ee)) via compound: niger (dedup in "niggeer")
+2026-07-05T03:48:20.136481168Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggerrr" (extended consonant (rrr)) via compound: niger (dedup in "niggerrr")
+2026-07-05T03:48:20.136484938Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckslang" (compound: fuck prefix) via compound: fuck (dedup in "fuckslang")
+2026-07-05T03:48:20.136487518Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckface" (compound: fuck prefix) via compound: fuckface (dedup in "fuckface")
+2026-07-05T03:48:20.136490408Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Choicefuck" (compound: fuck suffix) via compound: fuck (dedup in "choicefuck")
+2026-07-05T03:48:20.136492728Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-05T03:48:20.136495258Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-05T03:48:20.136497728Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-05T03:48:20.136500418Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T03:48:20.136502948Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T03:48:20.136505398Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-05T03:48:20.136507778Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-05T03:48:20.136510358Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-05T03:48:20.136514008Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-05T03:48:20.136530888Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-05T03:48:20.136533608Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-05T03:48:20.137266156Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-05T03:48:20.137268865Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-05T03:48:20.137272085Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-05T03:48:20.137274565Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-05T03:48:20.137277105Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-05T03:48:20.137279785Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-05T03:48:20.416588270Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-05T03:48:50.431881409Z [err]  [PROXY] Control Center request failed: 

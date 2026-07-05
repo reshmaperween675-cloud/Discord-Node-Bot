@@ -1,0 +1,89 @@
+2026-07-05T03:47:36.409095891Z [inf]  scheduling build on Metal builder "builder-rzviqx"
+2026-07-05T03:47:45.710276919Z [inf]  unpacking archive
+2026-07-05T03:47:45.893463641Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T03:47:45.893477892Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T03:47:45.893777482Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T03:47:45.927602543Z [inf]  [internal] load build definition from Dockerfile
+2026-07-05T03:47:45.937128105Z [inf]  [internal] load metadata for docker.io/library/node:22-bookworm-slim
+2026-07-05T03:47:46.085503717Z [inf]  [internal] load metadata for docker.io/library/node:22-bookworm-slim
+2026-07-05T03:47:46.086520021Z [inf]  [internal] load .dockerignore
+2026-07-05T03:47:46.086551248Z [inf]  [internal] load .dockerignore
+2026-07-05T03:47:46.086660632Z [inf]  [internal] load .dockerignore
+2026-07-05T03:47:46.118068327Z [inf]  [internal] load .dockerignore
+2026-07-05T03:47:46.132904326Z [inf]  [ 6/26] COPY artifacts/discord-bot/package.json    ./artifacts/discord-bot/
+2026-07-05T03:47:46.132927871Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T03:47:46.132930956Z [inf]  [internal] load build context
+2026-07-05T03:47:46.132931597Z [inf]  [16/26] COPY lib/db              ./lib/db
+2026-07-05T03:47:46.132932278Z [inf]  [12/26] COPY lib/api-zod/package.json              ./lib/api-zod/
+2026-07-05T03:47:46.132932769Z [inf]  [ 4/26] RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
+2026-07-05T03:47:46.132933300Z [inf]  [17/26] COPY lib/api-zod         ./lib/api-zod
+2026-07-05T03:47:46.132933831Z [inf]  [ 2/26] RUN apt-get update  && apt-get install -y --no-install-recommends fonts-dejavu-core fontconfig  && rm -rf /var/lib/apt/lists/*  && fc-cache -f
+2026-07-05T03:47:46.132934331Z [inf]  [ 9/26] COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+2026-07-05T03:47:46.132934852Z [inf]  [15/26] RUN pnpm install --frozen-lockfile     --filter "@workspace/discord-bot..."     --filter "@workspace/api-server..."     --filter "@workspace/control-center..."
+2026-07-05T03:47:46.132935353Z [inf]  [14/26] COPY scripts/package.json                  ./scripts/
+2026-07-05T03:47:46.132935843Z [inf]  [ 7/26] COPY artifacts/api-server/package.json     ./artifacts/api-server/
+2026-07-05T03:47:46.132936364Z [inf]  [ 5/26] COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc tsconfig.base.json ./
+2026-07-05T03:47:46.132936865Z [inf]  [13/26] COPY lib/db/package.json                   ./lib/db/
+2026-07-05T03:47:46.132937386Z [inf]  [ 8/26] COPY artifacts/control-center/package.json ./artifacts/control-center/
+2026-07-05T03:47:46.132937967Z [inf]  [18/26] COPY lib/api-client-react ./lib/api-client-react
+2026-07-05T03:47:46.132938458Z [inf]  [ 3/26] WORKDIR /app
+2026-07-05T03:47:46.132941041Z [inf]  [11/26] COPY lib/api-spec/package.json             ./lib/api-spec/
+2026-07-05T03:47:46.132941572Z [inf]  [19/26] COPY artifacts/discord-bot     ./artifacts/discord-bot
+2026-07-05T03:47:46.132942163Z [inf]  [10/26] COPY lib/api-client-react/package.json     ./lib/api-client-react/
+2026-07-05T03:47:46.132953069Z [inf]  [22/26] RUN pnpm --filter @workspace/discord-bot run build
+2026-07-05T03:47:46.132953720Z [inf]  [21/26] COPY artifacts/control-center  ./artifacts/control-center
+2026-07-05T03:47:46.132954231Z [inf]  [20/26] COPY artifacts/api-server      ./artifacts/api-server
+2026-07-05T03:47:46.132973290Z [inf]  [26/26] RUN chmod +x ./start.sh
+2026-07-05T03:47:46.132973901Z [inf]  [25/26] COPY start.sh ./start.sh
+2026-07-05T03:47:46.132976995Z [inf]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T03:47:46.132977616Z [inf]  [23/26] RUN pnpm --filter @workspace/api-server run build
+2026-07-05T03:47:46.133153380Z [inf]  [internal] load build context
+2026-07-05T03:47:46.133756926Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T03:47:46.146380907Z [inf]  [ 1/26] FROM docker.io/library/node:22-bookworm-slim@sha256:813a7480f28fdadac1f7f5c824bcdad435b5bc1322a5968bbbdef8d058f9dff4
+2026-07-05T03:47:46.147405413Z [inf]  [internal] load build context
+2026-07-05T03:47:46.251579435Z [inf]  [internal] load build context
+2026-07-05T03:47:46.297104992Z [inf]  [ 2/26] RUN apt-get update  && apt-get install -y --no-install-recommends fonts-dejavu-core fontconfig  && rm -rf /var/lib/apt/lists/*  && fc-cache -f
+2026-07-05T03:47:46.297106284Z [inf]  [ 3/26] WORKDIR /app
+2026-07-05T03:47:46.297106574Z [inf]  [ 4/26] RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
+2026-07-05T03:47:46.297106815Z [inf]  [ 5/26] COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc tsconfig.base.json ./
+2026-07-05T03:47:46.297107035Z [inf]  [ 6/26] COPY artifacts/discord-bot/package.json    ./artifacts/discord-bot/
+2026-07-05T03:47:46.297107255Z [inf]  [ 7/26] COPY artifacts/api-server/package.json     ./artifacts/api-server/
+2026-07-05T03:47:46.297107485Z [inf]  [ 8/26] COPY artifacts/control-center/package.json ./artifacts/control-center/
+2026-07-05T03:47:46.297107706Z [inf]  [ 9/26] COPY artifacts/mockup-sandbox/package.json ./artifacts/mockup-sandbox/
+2026-07-05T03:47:46.297107926Z [inf]  [10/26] COPY lib/api-client-react/package.json     ./lib/api-client-react/
+2026-07-05T03:47:46.297108146Z [inf]  [11/26] COPY lib/api-spec/package.json             ./lib/api-spec/
+2026-07-05T03:47:46.297108387Z [inf]  [12/26] COPY lib/api-zod/package.json              ./lib/api-zod/
+2026-07-05T03:47:46.297108597Z [inf]  [13/26] COPY lib/db/package.json                   ./lib/db/
+2026-07-05T03:47:46.297108827Z [inf]  [14/26] COPY scripts/package.json                  ./scripts/
+2026-07-05T03:47:46.297109068Z [inf]  [15/26] RUN pnpm install --frozen-lockfile     --filter "@workspace/discord-bot..."     --filter "@workspace/api-server..."     --filter "@workspace/control-center..."
+2026-07-05T03:47:46.297109589Z [inf]  [16/26] COPY lib/db              ./lib/db
+2026-07-05T03:47:46.297109909Z [inf]  [17/26] COPY lib/api-zod         ./lib/api-zod
+2026-07-05T03:47:46.297112132Z [inf]  [18/26] COPY lib/api-client-react ./lib/api-client-react
+2026-07-05T03:47:46.297112503Z [inf]  [19/26] COPY artifacts/discord-bot     ./artifacts/discord-bot
+2026-07-05T03:47:46.297112744Z [inf]  [20/26] COPY artifacts/api-server      ./artifacts/api-server
+2026-07-05T03:47:46.297112974Z [inf]  [21/26] COPY artifacts/control-center  ./artifacts/control-center
+2026-07-05T03:47:46.297113194Z [inf]  [22/26] RUN pnpm --filter @workspace/discord-bot run build
+2026-07-05T03:47:46.297113414Z [inf]  [23/26] RUN pnpm --filter @workspace/api-server run build
+2026-07-05T03:47:46.297113645Z [inf]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T03:47:46.297118242Z [inf]  [24/26] RUN PORT=3000 BASE_PATH=/dashboard pnpm --filter @workspace/control-center run build
+2026-07-05T03:47:46.297125953Z [inf]  [25/26] COPY start.sh ./start.sh
+2026-07-05T03:47:47.613376727Z [inf]  [25/26] COPY start.sh ./start.sh
+2026-07-05T03:47:47.619106284Z [inf]  [26/26] RUN chmod +x ./start.sh
+2026-07-05T03:47:47.795378421Z [inf]  [26/26] RUN chmod +x ./start.sh
+2026-07-05T03:47:47.806934510Z [inf]  exporting to docker image format
+2026-07-05T03:47:48.710023629Z [inf]  exporting to docker image format
+2026-07-05T03:47:49.184644687Z [inf]  containerimage.digest: sha256:163baa825290a0084bcf1bf26d8d1c8ce4068019b362c9756e8b658014d74689
+2026-07-05T03:47:49.184654302Z [inf]  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6MTYzYmFhODI1MjkwYTAwODRiY2YxYmYyNmQ4ZDFjOGNlNDA2ODAxOWIzNjJjOTc1NmU4YjY1ODAxNGQ3NDY4OSIsInNpemUiOjU5ODUsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0wNVQwMzo0Nzo0N1oifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
+2026-07-05T03:47:49.184656926Z [inf]  containerimage.config.digest: sha256:770c31e8c7ecb0399d61bd31e13c97395a47b643f5daa110868a079895757a63
+2026-07-05T03:47:54.046117499Z [inf]  uploading snapshot
+2026-07-05T03:48:04.787570114Z [inf]  image push
+2026-07-05T03:48:04.787613449Z [inf]  image push
+2026-07-05T03:48:13.764728841Z [inf]  
+2026-07-05T03:48:13.764730629Z [inf]  [35m====================
+Starting Healthcheck
+====================
+[0m
+2026-07-05T03:48:13.764731264Z [inf]  [37mPath: /api/healthz[0m
+2026-07-05T03:48:13.764732054Z [inf]  [37mRetry window: 2m0s[0m
+2026-07-05T03:48:13.764732904Z [inf]  
+2026-07-05T03:48:14.909078402Z [inf]  [92m[1/1] Healthcheck succeeded![0m
