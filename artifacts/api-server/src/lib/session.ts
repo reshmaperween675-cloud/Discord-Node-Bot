@@ -1,20 +1,34 @@
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
+import { randomBytes } from "node:crypto";
 import { pool } from "@workspace/db";
 
 const PgStore = connectPgSimple(session);
 
-const SECRET = process.env.SESSION_SECRET;
-if (!SECRET) {
-  throw new Error("SESSION_SECRET environment variable is required");
+const SECRET = process.env.SESSION_SECRET ?? (() => {
+  console.warn(
+    "[SESSION] SESSION_SECRET is not set — generating a random secret. " +
+    "Sessions will not survive restarts. Set SESSION_SECRET in Railway env vars."
+  );
+  return randomBytes(32).toString("hex");
+})();
+
+// Try to use the Postgres session store; fall back to in-memory if it fails.
+function makeStore(): session.Store | undefined {
+  try {
+    return new PgStore({
+      pool,
+      tableName: "dashboard_sessions",
+      createTableIfMissing: true,
+    });
+  } catch (err) {
+    console.warn("[SESSION] Failed to create PgStore — using in-memory store:", err);
+    return undefined; // express-session defaults to MemoryStore
+  }
 }
 
 export const sessionMiddleware = session({
-  store: new PgStore({
-    pool,
-    tableName: "dashboard_sessions",
-    createTableIfMissing: true,
-  }),
+  store: makeStore(),
   secret: SECRET,
   resave: false,
   saveUninitialized: false,
