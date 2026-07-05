@@ -1,33 +1,39 @@
 #!/bin/sh
-set -e
+# NO set -e — the supervisor loop must survive api-server crashes.
+# With set -e, any non-zero exit inside the while loop body kills the subshell,
+# meaning the api-server would never restart after its first crash.
 
-# Supervisor: start the API server and auto-restart it if it crashes.
-# The api-server runs on internal port 8080 (never public-facing).
-start_api_server() {
+# ── API server supervisor ────────────────────────────────────────────────────
+# Runs in a background subshell. Restarts automatically on any crash.
+(
   while true; do
-    PORT=8080 node /app/artifacts/api-server/dist/index.mjs
-    echo "[start.sh] API server exited ($?) — restarting in 2s..." >&2
-    sleep 2
+    echo "[api] Starting api-server on :8080..." >&2
+    PORT=8080 node /app/artifacts/api-server/dist/index.mjs || \
+      echo "[api] Exited ($?), restarting in 3s..." >&2
+    sleep 3
   done
-}
-start_api_server &
+) &
 
-# Wait until the API server is actually accepting connections.
-# Uses node (always present) — wget/curl are not in node:22-bookworm-slim.
-echo "[start.sh] Waiting for API server..."
-TRIES=0
-while [ $TRIES -lt 30 ]; do
-  if node -e "const h=require('http');h.get('http://localhost:8080/api/healthz',r=>{process.exit(r.statusCode<400?0:1)}).on('error',()=>process.exit(1))" 2>/dev/null; then
-    echo "[start.sh] API server ready after ${TRIES}s."
+# ── Wait for api-server to be ready ─────────────────────────────────────────
+# node is always available; wget/curl are not in node:22-bookworm-slim.
+echo "[start] Waiting for api-server..."
+i=0
+while [ $i -lt 20 ]; do
+  if node -e "
+    var h=require('http');
+    h.get('http://localhost:8080/api/healthz',function(r){
+      process.exit(r.statusCode<400?0:1);
+    }).on('error',function(){process.exit(1)});
+  " 2>/dev/null; then
+    echo "[start] API server ready (${i}s)."
     break
   fi
-  TRIES=$((TRIES + 1))
+  i=$((i+1))
   sleep 1
 done
 
-if [ $TRIES -ge 30 ]; then
-  echo "[start.sh] WARNING: API server did not respond after 30s — Control Center may be unavailable." >&2
-fi
+[ $i -ge 20 ] && echo "[start] WARNING: api-server not ready after 20s — Control Center may be unavailable." >&2
 
-# Start the Discord bot as the foreground process Railway monitors.
+# ── Discord bot (foreground — Railway monitors this process) ─────────────────
+echo "[start] Starting Discord bot..."
 exec node /app/artifacts/discord-bot/dist/index.mjs
