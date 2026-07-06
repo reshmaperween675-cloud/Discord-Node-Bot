@@ -1,0 +1,1000 @@
+2026-07-05T04:50:53.343866133Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-05T04:50:53.343869523Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-05T04:50:53.343872663Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-05T04:50:53.343875543Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T04:50:53.343878583Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T04:50:53.344639935Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-05T04:50:53.344641395Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-05T04:50:53.344665115Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-05T04:50:53.344668725Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-05T04:50:53.344672975Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-05T04:50:53.344677485Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-05T04:50:53.344681215Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-05T04:50:53.344686495Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-05T04:50:53.344690455Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-05T04:50:53.344694145Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-05T04:50:53.344697885Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-05T04:50:53.344701485Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-05T04:50:53.509616878Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-05T04:50:54.327022387Z [inf]  Command failed with signal "SIGTERM"
+2026-07-05T04:50:54.327084571Z [inf]  /app/artifacts/discord-bot:
+2026-07-05T04:50:54.327089543Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `node dist/index.mjs`
+2026-07-05T04:50:56.472906493Z [err]  2026-07-05 04:50:50.968 UTC [146759] LOG:  SSL error: unexpected eof while reading
+2026-07-05T04:50:56.472915362Z [err]  2026-07-05 04:50:50.968 UTC [146759] LOG:  could not receive data from client: Connection reset by peer
+2026-07-05T04:50:56.472919692Z [err]  2026-07-05 04:50:50.968 UTC [146755] LOG:  SSL error: unexpected eof while reading
+2026-07-05T04:52:54.176076083Z [inf]  request completed
+2026-07-05T04:52:54.176078973Z [inf]  request completed
+2026-07-05T04:52:54.176081593Z [inf]  request completed
+2026-07-05T04:52:54.176084803Z [inf]  request completed
+2026-07-05T04:52:56.877291591Z [err]  2026-07-05 04:52:50.603 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T04:52:56.877302781Z [err]  2026-07-05 04:52:54.034 UTC [91] LOG:  checkpoint complete: wrote 34 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=3.416 s, sync=0.006 s, total=3.431 s; sync files=26, longest=0.004 s, average=0.001 s; distance=224 kB, estimate=233 kB; lsn=0/65669568, redo lsn=0/65669510
+2026-07-05T04:53:14.133657270Z [inf]  request completed
+2026-07-05T04:53:14.133663990Z [inf]  Failed to get activity
+2026-07-05T04:53:14.133691980Z [inf]  request completed
+2026-07-05T04:53:14.133707350Z [inf]  request completed
+2026-07-05T04:53:14.133714999Z [inf]  request completed
+2026-07-05T04:53:14.133736739Z [inf]  Successful dashboard login
+2026-07-05T04:53:14.133738709Z [inf]  request completed
+2026-07-05T04:53:14.134813239Z [inf]  request completed
+2026-07-05T04:53:14.134816319Z [inf]  request completed
+2026-07-05T04:53:14.134819109Z [inf]  request completed
+2026-07-05T04:53:15.535807866Z [inf]  request completed
+2026-07-05T04:53:16.961936735Z [err]  2026-07-05 04:53:07.069 UTC [146774] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:53:16.961946195Z [err]  2026-07-05 04:53:07.069 UTC [146774] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T04:53:17.717082366Z [inf]  request completed
+2026-07-05T04:53:17.717085356Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:53:17.717088596Z [err]  params: command.%:rank,50
+2026-07-05T04:53:17.717091506Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T04:53:17.717094316Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T04:53:17.717097956Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T04:53:17.717101496Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54741:20
+2026-07-05T04:53:17.717105055Z [inf]  request errored
+2026-07-05T04:53:17.731048575Z [err]  2026-07-05 04:53:17.457 UTC [146778] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:53:17.731059735Z [err]  2026-07-05 04:53:17.457 UTC [146778] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:53:18.850179681Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:53:18.850183581Z [err]  params: command.%:rank,50
+2026-07-05T04:53:18.850187081Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T04:53:18.850189761Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T04:53:18.850192261Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T04:53:18.850195021Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54741:20
+2026-07-05T04:53:18.850197411Z [inf]  request errored
+2026-07-05T04:53:18.878738129Z [err]  2026-07-05 04:53:18.840 UTC [146775] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:53:18.878743609Z [err]  2026-07-05 04:53:18.840 UTC [146775] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:53:21.233516408Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:53:21.233524968Z [err]  params: command.%:rank,50
+2026-07-05T04:53:21.233529558Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T04:53:21.233533657Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T04:53:21.233537447Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T04:53:21.233542077Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54741:20
+2026-07-05T04:53:21.233546427Z [inf]  request errored
+2026-07-05T04:53:21.323636830Z [err]  2026-07-05 04:53:21.209 UTC [146779] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:53:21.323645490Z [err]  2026-07-05 04:53:21.209 UTC [146779] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:53:25.594498111Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T04:53:25.594503221Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T04:53:25.594506411Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54741:20
+2026-07-05T04:53:25.594508901Z [inf]  request errored
+2026-07-05T04:53:25.594519571Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:53:25.594522801Z [err]  params: command.%:rank,50
+2026-07-05T04:53:25.594526650Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T04:53:25.596981737Z [err]  2026-07-05 04:53:25.589 UTC [146780] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:53:25.596988557Z [err]  2026-07-05 04:53:25.589 UTC [146780] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:53:32.532018288Z [inf]  request completed
+2026-07-05T04:53:52.562109516Z [inf]  request completed
+2026-07-05T04:54:12.616287138Z [inf]  request completed
+2026-07-05T04:54:32.664064612Z [inf]  request completed
+2026-07-05T04:54:39.997760784Z [inf]  request completed
+2026-07-05T04:54:59.700445990Z [inf]  request completed
+2026-07-05T04:55:01.808968308Z [inf]  request completed
+2026-07-05T04:55:03.292565217Z [inf]  request completed
+2026-07-05T04:55:06.543694381Z [inf]  request completed
+2026-07-05T04:55:08.957806647Z [inf]  request completed
+2026-07-05T04:55:09.454515026Z [inf]  request completed
+2026-07-05T04:55:13.485438901Z [inf]  request completed
+2026-07-05T04:55:14.883912099Z [inf]  request completed
+2026-07-05T04:55:34.891362160Z [inf]  request completed
+2026-07-05T04:55:39.468784163Z [inf]  request completed
+2026-07-05T04:55:39.788712125Z [inf]  request completed
+2026-07-05T04:55:39.788727365Z [inf]  request completed
+2026-07-05T04:55:40.284021526Z [inf]  request completed
+2026-07-05T04:55:40.284027006Z [inf]  request completed
+2026-07-05T04:55:40.868491508Z [inf]  request completed
+2026-07-05T04:55:45.366763993Z [inf]  request completed
+2026-07-05T04:55:49.041692541Z [inf]  Failed to get activity
+2026-07-05T04:55:49.041697241Z [inf]  request completed
+2026-07-05T04:55:49.095521409Z [inf]  request completed
+2026-07-05T04:55:54.474650619Z [inf]  request completed
+2026-07-05T04:55:56.112017918Z [err]  2026-07-05 04:55:49.033 UTC [146793] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:55:56.112047538Z [err]  2026-07-05 04:55:49.033 UTC [146793] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T04:55:57.016683199Z [inf]  request completed
+2026-07-05T04:55:57.563213002Z [inf]  request completed
+2026-07-05T04:55:57.563217032Z [inf]  request completed
+2026-07-05T04:55:57.780711080Z [inf]  request completed
+2026-07-05T04:55:57.780717940Z [inf]  request completed
+2026-07-05T04:55:58.306298682Z [inf]  Failed to get activity
+2026-07-05T04:55:58.306303112Z [inf]  request completed
+2026-07-05T04:55:58.343806505Z [inf]  request completed
+2026-07-05T04:55:58.570833243Z [err]  2026-07-05 04:55:58.296 UTC [146795] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:55:58.570835893Z [err]  2026-07-05 04:55:58.296 UTC [146795] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T04:56:03.721998721Z [inf]  request completed
+2026-07-05T04:56:06.799003723Z [inf]  request completed
+2026-07-05T04:56:11.930173190Z [inf]  request completed
+2026-07-05T04:56:11.941139596Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:56:11.941144846Z [err]  params: command.%:leaderboard,50
+2026-07-05T04:56:11.941148316Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T04:56:11.941151376Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T04:56:11.941154146Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T04:56:11.941156526Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54741:20
+2026-07-05T04:56:11.941159186Z [inf]  request errored
+2026-07-05T04:56:13.367481166Z [inf]  request errored
+2026-07-05T04:56:13.367486636Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:56:13.367490935Z [err]  params: command.%:leaderboard,50
+2026-07-05T04:56:13.367495465Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T04:56:13.367499305Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T04:56:13.367502765Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T04:56:13.367506095Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54741:20
+2026-07-05T04:56:15.951149156Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:56:15.951152246Z [err]  params: command.%:leaderboard,50
+2026-07-05T04:56:15.951155476Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T04:56:15.951158676Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T04:56:15.951163066Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T04:56:15.951166646Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54741:20
+2026-07-05T04:56:15.951170226Z [inf]  request errored
+2026-07-05T04:56:18.594543983Z [err]  2026-07-05 04:56:11.933 UTC [146797] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:56:18.594548613Z [err]  2026-07-05 04:56:11.933 UTC [146797] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:56:18.594552063Z [err]  2026-07-05 04:56:13.351 UTC [146798] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:56:18.594555983Z [err]  2026-07-05 04:56:13.351 UTC [146798] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:56:18.594559733Z [err]  2026-07-05 04:56:15.731 UTC [146799] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:56:18.594562842Z [err]  2026-07-05 04:56:15.731 UTC [146799] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:56:20.313738806Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:56:20.313742876Z [err]  params: command.%:leaderboard,50
+2026-07-05T04:56:20.313746246Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T04:56:20.313748855Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T04:56:20.313751445Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T04:56:20.313753745Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54741:20
+2026-07-05T04:56:20.313756315Z [inf]  request errored
+2026-07-05T04:56:20.421126142Z [err]  2026-07-05 04:56:20.309 UTC [146801] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:56:20.421141251Z [err]  2026-07-05 04:56:20.309 UTC [146801] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T04:56:27.458098205Z [inf]  request completed
+2026-07-05T04:56:32.727073004Z [inf]  request completed
+2026-07-05T04:56:35.565387406Z [inf]  Failed to list audit logs
+2026-07-05T04:56:35.565392466Z [inf]  request errored
+2026-07-05T04:56:36.831533810Z [inf]  Failed to list audit logs
+2026-07-05T04:56:36.831538000Z [inf]  request errored
+2026-07-05T04:56:39.230555427Z [inf]  Failed to list audit logs
+2026-07-05T04:56:39.230561507Z [inf]  request errored
+2026-07-05T04:56:40.048058806Z [inf]  request completed
+2026-07-05T04:56:40.401087901Z [err]  2026-07-05 04:56:35.395 UTC [146802] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:56:40.401094021Z [err]  2026-07-05 04:56:35.395 UTC [146802] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T04:56:40.401098021Z [err]  2026-07-05 04:56:36.770 UTC [146804] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:56:40.401101561Z [err]  2026-07-05 04:56:36.770 UTC [146804] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T04:56:40.401105301Z [err]  2026-07-05 04:56:39.183 UTC [146805] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T04:56:40.401151391Z [err]  2026-07-05 04:56:39.183 UTC [146805] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T04:56:40.684289672Z [inf]  request completed
+2026-07-05T04:56:43.118726612Z [inf]  request completed
+2026-07-05T04:57:50.969567825Z [err]  2026-07-05 04:57:50.133 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T04:57:52.872298706Z [err]  2026-07-05 04:57:52.860 UTC [91] LOG:  checkpoint complete: wrote 27 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.710 s, sync=0.007 s, total=2.728 s; sync files=13, longest=0.004 s, average=0.001 s; distance=188 kB, estimate=228 kB; lsn=0/65698668, redo lsn=0/656985D8
+2026-07-05T05:02:54.533763673Z [err]  2026-07-05 05:02:50.960 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:02:54.533776402Z [err]  2026-07-05 05:02:52.287 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.310 s, sync=0.005 s, total=1.328 s; sync files=7, longest=0.003 s, average=0.001 s; distance=83 kB, estimate=214 kB; lsn=0/656AD4B8, redo lsn=0/656AD460
+2026-07-05T05:07:55.633140899Z [err]  2026-07-05 05:07:50.379 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:07:55.633147049Z [err]  2026-07-05 05:07:52.107 UTC [91] LOG:  checkpoint complete: wrote 17 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.711 s, sync=0.006 s, total=1.728 s; sync files=6, longest=0.003 s, average=0.001 s; distance=122 kB, estimate=204 kB; lsn=0/656CBEB8, redo lsn=0/656CBE60
+2026-07-05T05:10:26.553657138Z [inf]  [INTERACTION] /leaderboard received
+2026-07-05T05:10:26.553662358Z [inf]  [INTERACTION] /leaderboard — deferred in 309ms, running handler
+2026-07-05T05:12:27.474140360Z [inf]  [INTERACTION] /leaderboard received
+2026-07-05T05:12:27.474143640Z [inf]  [INTERACTION] /leaderboard — deferred in 281ms, running handler
+2026-07-05T05:12:57.774884979Z [err]  2026-07-05 05:12:50.199 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:12:57.774890889Z [err]  2026-07-05 05:12:52.527 UTC [91] LOG:  checkpoint complete: wrote 23 buffers (0.1%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.310 s, sync=0.006 s, total=2.328 s; sync files=7, longest=0.003 s, average=0.001 s; distance=161 kB, estimate=200 kB; lsn=0/656F65E0, redo lsn=0/656F4550
+2026-07-05T05:17:59.387970361Z [err]  2026-07-05 05:17:50.611 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:17:59.387976111Z [err]  2026-07-05 05:17:51.029 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.005 s, total=0.418 s; sync files=3, longest=0.003 s, average=0.002 s; distance=42 kB, estimate=184 kB; lsn=0/656FEF60, redo lsn=0/656FEF08
+2026-07-05T05:22:51.046144824Z [err]  2026-07-05 05:22:50.127 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:22:51.365040655Z [err]  2026-07-05 05:22:51.350 UTC [91] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.205 s, sync=0.005 s, total=1.224 s; sync files=6, longest=0.003 s, average=0.001 s; distance=85 kB, estimate=174 kB; lsn=0/657153F0, redo lsn=0/65714528
+2026-07-05T05:27:52.574056217Z [err]  2026-07-05 05:27:50.447 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:27:52.574065557Z [err]  2026-07-05 05:27:51.568 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.107 s, sync=0.005 s, total=1.121 s; sync files=6, longest=0.003 s, average=0.001 s; distance=69 kB, estimate=164 kB; lsn=0/65725D30, redo lsn=0/65725CD8
+2026-07-05T05:32:53.768253763Z [err]  2026-07-05 05:32:50.668 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:32:53.768266302Z [err]  2026-07-05 05:32:51.086 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.006 s, total=0.419 s; sync files=3, longest=0.003 s, average=0.002 s; distance=35 kB, estimate=151 kB; lsn=0/6572E9A0, redo lsn=0/6572E948
+2026-07-05T05:37:56.148595326Z [err]  2026-07-05 05:37:50.184 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:37:56.148601026Z [err]  2026-07-05 05:37:51.402 UTC [91] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.205 s, sync=0.004 s, total=1.218 s; sync files=7, longest=0.003 s, average=0.001 s; distance=84 kB, estimate=144 kB; lsn=0/65743C50, redo lsn=0/65743BF8
+2026-07-05T05:41:16.190265672Z [inf]  [LEVELING] "Experienced" already on nico_xd67 — skipping add
+2026-07-05T05:42:57.226365804Z [err]  2026-07-05 05:42:50.485 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:42:57.226370614Z [err]  2026-07-05 05:42:51.007 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.007 s, total=0.523 s; sync files=3, longest=0.004 s, average=0.003 s; distance=53 kB, estimate=135 kB; lsn=0/657511B8, redo lsn=0/65751160
+2026-07-05T05:47:59.362544620Z [err]  2026-07-05 05:47:50.063 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:47:59.362561860Z [err]  2026-07-05 05:47:52.687 UTC [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.610 s, sync=0.004 s, total=2.625 s; sync files=8, longest=0.003 s, average=0.001 s; distance=195 kB, estimate=195 kB; lsn=0/65781EC8, redo lsn=0/65781E70
+2026-07-05T05:51:00.153078039Z [inf]  [LOWO EVENT] Started skill_storm for 60m.
+2026-07-05T05:52:51.810262925Z [err]  2026-07-05 05:52:50.787 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:52:52.240357264Z [err]  2026-07-05 05:52:52.212 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.406 s, sync=0.007 s, total=1.426 s; sync files=6, longest=0.004 s, average=0.002 s; distance=112 kB, estimate=186 kB; lsn=0/6579DFB8, redo lsn=0/6579DF60
+2026-07-05T05:56:15.764019661Z [inf]  Starting Container
+2026-07-05T05:56:16.043115199Z [inf]  > node dist/index.mjs
+2026-07-05T05:56:16.043122209Z [inf]  
+2026-07-05T05:56:16.043145509Z [inf]  
+2026-07-05T05:56:16.043150689Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-07-05T05:56:16.157574155Z [inf]  [ANTINUKE] Events registered (GuildAuditLogEntryCreate + snapshot + webhook-spam).
+2026-07-05T05:56:16.157578925Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T05:56:16.157581835Z [inf]  [PERSISTENCE] Initializing Postgres-backed persistence...
+2026-07-05T05:56:16.162060991Z [inf]  [KEEP-ALIVE] HTTP server running on port 8080
+2026-07-05T05:56:16.224175537Z [inf]  [PERSISTENCE] Schema ready.
+2026-07-05T05:56:16.261227163Z [err]  Warning: connect.session() MemoryStore is not
+2026-07-05T05:56:16.261229563Z [err]  designed for a production environment, as it will leak
+2026-07-05T05:56:16.261232703Z [err]  memory, and will not scale past a single process.
+2026-07-05T05:56:16.261235093Z [inf]  API server listening
+2026-07-05T05:56:17.022237607Z [inf]  [READY] Logged in as EoN Management Bot#0533
+2026-07-05T05:56:17.022242077Z [inf]  [READY] Guilds in cache: 20
+2026-07-05T05:56:17.022245757Z [inf]  [READY] REST connection pre-warmed.
+2026-07-05T05:56:17.112033078Z [inf]  [READY] Cleared global commands (using per-guild registration).
+2026-07-05T05:56:17.349440368Z [inf]  [READY] Registered 99 commands to guild: 1122802372960321578
+2026-07-05T05:56:17.595350797Z [inf]  [READY] Registered 99 commands to guild: 1371028067627171880
+2026-07-05T05:56:17.900102873Z [inf]  [READY] Registered 99 commands to guild: 1454713289446785057
+2026-07-05T05:56:18.108163504Z [inf]  [READY] Registered 99 commands to guild: 1475861320938160220
+2026-07-05T05:56:18.432055707Z [inf]  [READY] Registered 99 commands to guild: 1475878010715508746
+2026-07-05T05:56:18.634524942Z [inf]  [READY] Registered 99 commands to guild: 1479910330669990025
+2026-07-05T05:56:18.870121219Z [inf]  [READY] Registered 99 commands to guild: 1492667977504526476
+2026-07-05T05:56:19.081965844Z [inf]  [READY] Registered 99 commands to guild: 1499320220450295878
+2026-07-05T05:56:19.288732117Z [inf]  [READY] Registered 99 commands to guild: 1511354334191812618
+2026-07-05T05:56:19.510485857Z [inf]  [READY] Registered 99 commands to guild: 1512021132218208396
+2026-07-05T05:56:19.813905106Z [inf]  [READY] Registered 99 commands to guild: 1514944305402216509
+2026-07-05T05:56:20.106340500Z [inf]  [READY] Registered 99 commands to guild: 1515228143001145405
+2026-07-05T05:56:20.320351455Z [inf]  [READY] Registered 99 commands to guild: 1519797029046325399
+2026-07-05T05:56:20.518640069Z [inf]  [READY] Registered 99 commands to guild: 1520493829428351109
+2026-07-05T05:56:20.765621078Z [inf]  [READY] Registered 99 commands to guild: 1521772134798721085
+2026-07-05T05:56:21.084826996Z [inf]  [READY] Registered 99 commands to guild: 1521827316710379631
+2026-07-05T05:56:21.286386250Z [inf]  [READY] Registered 99 commands to guild: 1521902661048205462
+2026-07-05T05:56:21.526125378Z [inf]  [READY] Registered 99 commands to guild: 1521912478022238399
+2026-07-05T05:56:21.829778485Z [inf]  [READY] Registered 99 commands to guild: 1522204904637337700
+2026-07-05T05:56:21.958541006Z [inf]  Stopping Container
+2026-07-05T05:56:22.096339116Z [inf]  [READY] Registered 99 commands to guild: 1522298846917693592
+2026-07-05T05:56:22.096343686Z [inf]  [READY] Kill leaderboard refreshed.
+2026-07-05T05:56:22.096348956Z [inf]  [MIGRATE] leaderboard.json → leaderboard_players (0 rows)
+2026-07-05T05:56:22.096353597Z [inf]  [MIGRATE] lowo_channels.json → lowo_guild_settings
+2026-07-05T05:56:22.096357757Z [inf]  [READY] JSON→DB migration completed.
+2026-07-05T05:56:22.096361607Z [inf]  [ADMIN] Auto-generated panel token: 473fb53e12e83762a1c775a84beaed211c993bec8f54046ab620100d2c7f223e
+2026-07-05T05:56:22.096366247Z [inf]  [ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.
+2026-07-05T05:56:22.096370287Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggeer" (extended vowel (ee)) via compound: niger (dedup in "niggeer")
+2026-07-05T05:56:22.096374907Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggerrr" (extended consonant (rrr)) via compound: niger (dedup in "niggerrr")
+2026-07-05T05:56:22.096379807Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckslang" (compound: fuck prefix) via compound: fuck (dedup in "fuckslang")
+2026-07-05T05:56:22.096383727Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckface" (compound: fuck prefix) via compound: fuckface (dedup in "fuckface")
+2026-07-05T05:56:22.096388047Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Choicefuck" (compound: fuck suffix) via compound: fuck (dedup in "choicefuck")
+2026-07-05T05:56:22.096392567Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-05T05:56:22.096397107Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-05T05:56:22.096401727Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-05T05:56:22.096404957Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T05:56:22.096408947Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T05:56:22.096603745Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-05T05:56:22.096606955Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-05T05:56:22.096610565Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-05T05:56:22.096613545Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-05T05:56:22.096617095Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-05T05:56:22.096620825Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-05T05:56:22.096624155Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-05T05:56:22.096627485Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-05T05:56:22.096631364Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-05T05:56:22.096635734Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-05T05:56:22.096639304Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-05T05:56:22.096652104Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-05T05:56:22.245783768Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-05T05:56:23.007163001Z [err]  2026-07-05 05:56:21.145 UTC [147027] LOG:  SSL error: unexpected eof while reading
+2026-07-05T05:56:23.007165941Z [err]  2026-07-05 05:56:21.145 UTC [147027] LOG:  could not receive data from client: Connection reset by peer
+2026-07-05T05:56:23.007168871Z [err]  2026-07-05 05:56:21.147 UTC [147031] LOG:  SSL error: unexpected eof while reading
+2026-07-05T05:56:23.007171851Z [err]  2026-07-05 05:56:21.147 UTC [147031] LOG:  could not receive data from client: Connection reset by peer
+2026-07-05T05:56:23.198457745Z [inf]  /app/artifacts/discord-bot:
+2026-07-05T05:56:23.198461305Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `node dist/index.mjs`
+2026-07-05T05:56:23.198464085Z [inf]  Command failed with signal "SIGTERM"
+2026-07-05T05:57:53.640669211Z [err]  2026-07-05 05:57:50.312 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T05:57:53.965433748Z [err]  2026-07-05 05:57:53.953 UTC [91] LOG:  checkpoint complete: wrote 36 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=3.613 s, sync=0.016 s, total=3.642 s; sync files=26, longest=0.009 s, average=0.001 s; distance=246 kB, estimate=246 kB; lsn=0/657DEF58, redo lsn=0/657DBAC0
+2026-07-05T06:01:33.481383053Z [inf]  request completed
+2026-07-05T06:01:33.481388443Z [inf]  request completed
+2026-07-05T06:01:33.481391843Z [inf]  request completed
+2026-07-05T06:01:33.481395013Z [inf]  request completed
+2026-07-05T06:02:13.556819726Z [inf]  request completed
+2026-07-05T06:02:13.556822786Z [inf]  request completed
+2026-07-05T06:02:13.556825786Z [inf]  request completed
+2026-07-05T06:02:13.556828756Z [inf]  request completed
+2026-07-05T06:02:15.973800338Z [inf]  Successful dashboard login
+2026-07-05T06:02:15.973807768Z [inf]  request completed
+2026-07-05T06:02:16.457496598Z [inf]  request completed
+2026-07-05T06:02:16.856026171Z [inf]  request completed
+2026-07-05T06:02:16.867238725Z [inf]  request completed
+2026-07-05T06:02:17.618766290Z [inf]  request completed
+2026-07-05T06:02:18.037610682Z [inf]  request completed
+2026-07-05T06:02:18.037643311Z [inf]  Failed to get activity
+2026-07-05T06:02:18.038496524Z [inf]  request completed
+2026-07-05T06:02:20.342525654Z [inf]  request completed
+2026-07-05T06:02:25.640586418Z [err]  2026-07-05 06:02:18.034 UTC [147060] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T06:02:25.640595628Z [err]  2026-07-05 06:02:18.034 UTC [147060] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T06:02:55.631678542Z [err]  2026-07-05 06:02:51.044 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:02:55.631687552Z [err]  2026-07-05 06:02:53.368 UTC [91] LOG:  checkpoint complete: wrote 23 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.308 s, sync=0.006 s, total=2.325 s; sync files=6, longest=0.003 s, average=0.001 s; distance=180 kB, estimate=240 kB; lsn=0/65817F80, redo lsn=0/65808DB8
+2026-07-05T06:03:50.546723315Z [inf]  request completed
+2026-07-05T06:04:40.624237690Z [inf]  request completed
+2026-07-05T06:04:40.624253210Z [inf]  request completed
+2026-07-05T06:05:00.721434640Z [inf]  request completed
+2026-07-05T06:05:40.680707288Z [inf]  request completed
+2026-07-05T06:05:41.968723671Z [inf]  request completed
+2026-07-05T06:05:41.968727811Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T06:05:41.968731351Z [err]  params: command.%:rank,50
+2026-07-05T06:05:41.968734771Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T06:05:41.968739061Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T06:05:41.968746381Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T06:05:41.968750581Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54813:20
+2026-07-05T06:05:41.968754601Z [inf]  request errored
+2026-07-05T06:05:43.308556828Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T06:05:43.308560728Z [err]  params: command.%:rank,50
+2026-07-05T06:05:43.308564148Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T06:05:43.308568958Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T06:05:43.308571988Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T06:05:43.308575008Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54813:20
+2026-07-05T06:05:43.308578608Z [inf]  request errored
+2026-07-05T06:05:46.026583363Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:41928:26
+2026-07-05T06:05:46.026588293Z [err]      at async file:///app/artifacts/api-server/dist/index.mjs:54813:20
+2026-07-05T06:05:46.026592273Z [inf]  request errored
+2026-07-05T06:05:46.026617473Z [err]  params: command.%:rank,50
+2026-07-05T06:05:46.026623273Z [err]  Error: Failed query: select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T06:05:46.026635033Z [err]      at NodePgPreparedQuery.queryWithCache (file:///app/artifacts/api-server/dist/index.mjs:41641:19)
+2026-07-05T06:05:46.026641743Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T06:05:46.546151128Z [err]  2026-07-05 06:05:41.919 UTC [147078] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T06:05:46.546159768Z [err]  2026-07-05 06:05:41.919 UTC [147078] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T06:05:46.546164368Z [err]  2026-07-05 06:05:43.297 UTC [147077] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T06:05:46.546168488Z [err]  2026-07-05 06:05:43.297 UTC [147077] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T06:05:46.546172178Z [err]  2026-07-05 06:05:45.881 UTC [147079] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T06:05:46.546176428Z [err]  2026-07-05 06:05:45.881 UTC [147079] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" where "dashboard_audit_logs"."action" LIKE $1 order by "dashboard_audit_logs"."created_at" desc limit $2
+2026-07-05T06:06:55.979528025Z [inf]  request completed
+2026-07-05T06:07:04.494580416Z [err]  [MEWO AI] imagine error: Error: pollinations 429
+2026-07-05T06:07:04.494585966Z [err]      at imagineViaPollinations (file:///app/artifacts/discord-bot/dist/index.mjs:171569:22)
+2026-07-05T06:07:04.494591566Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T06:07:04.494595766Z [err]      at async cmdGrokImagine (file:///app/artifacts/discord-bot/dist/index.mjs:171595:22)
+2026-07-05T06:07:04.494599366Z [err]      at async handleMewoCommand (file:///app/artifacts/discord-bot/dist/index.mjs:173716:9)
+2026-07-05T06:07:06.074666899Z [err]  [MEWO AI] imagine error: Error: pollinations 429
+2026-07-05T06:07:06.074671259Z [err]      at imagineViaPollinations (file:///app/artifacts/discord-bot/dist/index.mjs:171569:22)
+2026-07-05T06:07:06.074675249Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T06:07:06.074684099Z [err]      at async cmdGrokImagine (file:///app/artifacts/discord-bot/dist/index.mjs:171595:22)
+2026-07-05T06:07:06.074689589Z [err]      at async handleMewoCommand (file:///app/artifacts/discord-bot/dist/index.mjs:173716:9)
+2026-07-05T06:07:45.970482388Z [inf]  request completed
+2026-07-05T06:07:45.970486168Z [inf]  request completed
+2026-07-05T06:07:46.002689237Z [inf]  request completed
+2026-07-05T06:07:57.668982098Z [err]  2026-07-05 06:07:51.467 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:07:57.668988668Z [err]  2026-07-05 06:07:52.990 UTC [91] LOG:  checkpoint complete: wrote 15 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.507 s, sync=0.006 s, total=1.523 s; sync files=6, longest=0.003 s, average=0.001 s; distance=121 kB, estimate=228 kB; lsn=0/658272B0, redo lsn=0/65827258
+2026-07-05T06:08:15.961999913Z [err]  [MEWO AI] imagine error: Error: pollinations 429
+2026-07-05T06:08:15.962005513Z [err]      at imagineViaPollinations (file:///app/artifacts/discord-bot/dist/index.mjs:171569:22)
+2026-07-05T06:08:15.962009623Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T06:08:15.962013093Z [err]      at async cmdGrokImagine (file:///app/artifacts/discord-bot/dist/index.mjs:171595:22)
+2026-07-05T06:08:15.962016433Z [err]      at async handleMewoCommand (file:///app/artifacts/discord-bot/dist/index.mjs:173716:9)
+2026-07-05T06:12:59.134363464Z [err]  2026-07-05 06:12:52.000 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:12:59.134379524Z [err]  2026-07-05 06:12:53.325 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.310 s, sync=0.006 s, total=1.326 s; sync files=6, longest=0.003 s, average=0.001 s; distance=104 kB, estimate=215 kB; lsn=0/658453A8, redo lsn=0/65841458
+2026-07-05T06:18:01.086741331Z [err]  2026-07-05 06:17:51.424 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:18:01.086744421Z [err]  2026-07-05 06:17:52.753 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.008 s, total=1.329 s; sync files=7, longest=0.004 s, average=0.002 s; distance=112 kB, estimate=205 kB; lsn=0/6585D810, redo lsn=0/6585D7B8
+2026-07-05T06:18:38.610714733Z [inf]  [INTERACTION] /afk received
+2026-07-05T06:18:38.610719993Z [inf]  [INTERACTION] /afk — deferred in 357ms, running handler
+2026-07-05T06:22:52.738553038Z [err]  2026-07-05 06:22:51.852 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:22:54.324701059Z [err]  2026-07-05 06:22:54.276 UTC [91] LOG:  checkpoint complete: wrote 24 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.408 s, sync=0.005 s, total=2.424 s; sync files=7, longest=0.004 s, average=0.001 s; distance=179 kB, estimate=203 kB; lsn=0/6588A6C8, redo lsn=0/6588A670
+2026-07-05T06:27:00.901706005Z [inf]  request completed
+2026-07-05T06:27:00.901709855Z [inf]  request completed
+2026-07-05T06:27:00.901714145Z [inf]  Failed to get activity
+2026-07-05T06:27:00.901720345Z [inf]  request completed
+2026-07-05T06:27:00.901724255Z [inf]  request completed
+2026-07-05T06:27:00.901727915Z [inf]  request completed
+2026-07-05T06:27:00.902199511Z [inf]  request completed
+2026-07-05T06:27:00.902202721Z [inf]  request completed
+2026-07-05T06:27:00.956333767Z [inf]  request completed
+2026-07-05T06:27:02.927335220Z [inf]  request completed
+2026-07-05T06:27:02.927337880Z [inf]  Failed to get activity
+2026-07-05T06:27:02.928223472Z [inf]  request completed
+2026-07-05T06:27:05.963631932Z [inf]  request completed
+2026-07-05T06:27:05.963637192Z [inf]  request completed
+2026-07-05T06:27:06.236160807Z [inf]  request completed
+2026-07-05T06:27:06.424863103Z [err]  2026-07-05 06:26:59.768 UTC [147165] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T06:27:06.424872033Z [err]  2026-07-05 06:26:59.768 UTC [147165] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T06:27:06.424875613Z [err]  2026-07-05 06:27:02.832 UTC [147166] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T06:27:06.424879313Z [err]  2026-07-05 06:27:02.832 UTC [147166] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T06:27:06.962744037Z [inf]  request completed
+2026-07-05T06:27:07.000522826Z [inf]  request completed
+2026-07-05T06:27:08.902980046Z [inf]  request completed
+2026-07-05T06:27:08.902983026Z [inf]  request completed
+2026-07-05T06:27:56.482683783Z [err]  2026-07-05 06:27:51.375 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:27:56.482689072Z [err]  2026-07-05 06:27:52.097 UTC [91] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.704 s, sync=0.007 s, total=0.722 s; sync files=4, longest=0.004 s, average=0.002 s; distance=71 kB, estimate=189 kB; lsn=0/6589C590, redo lsn=0/6589C538
+2026-07-05T06:28:13.602659094Z [err]  Warning: connect.session() MemoryStore is not
+2026-07-05T06:28:13.602661184Z [inf]  
+2026-07-05T06:28:13.602664334Z [err]  designed for a production environment, as it will leak
+2026-07-05T06:28:13.602667604Z [inf]  [ANTINUKE] Events registered (GuildAuditLogEntryCreate + snapshot + webhook-spam).
+2026-07-05T06:28:13.602667844Z [err]  memory, and will not scale past a single process.
+2026-07-05T06:28:13.602671374Z [inf]  API server listening
+2026-07-05T06:28:13.602671624Z [inf]  [API] Starting api-server on :8081...
+2026-07-05T06:28:13.602674743Z [inf]  [PERSISTENCE] Initializing Postgres-backed persistence...
+2026-07-05T06:28:13.602678023Z [inf]  [KEEP-ALIVE] HTTP server running on port 8080
+2026-07-05T06:28:13.602681373Z [inf]  [PERSISTENCE] Schema ready.
+2026-07-05T06:28:13.602700333Z [inf]  
+2026-07-05T06:28:13.602703743Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-07-05T06:28:13.602706763Z [inf]  > node dist/index.mjs
+2026-07-05T06:28:13.768955127Z [inf]  Starting Container
+2026-07-05T06:28:20.504042968Z [inf]  Stopping Container
+2026-07-05T06:28:26.382323078Z [err]  2026-07-05 06:28:19.131 UTC [147168] LOG:  SSL error: unexpected eof while reading
+2026-07-05T06:28:26.382327718Z [err]  2026-07-05 06:28:19.131 UTC [147168] LOG:  could not receive data from client: Connection reset by peer
+2026-07-05T06:28:26.382340447Z [err]  2026-07-05 06:28:19.132 UTC [147148] LOG:  SSL error: unexpected eof while reading
+2026-07-05T06:28:26.382344657Z [err]  2026-07-05 06:28:19.132 UTC [147148] LOG:  could not receive data from client: Connection reset by peer
+2026-07-05T06:28:28.899348401Z [inf]  /app/artifacts/discord-bot:
+2026-07-05T06:28:28.899353371Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `node dist/index.mjs`
+2026-07-05T06:28:28.899356321Z [inf]  Command failed with signal "SIGTERM"
+2026-07-05T06:29:33.866865783Z [inf]  request completed
+2026-07-05T06:29:33.866869353Z [inf]  request completed
+2026-07-05T06:29:33.866874303Z [inf]  request completed
+2026-07-05T06:29:33.866878223Z [inf]  request completed
+2026-07-05T06:29:34.866287362Z [inf]  Successful dashboard login
+2026-07-05T06:29:34.866290532Z [inf]  request completed
+2026-07-05T06:29:35.197826717Z [inf]  request completed
+2026-07-05T06:29:35.807603503Z [inf]  request completed
+2026-07-05T06:29:35.807606123Z [inf]  request completed
+2026-07-05T06:29:36.249025595Z [inf]  request completed
+2026-07-05T06:29:36.752132002Z [inf]  Failed to get activity
+2026-07-05T06:29:36.752137962Z [inf]  request completed
+2026-07-05T06:29:36.752786856Z [inf]  request completed
+2026-07-05T06:29:36.780258775Z [err]  2026-07-05 06:29:36.625 UTC [147178] ERROR:  relation "dashboard_audit_logs" does not exist at character 96
+2026-07-05T06:29:36.780268985Z [err]  2026-07-05 06:29:36.625 UTC [147178] STATEMENT:  select "id", "action", "user_id", "username", "before", "after", "metadata", "created_at" from "dashboard_audit_logs" order by "dashboard_audit_logs"."created_at" desc limit $1
+2026-07-05T06:29:40.900889583Z [inf]  request completed
+2026-07-05T06:29:50.464620896Z [inf]  request completed
+2026-07-05T06:30:40.588720719Z [inf]  request completed
+2026-07-05T06:30:40.588725089Z [inf]  request completed
+2026-07-05T06:31:00.613872292Z [inf]  request completed
+2026-07-05T06:32:58.754252061Z [err]  2026-07-05 06:32:51.194 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:32:58.754260001Z [err]  2026-07-05 06:32:54.428 UTC [91] LOG:  checkpoint complete: wrote 32 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=3.212 s, sync=0.011 s, total=3.235 s; sync files=25, longest=0.005 s, average=0.001 s; distance=201 kB, estimate=201 kB; lsn=0/658CEC78, redo lsn=0/658CEC20
+2026-07-05T06:46:55.553346994Z [inf]  [READY] Logged in as EoN Management Bot#0533
+2026-07-05T06:46:55.553361434Z [inf]  [READY] Guilds in cache: 20
+2026-07-05T06:46:55.553366234Z [inf]  [READY] REST connection pre-warmed.
+2026-07-05T06:46:55.553370454Z [inf]  [READY] Cleared global commands (using per-guild registration).
+2026-07-05T06:46:55.553374764Z [inf]  [READY] Registered 99 commands to guild: 1122802372960321578
+2026-07-05T06:46:55.553379314Z [inf]  [READY] Registered 99 commands to guild: 1371028067627171880
+2026-07-05T06:46:55.553383644Z [inf]  [READY] Registered 99 commands to guild: 1454713289446785057
+2026-07-05T06:46:55.553387564Z [inf]  [READY] Registered 99 commands to guild: 1475861320938160220
+2026-07-05T06:46:55.553391374Z [inf]  [READY] Registered 99 commands to guild: 1475878010715508746
+2026-07-05T06:46:55.553395574Z [inf]  [READY] Registered 99 commands to guild: 1479910330669990025
+2026-07-05T06:46:55.553399873Z [inf]  [READY] Registered 99 commands to guild: 1492667977504526476
+2026-07-05T06:46:55.553404293Z [inf]  [READY] Registered 99 commands to guild: 1499320220450295878
+2026-07-05T06:46:55.553407883Z [inf]  [READY] Registered 99 commands to guild: 1511354334191812618
+2026-07-05T06:46:55.553411403Z [inf]  [READY] Registered 99 commands to guild: 1512021132218208396
+2026-07-05T06:46:55.553414633Z [inf]  [READY] Registered 99 commands to guild: 1514944305402216509
+2026-07-05T06:46:55.553418193Z [inf]  [READY] Registered 99 commands to guild: 1515228143001145405
+2026-07-05T06:46:55.553421753Z [inf]  [READY] Registered 99 commands to guild: 1519797029046325399
+2026-07-05T06:46:55.553425493Z [inf]  [READY] Registered 99 commands to guild: 1520493829428351109
+2026-07-05T06:46:55.553429223Z [inf]  [READY] Registered 99 commands to guild: 1521772134798721085
+2026-07-05T06:46:55.553432833Z [inf]  [READY] Registered 99 commands to guild: 1521827316710379631
+2026-07-05T06:46:55.553436263Z [inf]  [READY] Registered 99 commands to guild: 1521902661048205462
+2026-07-05T06:46:55.554437174Z [inf]  [READY] Registered 99 commands to guild: 1521912478022238399
+2026-07-05T06:46:55.554441064Z [inf]  [READY] Registered 99 commands to guild: 1522204904637337700
+2026-07-05T06:46:55.554443894Z [inf]  [READY] Registered 99 commands to guild: 1522298846917693592
+2026-07-05T06:46:55.554447053Z [inf]  [READY] Kill leaderboard refreshed.
+2026-07-05T06:46:55.554449743Z [inf]  [MIGRATE] leaderboard.json → leaderboard_players (0 rows)
+2026-07-05T06:46:55.554454623Z [inf]  [MIGRATE] lowo_channels.json → lowo_guild_settings
+2026-07-05T06:46:55.554457283Z [inf]  [READY] JSON→DB migration completed.
+2026-07-05T06:46:55.554459663Z [inf]  [ADMIN] Auto-generated panel token: aca81fc8f07fe0f71aec6418bf0208dc7ea94b07231dfc60b5ac4f05ea0d90aa
+2026-07-05T06:46:55.554461993Z [inf]  [ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.
+2026-07-05T06:46:55.554464863Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggeer" (extended vowel (ee)) via compound: niger (dedup in "niggeer")
+2026-07-05T06:46:55.554467523Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggerrr" (extended consonant (rrr)) via compound: niger (dedup in "niggerrr")
+2026-07-05T06:46:55.554470333Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckslang" (compound: fuck prefix) via compound: fuck (dedup in "fuckslang")
+2026-07-05T06:46:55.554472613Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckface" (compound: fuck prefix) via compound: fuckface (dedup in "fuckface")
+2026-07-05T06:46:55.554475173Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Choicefuck" (compound: fuck suffix) via compound: fuck (dedup in "choicefuck")
+2026-07-05T06:46:55.554478043Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-05T06:46:55.554480483Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-05T06:46:55.554483293Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-05T06:46:55.555356305Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T06:46:55.555358815Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-05T06:46:55.555361035Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-05T06:46:55.555363615Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-05T06:46:55.555366415Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-05T06:46:55.555368865Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-05T06:46:55.555371675Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-05T06:46:55.555374455Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-05T06:46:55.555377175Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-05T06:46:55.555380155Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-05T06:46:55.555383475Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-05T06:46:55.555386175Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-05T06:46:55.555388924Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-05T06:46:55.555391384Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-05T06:46:55.555393824Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-05T06:47:54.138900514Z [err]  2026-07-05 06:47:51.693 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:47:54.138903624Z [err]  2026-07-05 06:47:52.315 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.604 s, sync=0.005 s, total=0.622 s; sync files=3, longest=0.003 s, average=0.002 s; distance=50 kB, estimate=186 kB; lsn=0/658DC8D0, redo lsn=0/658DB438
+2026-07-05T06:52:55.379966344Z [err]  2026-07-05 06:52:51.415 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:52:55.379974574Z [err]  2026-07-05 06:52:53.443 UTC [91] LOG:  checkpoint complete: wrote 20 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.009 s, sync=0.008 s, total=2.029 s; sync files=9, longest=0.005 s, average=0.001 s; distance=195 kB, estimate=195 kB; lsn=0/6590C120, redo lsn=0/6590C0C8
+2026-07-05T06:55:37.782824966Z [inf]  [INTERACTION] /levellb received
+2026-07-05T06:55:37.782827966Z [inf]  [INTERACTION] /levellb — deferred in 344ms, running handler
+2026-07-05T06:55:44.524388732Z [inf]  [INTERACTION] /weeklylb received
+2026-07-05T06:55:44.799660047Z [inf]  [INTERACTION] /weeklylb — deferred in 273ms, running handler
+2026-07-05T06:57:56.802732750Z [err]  2026-07-05 06:57:51.543 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T06:57:56.802780939Z [err]  2026-07-05 06:57:53.077 UTC [91] LOG:  checkpoint complete: wrote 15 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.505 s, sync=0.018 s, total=1.534 s; sync files=7, longest=0.011 s, average=0.003 s; distance=115 kB, estimate=187 kB; lsn=0/6592CCB0, redo lsn=0/65928E70
+2026-07-05T07:02:58.324020686Z [err]  2026-07-05 07:02:51.171 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:02:58.324024546Z [err]  2026-07-05 07:02:53.201 UTC [91] LOG:  checkpoint complete: wrote 20 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.008 s, sync=0.009 s, total=2.031 s; sync files=9, longest=0.004 s, average=0.001 s; distance=143 kB, estimate=182 kB; lsn=0/65950550, redo lsn=0/6594CE10
+2026-07-05T07:07:59.280637178Z [err]  2026-07-05 07:07:51.299 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:07:59.280640208Z [err]  2026-07-05 07:07:52.630 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.308 s, sync=0.008 s, total=1.331 s; sync files=7, longest=0.006 s, average=0.002 s; distance=88 kB, estimate=173 kB; lsn=0/65962EB0, redo lsn=0/65962E58
+2026-07-05T07:08:58.565990076Z [inf]  [INTERACTION] /censor received
+2026-07-05T07:08:58.565993456Z [inf]  [INTERACTION] /censor — deferred in 386ms, running handler
+2026-07-05T07:09:18.625953304Z [inf]  [MODERATION] Detected "profanity: ass (symbol/separator bypass)" (regex) from ecxusemesir47 in #⟢│ɢᴇɴᴇʀᴀʟ│⟢: "bet if I don't angoor ur ass"
+2026-07-05T07:09:18.625957424Z [inf]  [MODERATION] Message deleted successfully.
+2026-07-05T07:09:18.625960494Z [inf]  [INTERACTION] /stopcensor received
+2026-07-05T07:09:18.625964084Z [inf]  [INTERACTION] /stopcensor — deferred in 213ms, running handler
+2026-07-05T07:13:00.973332392Z [err]  2026-07-05 07:12:51.727 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:13:00.973335602Z [err]  2026-07-05 07:12:53.248 UTC [91] LOG:  checkpoint complete: wrote 15 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.506 s, sync=0.005 s, total=1.521 s; sync files=9, longest=0.003 s, average=0.001 s; distance=93 kB, estimate=165 kB; lsn=0/6597A330, redo lsn=0/6597A2D8
+2026-07-05T07:17:52.899241251Z [err]  2026-07-05 07:17:51.345 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:17:52.899248331Z [err]  2026-07-05 07:17:52.667 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.008 s, total=1.323 s; sync files=6, longest=0.004 s, average=0.002 s; distance=99 kB, estimate=158 kB; lsn=0/659931A0, redo lsn=0/65993148
+2026-07-05T07:22:54.557080168Z [err]  2026-07-05 07:22:51.740 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:22:54.557087027Z [err]  2026-07-05 07:22:52.259 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.504 s, sync=0.006 s, total=0.520 s; sync files=3, longest=0.004 s, average=0.002 s; distance=44 kB, estimate=147 kB; lsn=0/6599E1F0, redo lsn=0/6599E198
+2026-07-05T07:27:55.791932600Z [err]  2026-07-05 07:27:51.355 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:27:55.791938140Z [err]  2026-07-05 07:27:52.879 UTC [91] LOG:  checkpoint complete: wrote 15 buffers (0.1%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.507 s, sync=0.007 s, total=1.525 s; sync files=7, longest=0.005 s, average=0.001 s; distance=114 kB, estimate=144 kB; lsn=0/659BCE78, redo lsn=0/659BAD80
+2026-07-05T07:32:57.365201648Z [err]  2026-07-05 07:32:51.980 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:32:57.365205388Z [err]  2026-07-05 07:32:54.105 UTC [91] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.107 s, sync=0.006 s, total=2.126 s; sync files=6, longest=0.004 s, average=0.001 s; distance=159 kB, estimate=159 kB; lsn=0/659E2DF0, redo lsn=0/659E2D60
+2026-07-05T07:37:59.145367356Z [err]  2026-07-05 07:37:51.201 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:37:59.145370136Z [err]  2026-07-05 07:37:51.517 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.005 s, total=0.317 s; sync files=3, longest=0.003 s, average=0.002 s; distance=24 kB, estimate=146 kB; lsn=0/659E8DC8, redo lsn=0/659E8D70
+2026-07-05T07:43:00.925009776Z [err]  2026-07-05 07:42:51.559 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:43:00.925014596Z [err]  2026-07-05 07:42:52.782 UTC [91] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.208 s, sync=0.005 s, total=1.224 s; sync files=4, longest=0.003 s, average=0.002 s; distance=85 kB, estimate=140 kB; lsn=0/659FE3C8, redo lsn=0/659FE370
+2026-07-05T07:47:52.286601856Z [err]  2026-07-05 07:47:51.880 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:47:52.506082879Z [err]  2026-07-05 07:47:52.501 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.005 s, total=0.621 s; sync files=3, longest=0.003 s, average=0.002 s; distance=46 kB, estimate=130 kB; lsn=0/65A09DC8, redo lsn=0/65A09D70
+2026-07-05T07:52:53.745535070Z [err]  2026-07-05 07:52:51.600 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:52:53.745541980Z [err]  2026-07-05 07:52:52.921 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.005 s, total=1.321 s; sync files=6, longest=0.003 s, average=0.001 s; distance=103 kB, estimate=128 kB; lsn=0/65A23BF0, redo lsn=0/65A23B98
+2026-07-05T07:57:55.292166813Z [err]  2026-07-05 07:57:52.020 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T07:57:55.292178873Z [err]  2026-07-05 07:57:52.540 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.006 s, total=0.521 s; sync files=3, longest=0.004 s, average=0.002 s; distance=46 kB, estimate=120 kB; lsn=0/65A2F5E8, redo lsn=0/65A2F590
+2026-07-05T08:02:56.422373803Z [err]  2026-07-05 08:02:52.639 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:02:56.422378693Z [err]  2026-07-05 08:02:53.758 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.105 s, sync=0.006 s, total=1.120 s; sync files=6, longest=0.003 s, average=0.001 s; distance=83 kB, estimate=116 kB; lsn=0/65A44298, redo lsn=0/65A44240
+2026-07-05T08:07:57.821362412Z [err]  2026-07-05 08:07:52.854 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:07:57.821368312Z [err]  2026-07-05 08:07:53.472 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.604 s, sync=0.005 s, total=0.618 s; sync files=3, longest=0.003 s, average=0.002 s; distance=60 kB, estimate=110 kB; lsn=0/65A53550, redo lsn=0/65A534F8
+2026-07-05T08:12:59.625623568Z [err]  2026-07-05 08:12:52.571 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:12:59.625632348Z [err]  2026-07-05 08:12:53.888 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.005 s, total=1.318 s; sync files=7, longest=0.004 s, average=0.001 s; distance=96 kB, estimate=109 kB; lsn=0/65A6B648, redo lsn=0/65A6B5F0
+2026-07-05T08:18:01.878599232Z [err]  2026-07-05 08:17:52.988 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:18:01.878604432Z [err]  2026-07-05 08:17:55.614 UTC [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.611 s, sync=0.005 s, total=2.627 s; sync files=7, longest=0.004 s, average=0.001 s; distance=205 kB, estimate=205 kB; lsn=0/65A9EB88, redo lsn=0/65A9EB30
+2026-07-05T08:22:53.305536176Z [err]  2026-07-05 08:22:52.712 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:22:53.305543246Z [err]  2026-07-05 08:22:53.130 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.005 s, total=0.419 s; sync files=3, longest=0.003 s, average=0.002 s; distance=32 kB, estimate=188 kB; lsn=0/65AA6F78, redo lsn=0/65AA6F20
+2026-07-05T08:27:55.446316862Z [err]  2026-07-05 08:27:52.228 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:27:55.446319792Z [err]  2026-07-05 08:27:52.651 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.004 s, total=0.424 s; sync files=3, longest=0.003 s, average=0.002 s; distance=31 kB, estimate=172 kB; lsn=0/65AAECD8, redo lsn=0/65AAEC80
+2026-07-05T08:32:57.736568119Z [err]  2026-07-05 08:32:52.751 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:32:57.736573259Z [err]  2026-07-05 08:32:54.976 UTC [91] LOG:  checkpoint complete: wrote 22 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.208 s, sync=0.005 s, total=2.226 s; sync files=6, longest=0.003 s, average=0.001 s; distance=150 kB, estimate=170 kB; lsn=0/65AD4590, redo lsn=0/65AD4538
+2026-07-05T08:37:59.367219911Z [err]  2026-07-05 08:37:53.075 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:37:59.367225801Z [err]  2026-07-05 08:37:54.527 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.411 s, sync=0.019 s, total=1.452 s; sync files=6, longest=0.012 s, average=0.004 s; distance=112 kB, estimate=164 kB; lsn=0/65AF0950, redo lsn=0/65AF08F8
+2026-07-05T08:41:42.439016192Z [inf]  [INTERACTION] /afk received
+2026-07-05T08:43:00.362130168Z [err]  2026-07-05 08:42:53.627 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:43:00.362136028Z [err]  2026-07-05 08:42:54.650 UTC [91] LOG:  checkpoint complete: wrote 10 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.005 s, sync=0.007 s, total=1.024 s; sync files=6, longest=0.005 s, average=0.002 s; distance=64 kB, estimate=154 kB; lsn=0/65B00AB0, redo lsn=0/65B00A58
+2026-07-05T08:48:01.673303013Z [err]  2026-07-05 08:47:53.747 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:48:01.673305893Z [err]  2026-07-05 08:47:55.075 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.309 s, sync=0.011 s, total=1.329 s; sync files=6, longest=0.006 s, average=0.002 s; distance=94 kB, estimate=148 kB; lsn=0/65B184B0, redo lsn=0/65B18420
+2026-07-05T08:52:53.344754805Z [err]  2026-07-05 08:52:53.175 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:52:53.700411673Z [err]  2026-07-05 08:52:53.694 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.504 s, sync=0.005 s, total=0.520 s; sync files=3, longest=0.003 s, average=0.002 s; distance=37 kB, estimate=137 kB; lsn=0/65B21AD8, redo lsn=0/65B21A80
+2026-07-05T08:56:25.710209085Z [err]  [LEVELING] Role not found: "Rookie" (level 5) in guild 1499320220450295878. Make sure the role name matches exactly (case-insensitive).
+2026-07-05T08:56:25.710213275Z [err]  [LEVELING] Role not found: "Rookie" (level 5) in guild 1499320220450295878. Make sure the role name matches exactly (case-insensitive).
+2026-07-05T08:56:25.710219505Z [err]  [INTERACTION] /afk — defer failed, cannot respond DiscordAPIError[10062]: Unknown interaction
+2026-07-05T08:56:25.710223905Z [err]      at handleErrors (file:///app/artifacts/discord-bot/dist/index.mjs:28492:17)
+2026-07-05T08:56:25.710227674Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T08:56:25.710232324Z [err]      at async BurstHandler.runRequest (file:///app/artifacts/discord-bot/dist/index.mjs:28594:27)
+2026-07-05T08:56:25.710236574Z [err]      at async _REST.request (file:///app/artifacts/discord-bot/dist/index.mjs:29056:26)
+2026-07-05T08:56:25.710239794Z [err]      at async ChatInputCommandInteraction25.deferReply (file:///app/artifacts/discord-bot/dist/index.mjs:57858:26)
+2026-07-05T08:56:25.710244394Z [err]      at async Client.<anonymous> (file:///app/artifacts/discord-bot/dist/index.mjs:176507:11) {
+2026-07-05T08:56:25.710249114Z [err]    requestBody: { files: undefined, json: { type: 5, data: [Object] } },
+2026-07-05T08:56:25.710254454Z [err]    rawError: { message: 'Unknown interaction', code: 10062 },
+2026-07-05T08:56:25.710258484Z [err]    code: 10062,
+2026-07-05T08:56:25.710262164Z [err]    status: 404,
+2026-07-05T08:56:25.710265744Z [err]    method: 'POST',
+2026-07-05T08:56:25.710269724Z [err]    url: 'https://discord.com/api/v10/interactions/1523247465980104754/aW50ZXJhY3Rpb246MTUyMzI0NzQ2NTk4MDEwNDc1NDpSeHlBZmZCdVF6dDZvbWoxUHJ6ek5ndEVBaUF2MzdySnFHZlVRV0M0SWZPVW9YSThzWVpSQ3VyOTZNUUNocW5qZHg0WERsOXBBVHh0eWl5TExuRE9vVHdYRzBpMUhxMzlaV1ZZbUxaQkdHdWo0dFpvWXN4QWpLa3pkUDA4d2xpMA/callback?with_response=false'
+2026-07-05T08:56:25.710631791Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T08:56:25.710637971Z [err]      at async cmdGrokImagine (file:///app/artifacts/discord-bot/dist/index.mjs:171595:22)
+2026-07-05T08:56:25.710642891Z [err]      at async handleMewoCommand (file:///app/artifacts/discord-bot/dist/index.mjs:173716:9)
+2026-07-05T08:56:25.710646241Z [err]  [MEWO AI] imagine error: Error: pollinations 429
+2026-07-05T08:56:25.710649071Z [err]      at imagineViaPollinations (file:///app/artifacts/discord-bot/dist/index.mjs:171569:22)
+2026-07-05T08:56:25.710652600Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T08:56:25.710655160Z [err]      at async cmdGrokImagine (file:///app/artifacts/discord-bot/dist/index.mjs:171595:22)
+2026-07-05T08:56:25.710658150Z [err]      at async handleMewoCommand (file:///app/artifacts/discord-bot/dist/index.mjs:173716:9)
+2026-07-05T08:56:25.710661230Z [err]  [MEWO AI] imagine error: Error: pollinations 429
+2026-07-05T08:56:25.710664070Z [err]      at imagineViaPollinations (file:///app/artifacts/discord-bot/dist/index.mjs:171569:22)
+2026-07-05T08:56:25.710667520Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T08:56:25.710670080Z [err]      at async cmdGrokImagine (file:///app/artifacts/discord-bot/dist/index.mjs:171595:22)
+2026-07-05T08:56:25.710671260Z [err]  }
+2026-07-05T08:56:25.710672600Z [err]      at async handleMewoCommand (file:///app/artifacts/discord-bot/dist/index.mjs:173716:9)
+2026-07-05T08:56:25.710675150Z [err]  [MEWO AI] imagine error: Error: pollinations 429
+2026-07-05T08:56:25.710678770Z [err]      at imagineViaPollinations (file:///app/artifacts/discord-bot/dist/index.mjs:171569:22)
+2026-07-05T08:57:55.022530555Z [err]  2026-07-05 08:57:53.786 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T08:57:55.022535175Z [err]  2026-07-05 08:57:54.708 UTC [91] LOG:  checkpoint complete: wrote 9 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.905 s, sync=0.006 s, total=0.922 s; sync files=4, longest=0.004 s, average=0.002 s; distance=78 kB, estimate=131 kB; lsn=0/65B352E8, redo lsn=0/65B35290
+2026-07-05T09:02:56.937740503Z [err]  2026-07-05 09:02:53.740 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:02:56.937747863Z [err]  2026-07-05 09:02:56.184 UTC [91] LOG:  checkpoint complete: wrote 24 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.416 s, sync=0.006 s, total=2.444 s; sync files=7, longest=0.006 s, average=0.001 s; distance=176 kB, estimate=176 kB; lsn=0/65B71490, redo lsn=0/65B61460
+2026-07-05T09:07:59.209815246Z [err]  2026-07-05 09:07:53.283 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:07:59.209821296Z [err]  2026-07-05 09:07:55.412 UTC [91] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.111 s, sync=0.006 s, total=2.129 s; sync files=6, longest=0.003 s, average=0.001 s; distance=160 kB, estimate=174 kB; lsn=0/65B8D8A8, redo lsn=0/65B89700
+2026-07-05T09:13:00.025231510Z [err]  2026-07-05 09:12:53.509 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:13:00.025235200Z [err]  2026-07-05 09:12:55.032 UTC [91] LOG:  checkpoint complete: wrote 15 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.506 s, sync=0.007 s, total=1.523 s; sync files=7, longest=0.005 s, average=0.001 s; distance=129 kB, estimate=170 kB; lsn=0/65BA9DD8, redo lsn=0/65BA9D80
+2026-07-05T09:18:01.915740208Z [err]  2026-07-05 09:17:53.124 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:18:01.915745718Z [err]  2026-07-05 09:17:55.554 UTC [91] LOG:  checkpoint complete: wrote 24 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.412 s, sync=0.007 s, total=2.430 s; sync files=7, longest=0.005 s, average=0.001 s; distance=190 kB, estimate=190 kB; lsn=0/65BD98C8, redo lsn=0/65BD9870
+2026-07-05T09:23:02.802217565Z [err]  2026-07-05 09:22:53.650 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:23:02.802221985Z [err]  2026-07-05 09:22:56.979 UTC [91] LOG:  checkpoint complete: wrote 33 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=3.313 s, sync=0.005 s, total=3.329 s; sync files=9, longest=0.004 s, average=0.001 s; distance=249 kB, estimate=249 kB; lsn=0/65C19F10, redo lsn=0/65C17D90
+2026-07-05T09:27:24.473369821Z [inf]  [INTERACTION] /avatar received
+2026-07-05T09:27:54.324830919Z [err]  2026-07-05 09:27:54.079 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:27:55.629375136Z [err]  2026-07-05 09:27:55.621 UTC [91] LOG:  checkpoint complete: wrote 15 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.515 s, sync=0.005 s, total=1.543 s; sync files=7, longest=0.003 s, average=0.001 s; distance=102 kB, estimate=234 kB; lsn=0/65C31610, redo lsn=0/65C315B8
+2026-07-05T09:32:56.435064341Z [err]  2026-07-05 09:32:54.719 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:32:56.435069161Z [err]  2026-07-05 09:32:55.340 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.604 s, sync=0.007 s, total=0.622 s; sync files=3, longest=0.005 s, average=0.003 s; distance=64 kB, estimate=217 kB; lsn=0/65C41908, redo lsn=0/65C418B0
+2026-07-05T09:37:57.851062349Z [err]  2026-07-05 09:37:54.434 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:37:57.851072249Z [err]  2026-07-05 09:37:56.165 UTC [91] LOG:  checkpoint complete: wrote 17 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.705 s, sync=0.009 s, total=1.732 s; sync files=9, longest=0.004 s, average=0.001 s; distance=116 kB, estimate=207 kB; lsn=0/65C5E920, redo lsn=0/65C5E8C8
+2026-07-05T09:41:58.724244385Z [inf]  [LOWO EVENT] Started mineral_rush for 60m.
+2026-07-05T09:42:58.759515712Z [err]  2026-07-05 09:42:54.265 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:42:58.759531972Z [err]  2026-07-05 09:42:57.192 UTC [91] LOG:  checkpoint complete: wrote 29 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.909 s, sync=0.005 s, total=2.928 s; sync files=9, longest=0.003 s, average=0.001 s; distance=181 kB, estimate=204 kB; lsn=0/65C8BEC8, redo lsn=0/65C8BE70
+2026-07-05T09:48:00.276140779Z [err]  2026-07-05 09:47:54.292 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:48:00.276144019Z [err]  2026-07-05 09:47:55.814 UTC [91] LOG:  checkpoint complete: wrote 15 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.507 s, sync=0.006 s, total=1.523 s; sync files=5, longest=0.003 s, average=0.002 s; distance=114 kB, estimate=195 kB; lsn=0/65CA8988, redo lsn=0/65CA8930
+2026-07-05T09:53:01.513733497Z [err]  2026-07-05 09:52:54.912 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:53:01.513738887Z [err]  2026-07-05 09:52:56.333 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.406 s, sync=0.005 s, total=1.422 s; sync files=7, longest=0.003 s, average=0.001 s; distance=90 kB, estimate=185 kB; lsn=0/65CBF1A0, redo lsn=0/65CBF148
+2026-07-05T09:58:03.342869272Z [err]  2026-07-05 09:57:54.432 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T09:58:03.342872822Z [err]  2026-07-05 09:57:55.860 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.408 s, sync=0.006 s, total=1.428 s; sync files=7, longest=0.004 s, average=0.001 s; distance=110 kB, estimate=177 kB; lsn=0/65CDAC60, redo lsn=0/65CDAC08
+2026-07-05T10:01:24.041336027Z [err]    requestBody: { files: undefined, json: { type: 5, data: [Object] } },
+2026-07-05T10:01:24.041350146Z [err]    rawError: { message: 'Unknown interaction', code: 10062 },
+2026-07-05T10:01:24.041355026Z [err]    code: 10062,
+2026-07-05T10:01:24.041359286Z [err]    status: 404,
+2026-07-05T10:01:24.041363986Z [err]    method: 'POST',
+2026-07-05T10:01:24.041369976Z [err]    url: 'https://discord.com/api/v10/interactions/1523258982804881459/aW50ZXJhY3Rpb246MTUyMzI1ODk4MjgwNDg4MTQ1OToxbTRibGdyOW56Tnk1akxxNHNCQVNhWHJ3Q25RODJEU2M0dG1IcE45MlF0bVFrcndXV3hURU9QaWNJWElTQ0RIc0J1cEt0czZUV3REaEtHTW1EVmpqMHl3d2ppUVdrMXk5Zk9NcHF3clNBWmJXMDdEcVZxNGcyRVYwNmRJYXdHWQ/callback?with_response=false'
+2026-07-05T10:01:24.041375856Z [err]  [INTERACTION] /avatar — defer failed, cannot respond DiscordAPIError[10062]: Unknown interaction
+2026-07-05T10:01:24.041376146Z [err]  }
+2026-07-05T10:01:24.041380346Z [err]      at handleErrors (file:///app/artifacts/discord-bot/dist/index.mjs:28492:17)
+2026-07-05T10:01:24.041383766Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T10:01:24.041387916Z [err]      at async BurstHandler.runRequest (file:///app/artifacts/discord-bot/dist/index.mjs:28594:27)
+2026-07-05T10:01:24.041391116Z [err]      at async _REST.request (file:///app/artifacts/discord-bot/dist/index.mjs:29056:26)
+2026-07-05T10:01:24.041394206Z [err]      at async ChatInputCommandInteraction25.deferReply (file:///app/artifacts/discord-bot/dist/index.mjs:57858:26)
+2026-07-05T10:01:24.041397076Z [err]      at async Client.<anonymous> (file:///app/artifacts/discord-bot/dist/index.mjs:176507:11) {
+2026-07-05T10:03:04.605950124Z [err]  2026-07-05 10:02:54.960 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:03:04.605955834Z [err]  2026-07-05 10:02:57.583 UTC [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.609 s, sync=0.006 s, total=2.624 s; sync files=7, longest=0.003 s, average=0.001 s; distance=198 kB, estimate=198 kB; lsn=0/65D0E6C0, redo lsn=0/65D0C5C0
+2026-07-05T10:07:55.662638556Z [err]  2026-07-05 10:07:54.662 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:07:56.101546172Z [err]  2026-07-05 10:07:56.083 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.405 s, sync=0.005 s, total=1.422 s; sync files=6, longest=0.003 s, average=0.001 s; distance=128 kB, estimate=191 kB; lsn=0/65D2C820, redo lsn=0/65D2C7C8
+2026-07-05T10:08:55.909793294Z [inf]  [GATEWAY] Shard 0 reconnecting...
+2026-07-05T10:08:55.909797164Z [inf]  [GATEWAY] Shard 0 RESUMED (replayed 1 events)
+2026-07-05T10:12:57.743420342Z [err]  2026-07-05 10:12:54.183 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:12:57.743430901Z [err]  2026-07-05 10:12:56.405 UTC [91] LOG:  checkpoint complete: wrote 22 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.207 s, sync=0.006 s, total=2.223 s; sync files=7, longest=0.004 s, average=0.001 s; distance=186 kB, estimate=190 kB; lsn=0/65D5D400, redo lsn=0/65D5B300
+2026-07-05T10:17:59.520050900Z [err]  2026-07-05 10:17:54.473 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:17:59.520054700Z [err]  2026-07-05 10:17:56.603 UTC [91] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.110 s, sync=0.004 s, total=2.131 s; sync files=8, longest=0.003 s, average=0.001 s; distance=149 kB, estimate=186 kB; lsn=0/65D81FC0, redo lsn=0/65D80750
+2026-07-05T10:23:00.270315063Z [err]  2026-07-05 10:22:54.650 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:23:00.270323433Z [err]  2026-07-05 10:22:55.973 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.307 s, sync=0.007 s, total=1.324 s; sync files=6, longest=0.004 s, average=0.002 s; distance=95 kB, estimate=177 kB; lsn=0/65D98618, redo lsn=0/65D985C0
+2026-07-05T10:28:01.421108473Z [err]  2026-07-05 10:27:55.073 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:28:01.421114033Z [err]  2026-07-05 10:27:56.193 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.004 s, total=1.121 s; sync files=4, longest=0.002 s, average=0.001 s; distance=84 kB, estimate=168 kB; lsn=0/65DAD9C8, redo lsn=0/65DAD970
+2026-07-05T10:33:02.337628283Z [err]  2026-07-05 10:32:55.290 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:33:02.337637333Z [err]  2026-07-05 10:32:56.608 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.006 s, total=1.318 s; sync files=6, longest=0.003 s, average=0.001 s; distance=88 kB, estimate=160 kB; lsn=0/65DC6C78, redo lsn=0/65DC3C70
+2026-07-05T10:38:04.300434040Z [err]  2026-07-05 10:37:55.707 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:38:04.300437680Z [err]  2026-07-05 10:37:56.125 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.005 s, total=0.419 s; sync files=3, longest=0.003 s, average=0.002 s; distance=33 kB, estimate=147 kB; lsn=0/65DCC438, redo lsn=0/65DCC3E0
+2026-07-05T10:41:54.699309003Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T10:42:55.457508373Z [err]  2026-07-05 10:42:55.212 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:42:55.638424324Z [err]  2026-07-05 10:42:55.633 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.405 s, sync=0.005 s, total=0.421 s; sync files=3, longest=0.003 s, average=0.002 s; distance=34 kB, estimate=136 kB; lsn=0/65DD4F80, redo lsn=0/65DD4F28
+2026-07-05T10:47:45.599501301Z [inf]  [GATEWAY] Shard 0 reconnecting...
+2026-07-05T10:47:45.599505601Z [inf]  [GATEWAY] Shard 0 RESUMED (replayed 1 events)
+2026-07-05T10:47:56.603419164Z [err]  2026-07-05 10:47:55.733 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:47:56.919693071Z [err]  2026-07-05 10:47:56.863 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.014 s, total=1.130 s; sync files=6, longest=0.010 s, average=0.003 s; distance=76 kB, estimate=130 kB; lsn=0/65DE8018, redo lsn=0/65DE7FA8
+2026-07-05T10:52:58.497778688Z [err]  2026-07-05 10:52:55.961 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:52:58.497792798Z [err]  2026-07-05 10:52:56.580 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.007 s, total=0.620 s; sync files=4, longest=0.004 s, average=0.002 s; distance=49 kB, estimate=122 kB; lsn=0/65DF4480, redo lsn=0/65DF4428
+2026-07-05T10:57:59.898099046Z [err]  2026-07-05 10:57:55.680 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T10:57:59.898102146Z [err]  2026-07-05 10:57:56.407 UTC [91] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.706 s, sync=0.012 s, total=0.728 s; sync files=3, longest=0.009 s, average=0.004 s; distance=73 kB, estimate=117 kB; lsn=0/65E06B70, redo lsn=0/65E06B18
+2026-07-05T11:03:01.018094575Z [err]  2026-07-05 11:02:55.507 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:03:01.018100985Z [err]  2026-07-05 11:02:58.136 UTC [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.610 s, sync=0.006 s, total=2.629 s; sync files=7, longest=0.003 s, average=0.001 s; distance=190 kB, estimate=190 kB; lsn=0/65E36540, redo lsn=0/65E364B0
+2026-07-05T11:08:02.906806764Z [err]  2026-07-05 11:07:55.236 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:08:02.906811564Z [err]  2026-07-05 11:07:55.575 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.307 s, sync=0.006 s, total=0.340 s; sync files=3, longest=0.003 s, average=0.002 s; distance=19 kB, estimate=173 kB; lsn=0/65E3B2F0, redo lsn=0/65E3B298
+2026-07-05T11:13:05.606079268Z [err]  2026-07-05 11:12:55.640 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:13:05.606084728Z [err]  2026-07-05 11:12:56.257 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.005 s, total=0.617 s; sync files=3, longest=0.003 s, average=0.002 s; distance=47 kB, estimate=160 kB; lsn=0/65E470D8, redo lsn=0/65E47080
+2026-07-05T11:16:51.856822089Z [inf]  [LOWO EVENT] Started void_breach for 30m.
+2026-07-05T11:17:56.528085618Z [err]  2026-07-05 11:17:55.357 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:17:57.535516045Z [err]  2026-07-05 11:17:57.479 UTC [91] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.109 s, sync=0.005 s, total=2.123 s; sync files=7, longest=0.004 s, average=0.001 s; distance=153 kB, estimate=160 kB; lsn=0/65E6D780, redo lsn=0/65E6D728
+2026-07-05T11:22:58.882336020Z [err]  2026-07-05 11:22:55.579 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:22:58.882340040Z [err]  2026-07-05 11:22:56.096 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.004 s, total=0.518 s; sync files=3, longest=0.003 s, average=0.002 s; distance=31 kB, estimate=147 kB; lsn=0/65E75768, redo lsn=0/65E75710
+2026-07-05T11:28:01.535196982Z [err]  2026-07-05 11:27:55.195 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:28:01.535202092Z [err]  2026-07-05 11:27:55.520 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.007 s, total=0.326 s; sync files=3, longest=0.005 s, average=0.003 s; distance=17 kB, estimate=134 kB; lsn=0/65E79C98, redo lsn=0/65E79C40
+2026-07-05T11:33:03.523830401Z [err]  2026-07-05 11:32:55.620 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:33:03.523835641Z [err]  2026-07-05 11:32:56.239 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.605 s, sync=0.005 s, total=0.620 s; sync files=3, longest=0.003 s, average=0.002 s; distance=45 kB, estimate=125 kB; lsn=0/65E85450, redo lsn=0/65E853F8
+2026-07-05T11:38:04.697292866Z [err]  2026-07-05 11:37:55.339 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:38:04.697296266Z [err]  2026-07-05 11:37:55.857 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.005 s, total=0.518 s; sync files=3, longest=0.003 s, average=0.002 s; distance=36 kB, estimate=116 kB; lsn=0/65E8E7A8, redo lsn=0/65E8E750
+2026-07-05T11:42:56.178660507Z [err]  2026-07-05 11:42:55.955 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:42:56.448109955Z [err]  2026-07-05 11:42:56.373 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.005 s, total=0.418 s; sync files=3, longest=0.003 s, average=0.002 s; distance=33 kB, estimate=108 kB; lsn=0/65E96D30, redo lsn=0/65E96CD8
+2026-07-05T11:47:57.435892706Z [err]  2026-07-05 11:47:55.473 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:47:57.435905526Z [err]  2026-07-05 11:47:55.796 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.008 s, total=0.323 s; sync files=3, longest=0.006 s, average=0.003 s; distance=16 kB, estimate=99 kB; lsn=0/65E9B0A8, redo lsn=0/65E9B050
+2026-07-05T11:51:51.404446055Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T11:52:59.247503993Z [err]  2026-07-05 11:52:55.895 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T11:52:59.247510103Z [err]  2026-07-05 11:52:56.319 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.007 s, total=0.424 s; sync files=3, longest=0.004 s, average=0.003 s; distance=26 kB, estimate=91 kB; lsn=0/65EA19B0, redo lsn=0/65EA1958
+2026-07-05T12:03:02.608008582Z [err]  2026-07-05 12:02:55.504 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:03:02.608014802Z [err]  2026-07-05 12:02:55.927 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.007 s, total=0.423 s; sync files=3, longest=0.004 s, average=0.003 s; distance=29 kB, estimate=85 kB; lsn=0/65EA8EE8, redo lsn=0/65EA8E90
+2026-07-05T12:08:03.853118149Z [err]  2026-07-05 12:07:56.026 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:08:03.853122099Z [err]  2026-07-05 12:07:56.644 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.605 s, sync=0.004 s, total=0.619 s; sync files=3, longest=0.003 s, average=0.002 s; distance=46 kB, estimate=81 kB; lsn=0/65EB4738, redo lsn=0/65EB46E0
+2026-07-05T12:13:05.241047940Z [err]  2026-07-05 12:12:56.744 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:13:05.241052540Z [err]  2026-07-05 12:12:58.068 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.309 s, sync=0.005 s, total=1.325 s; sync files=6, longest=0.003 s, average=0.001 s; distance=97 kB, estimate=97 kB; lsn=0/65ECCE30, redo lsn=0/65ECCDD8
+2026-07-05T12:18:05.793638827Z [err]  2026-07-05 12:17:56.162 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:18:05.793644697Z [err]  2026-07-05 12:17:56.389 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.008 s, total=0.227 s; sync files=2, longest=0.005 s, average=0.004 s; distance=16 kB, estimate=89 kB; lsn=0/65ED1030, redo lsn=0/65ED0FD8
+2026-07-05T12:27:58.869980829Z [err]  2026-07-05 12:27:56.589 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:27:58.869985799Z [err]  2026-07-05 12:27:57.112 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.504 s, sync=0.006 s, total=0.524 s; sync files=3, longest=0.003 s, average=0.002 s; distance=41 kB, estimate=84 kB; lsn=0/65EDB758, redo lsn=0/65EDB700
+2026-07-05T12:32:59.942587810Z [err]  2026-07-05 12:32:56.212 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:32:59.942592600Z [err]  2026-07-05 12:32:56.629 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.005 s, total=0.417 s; sync files=3, longest=0.003 s, average=0.002 s; distance=34 kB, estimate=79 kB; lsn=0/65EE3F90, redo lsn=0/65EE3F00
+2026-07-05T12:38:01.813181302Z [err]  2026-07-05 12:37:56.727 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:38:01.813185732Z [err]  2026-07-05 12:37:56.946 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.005 s, total=0.220 s; sync files=3, longest=0.003 s, average=0.002 s; distance=16 kB, estimate=73 kB; lsn=0/65EE8230, redo lsn=0/65EE81D8
+2026-07-05T12:43:03.307918165Z [err]  2026-07-05 12:42:57.045 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:43:03.307922045Z [err]  2026-07-05 12:42:58.264 UTC [91] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.205 s, sync=0.005 s, total=1.219 s; sync files=6, longest=0.003 s, average=0.001 s; distance=80 kB, estimate=80 kB; lsn=0/65EFC470, redo lsn=0/65EFC418
+2026-07-05T12:46:55.537208549Z [inf]  [LOWO EVENT] Started mineral_rush for 60m.
+2026-07-05T12:48:06.711089319Z [err]  2026-07-05 12:47:57.363 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:48:06.711092259Z [err]  2026-07-05 12:47:57.994 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.609 s, sync=0.005 s, total=0.631 s; sync files=4, longest=0.003 s, average=0.002 s; distance=48 kB, estimate=77 kB; lsn=0/65F08550, redo lsn=0/65F084F8
+2026-07-05T12:52:58.532480896Z [err]  2026-07-05 12:52:58.091 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:52:58.532492485Z [err]  2026-07-05 12:52:58.509 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.006 s, total=0.418 s; sync files=3, longest=0.004 s, average=0.002 s; distance=33 kB, estimate=72 kB; lsn=0/65F10CA8, redo lsn=0/65F10C50
+2026-07-05T12:57:59.745745882Z [err]  2026-07-05 12:57:58.607 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T12:57:59.745751432Z [err]  2026-07-05 12:57:59.226 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.005 s, total=0.619 s; sync files=3, longest=0.003 s, average=0.002 s; distance=43 kB, estimate=69 kB; lsn=0/65F1B900, redo lsn=0/65F1B8A8
+2026-07-05T13:03:01.723467726Z [err]  2026-07-05 13:02:58.315 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:03:01.723471286Z [err]  2026-07-05 13:03:00.338 UTC [91] LOG:  checkpoint complete: wrote 20 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.009 s, sync=0.006 s, total=2.024 s; sync files=7, longest=0.004 s, average=0.001 s; distance=131 kB, estimate=131 kB; lsn=0/65F3C640, redo lsn=0/65F3C5E8
+2026-07-05T13:08:03.195843434Z [err]  2026-07-05 13:07:58.435 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:08:03.195847834Z [err]  2026-07-05 13:07:58.956 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.005 s, total=0.522 s; sync files=3, longest=0.003 s, average=0.002 s; distance=35 kB, estimate=121 kB; lsn=0/65F454D0, redo lsn=0/65F45478
+2026-07-05T13:13:05.146178181Z [err]  2026-07-05 13:12:59.020 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:13:05.146182201Z [err]  2026-07-05 13:12:59.437 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.005 s, total=0.418 s; sync files=3, longest=0.003 s, average=0.002 s; distance=33 kB, estimate=112 kB; lsn=0/65F4DB98, redo lsn=0/65F4DB40
+2026-07-05T13:18:06.670380410Z [err]  2026-07-05 13:17:59.534 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:18:06.670383910Z [err]  2026-07-05 13:18:00.656 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.108 s, sync=0.005 s, total=1.122 s; sync files=6, longest=0.003 s, average=0.001 s; distance=73 kB, estimate=109 kB; lsn=0/65F60228, redo lsn=0/65F601D0
+2026-07-05T13:23:08.063532631Z [err]  2026-07-05 13:22:59.755 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:23:08.063537311Z [err]  2026-07-05 13:23:00.272 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.005 s, total=0.517 s; sync files=4, longest=0.003 s, average=0.002 s; distance=40 kB, estimate=102 kB; lsn=0/65F6A5B8, redo lsn=0/65F6A560
+2026-07-05T13:27:59.505761501Z [err]  2026-07-05 13:27:59.371 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:27:59.718460437Z [err]  2026-07-05 13:27:59.688 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.005 s, total=0.317 s; sync files=3, longest=0.003 s, average=0.002 s; distance=25 kB, estimate=94 kB; lsn=0/65F70A10, redo lsn=0/65F709B8
+2026-07-05T13:33:00.937286412Z [err]  2026-07-05 13:32:59.787 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:33:00.937298372Z [err]  2026-07-05 13:33:00.104 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.005 s, total=0.318 s; sync files=3, longest=0.003 s, average=0.002 s; distance=25 kB, estimate=87 kB; lsn=0/65F770B0, redo lsn=0/65F77058
+2026-07-05T13:35:18.984067718Z [inf]  [GATEWAY] Shard 0 reconnecting...
+2026-07-05T13:35:18.984070388Z [inf]  [GATEWAY] Shard 0 RESUMED (replayed 1 events)
+2026-07-05T13:38:02.799853241Z [err]  2026-07-05 13:37:59.204 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:38:02.799857141Z [err]  2026-07-05 13:37:59.925 UTC [91] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.705 s, sync=0.006 s, total=0.721 s; sync files=3, longest=0.004 s, average=0.002 s; distance=51 kB, estimate=84 kB; lsn=0/65F83F48, redo lsn=0/65F83EF0
+2026-07-05T13:43:04.337892594Z [err]  2026-07-05 13:43:00.023 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:43:04.337896074Z [err]  2026-07-05 13:43:00.543 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.505 s, sync=0.005 s, total=0.521 s; sync files=3, longest=0.003 s, average=0.002 s; distance=41 kB, estimate=79 kB; lsn=0/65F8E488, redo lsn=0/65F8E430
+2026-07-05T13:46:52.713334522Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T13:48:05.896159045Z [err]  2026-07-05 13:48:00.643 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:48:05.896163005Z [err]  2026-07-05 13:48:02.083 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.407 s, sync=0.006 s, total=1.441 s; sync files=6, longest=0.004 s, average=0.001 s; distance=96 kB, estimate=96 kB; lsn=0/65FA6840, redo lsn=0/65FA67E8
+2026-07-05T13:53:06.763959293Z [err]  2026-07-05 13:53:00.182 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:53:06.763962923Z [err]  2026-07-05 13:53:00.599 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.005 s, total=0.418 s; sync files=3, longest=0.003 s, average=0.002 s; distance=25 kB, estimate=89 kB; lsn=0/65FACCC8, redo lsn=0/65FACC70
+2026-07-05T13:58:08.848746309Z [err]  2026-07-05 13:58:00.699 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T13:58:08.848750469Z [err]  2026-07-05 13:58:01.122 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.004 s, total=0.424 s; sync files=3, longest=0.002 s, average=0.002 s; distance=32 kB, estimate=84 kB; lsn=0/65FB4FC8, redo lsn=0/65FB4F70
+2026-07-05T14:03:10.138265058Z [err]  2026-07-05 14:03:00.220 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:03:10.138269068Z [err]  2026-07-05 14:03:00.634 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.004 s, total=0.415 s; sync files=3, longest=0.002 s, average=0.002 s; distance=28 kB, estimate=78 kB; lsn=0/65FBC3C0, redo lsn=0/65FBC368
+2026-07-05T14:08:02.000159263Z [err]  2026-07-05 14:08:00.731 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:08:02.000165273Z [err]  2026-07-05 14:08:01.051 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.305 s, sync=0.005 s, total=0.321 s; sync files=3, longest=0.003 s, average=0.002 s; distance=23 kB, estimate=73 kB; lsn=0/65FC2200, redo lsn=0/65FC21A8
+2026-07-05T14:13:03.823217234Z [err]  2026-07-05 14:13:00.151 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:13:03.823221424Z [err]  2026-07-05 14:13:02.379 UTC [91] LOG:  checkpoint complete: wrote 22 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.209 s, sync=0.005 s, total=2.228 s; sync files=9, longest=0.004 s, average=0.001 s; distance=203 kB, estimate=203 kB; lsn=0/65FF5188, redo lsn=0/65FF5130
+2026-07-05T14:17:00.368691123Z [inf]  [LOWO EVENT] Started shop_sale for 60m.
+2026-07-05T14:18:05.405648250Z [err]  2026-07-05 14:18:00.478 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:18:05.405653030Z [err]  2026-07-05 14:18:01.002 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.505 s, sync=0.006 s, total=0.525 s; sync files=3, longest=0.004 s, average=0.002 s; distance=41 kB, estimate=187 kB; lsn=0/65FFF8D0, redo lsn=0/65FFF878
+2026-07-05T14:28:08.429226793Z [err]  2026-07-05 14:28:01.199 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:28:08.429231813Z [err]  2026-07-05 14:28:01.415 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.203 s, sync=0.004 s, total=0.217 s; sync files=3, longest=0.002 s, average=0.002 s; distance=16 kB, estimate=170 kB; lsn=0/66003BD0, redo lsn=0/66003B78
+2026-07-05T14:33:09.295945396Z [err]  2026-07-05 14:33:01.515 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:33:09.295952066Z [err]  2026-07-05 14:33:02.032 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.005 s, total=0.518 s; sync files=3, longest=0.003 s, average=0.002 s; distance=49 kB, estimate=158 kB; lsn=0/660100F8, redo lsn=0/660100A0
+2026-07-05T14:38:02.017564595Z [err]  2026-07-05 14:38:01.132 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:38:03.991356137Z [err]  2026-07-05 14:38:03.769 UTC [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.617 s, sync=0.005 s, total=2.637 s; sync files=8, longest=0.004 s, average=0.001 s; distance=186 kB, estimate=186 kB; lsn=0/6603EBA8, redo lsn=0/6603EB50
+2026-07-05T14:43:05.207223825Z [err]  2026-07-05 14:43:01.854 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:43:05.207234505Z [err]  2026-07-05 14:43:04.076 UTC [91] LOG:  checkpoint complete: wrote 22 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.209 s, sync=0.005 s, total=2.222 s; sync files=7, longest=0.003 s, average=0.001 s; distance=168 kB, estimate=184 kB; lsn=0/66068BE8, redo lsn=0/66068B90
+2026-07-05T14:48:06.856254940Z [err]  2026-07-05 14:48:01.176 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:48:06.856259290Z [err]  2026-07-05 14:48:01.719 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.508 s, sync=0.012 s, total=0.544 s; sync files=3, longest=0.007 s, average=0.004 s; distance=46 kB, estimate=170 kB; lsn=0/66074638, redo lsn=0/660745E0
+2026-07-05T14:53:08.183817892Z [err]  2026-07-05 14:53:01.816 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:53:08.183829312Z [err]  2026-07-05 14:53:03.437 UTC [91] LOG:  checkpoint complete: wrote 16 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.607 s, sync=0.006 s, total=1.621 s; sync files=7, longest=0.004 s, average=0.001 s; distance=127 kB, estimate=166 kB; lsn=0/660942B0, redo lsn=0/66094258
+2026-07-05T14:58:09.493452375Z [err]  2026-07-05 14:58:01.528 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T14:58:09.493458935Z [err]  2026-07-05 14:58:04.054 UTC [91] LOG:  checkpoint complete: wrote 25 buffers (0.2%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.511 s, sync=0.005 s, total=2.526 s; sync files=8, longest=0.003 s, average=0.001 s; distance=189 kB, estimate=189 kB; lsn=0/660C5118, redo lsn=0/660C3708
+2026-07-05T15:03:10.493574499Z [err]  2026-07-05 15:03:01.151 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:03:10.493586429Z [err]  2026-07-05 15:03:02.577 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.411 s, sync=0.006 s, total=1.427 s; sync files=6, longest=0.003 s, average=0.001 s; distance=104 kB, estimate=180 kB; lsn=0/660DDB58, redo lsn=0/660DDB00
+2026-07-05T15:08:01.929816388Z [err]  2026-07-05 15:08:01.677 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:08:03.339743895Z [err]  2026-07-05 15:08:03.308 UTC [91] LOG:  checkpoint complete: wrote 16 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.606 s, sync=0.017 s, total=1.632 s; sync files=7, longest=0.011 s, average=0.003 s; distance=109 kB, estimate=173 kB; lsn=0/660F90F8, redo lsn=0/660F90A0
+2026-07-05T15:12:23.667517976Z [inf]  [GATEWAY] Shard 0 reconnecting...
+2026-07-05T15:12:23.667520956Z [inf]  [GATEWAY] Shard 0 RESUMED (replayed 1 events)
+2026-07-05T15:13:05.293988681Z [err]  2026-07-05 15:13:01.407 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:13:05.293993731Z [err]  2026-07-05 15:13:02.727 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.005 s, total=1.321 s; sync files=4, longest=0.003 s, average=0.002 s; distance=98 kB, estimate=166 kB; lsn=0/661148A0, redo lsn=0/661118E0
+2026-07-05T15:16:54.587298166Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T15:18:06.544553019Z [err]  2026-07-05 15:18:01.826 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:18:06.544556249Z [err]  2026-07-05 15:18:03.248 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.406 s, sync=0.004 s, total=1.422 s; sync files=6, longest=0.003 s, average=0.001 s; distance=97 kB, estimate=159 kB; lsn=0/66129D40, redo lsn=0/66129CE8
+2026-07-05T15:23:07.781625257Z [err]  2026-07-05 15:23:01.345 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:23:07.781637076Z [err]  2026-07-05 15:23:01.860 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.004 s, total=0.516 s; sync files=3, longest=0.003 s, average=0.002 s; distance=47 kB, estimate=148 kB; lsn=0/66135BE8, redo lsn=0/66135B90
+2026-07-05T15:28:08.683275373Z [err]  2026-07-05 15:28:01.959 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:28:08.683299163Z [err]  2026-07-05 15:28:04.590 UTC [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.610 s, sync=0.009 s, total=2.632 s; sync files=9, longest=0.005 s, average=0.001 s; distance=187 kB, estimate=187 kB; lsn=0/66165E60, redo lsn=0/66164AB0
+2026-07-05T15:31:58.607055281Z [inf]  [LOWO EVENT] Started double_hunt for 60m.
+2026-07-05T15:33:10.469196139Z [err]  2026-07-05 15:33:01.689 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:33:10.469202269Z [err]  2026-07-05 15:33:03.007 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.305 s, sync=0.005 s, total=1.319 s; sync files=6, longest=0.003 s, average=0.001 s; distance=96 kB, estimate=178 kB; lsn=0/661807D8, redo lsn=0/6617CAF0
+2026-07-05T15:34:09.269380952Z [inf]  [INTERACTION] /setupleaderboard received
+2026-07-05T15:38:01.828830022Z [err]  2026-07-05 15:38:01.103 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:38:03.039972500Z [err]  2026-07-05 15:38:03.032 UTC [91] LOG:  checkpoint complete: wrote 19 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.907 s, sync=0.008 s, total=1.929 s; sync files=6, longest=0.004 s, average=0.002 s; distance=148 kB, estimate=175 kB; lsn=0/661A2D70, redo lsn=0/661A1B38
+2026-07-05T15:41:30.941739396Z [err]  [LEVELING] Role not found: "Rookie" (level 5) in guild 1499320220450295878. Make sure the role name matches exactly (case-insensitive).
+2026-07-05T15:41:31.211986689Z [err]  [INTERACTION] /setupleaderboard — defer failed, cannot respond DiscordAPIError[10062]: Unknown interaction
+2026-07-05T15:41:31.211992409Z [err]      at handleErrors (file:///app/artifacts/discord-bot/dist/index.mjs:28492:17)
+2026-07-05T15:41:31.211996999Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T15:41:31.212000939Z [err]      at async BurstHandler.runRequest (file:///app/artifacts/discord-bot/dist/index.mjs:28594:27)
+2026-07-05T15:41:31.212007249Z [err]      at async _REST.request (file:///app/artifacts/discord-bot/dist/index.mjs:29056:26)
+2026-07-05T15:41:31.212012409Z [err]      at async ChatInputCommandInteraction25.deferReply (file:///app/artifacts/discord-bot/dist/index.mjs:57858:26)
+2026-07-05T15:41:31.212017089Z [err]      at async Client.<anonymous> (file:///app/artifacts/discord-bot/dist/index.mjs:176509:11) {
+2026-07-05T15:41:31.212020939Z [err]    requestBody: { files: undefined, json: { type: 5, data: [Object] } },
+2026-07-05T15:41:31.212027039Z [err]    rawError: { message: 'Unknown interaction', code: 10062 },
+2026-07-05T15:41:31.212031559Z [err]    code: 10062,
+2026-07-05T15:41:31.212035149Z [err]    status: 404,
+2026-07-05T15:41:31.212039459Z [err]    method: 'POST',
+2026-07-05T15:41:31.212043459Z [err]    url: 'https://discord.com/api/v10/interactions/1523351273934688468/aW50ZXJhY3Rpb246MTUyMzM1MTI3MzkzNDY4ODQ2ODplRDBKNk51bjRnUk1CYjVzVENLWTRaa0NmVG5QeFh6QWJSVjhObGRpZ1lBWlg5YmprWEtqdERoQlFnbktoM3F4N1ZQbUdBOFFXYkx0Q1daalBZVE84VFpwRjhrSjAzaElvQjdWRWJxc0JEOEFRM2JrcTlUY3dZSEwwNllKUDR3bg/callback?with_response=false'
+2026-07-05T15:41:31.212047669Z [err]  }
+2026-07-05T15:41:40.366688079Z [err]  [MEWO AI] imagine error: DiscordAPIError[10008]: Unknown Message
+2026-07-05T15:41:40.366698649Z [err]      at handleErrors (file:///app/artifacts/discord-bot/dist/index.mjs:28492:17)
+2026-07-05T15:41:40.366703339Z [err]      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+2026-07-05T15:41:40.366707049Z [err]      at async SequentialHandler.runRequest (file:///app/artifacts/discord-bot/dist/index.mjs:28889:27)
+2026-07-05T15:41:40.366710849Z [err]      at async SequentialHandler.queueRequest (file:///app/artifacts/discord-bot/dist/index.mjs:28720:18)
+2026-07-05T15:41:40.366715539Z [err]      at async _REST.request (file:///app/artifacts/discord-bot/dist/index.mjs:29056:26)
+2026-07-05T15:41:40.366719709Z [err]      at async GuildMessageManager.edit (file:///app/artifacts/discord-bot/dist/index.mjs:51727:19)
+2026-07-05T15:41:40.366722869Z [err]      at async cmdGrokImagine (file:///app/artifacts/discord-bot/dist/index.mjs:171600:5)
+2026-07-05T15:41:40.366726649Z [err]      at async handleMewoCommand (file:///app/artifacts/discord-bot/dist/index.mjs:173716:9) {
+2026-07-05T15:41:40.366730349Z [err]    requestBody: {
+2026-07-05T15:41:40.366734139Z [err]      files: [ [Object] ],
+2026-07-05T15:41:40.366742989Z [err]      json: {
+2026-07-05T15:41:40.366746619Z [err]        content: undefined,
+2026-07-05T15:41:40.366755769Z [err]        tts: false,
+2026-07-05T15:41:40.366759509Z [err]        nonce: undefined,
+2026-07-05T15:41:40.366763469Z [err]        enforce_nonce: false,
+2026-07-05T15:41:40.366766879Z [err]        embeds: [Array],
+2026-07-05T15:41:40.366770279Z [err]        components: undefined,
+2026-07-05T15:41:40.366773939Z [err]        username: undefined,
+2026-07-05T15:41:40.366777849Z [err]        avatar_url: undefined,
+2026-07-05T15:41:40.366781809Z [err]        allowed_mentions: undefined,
+2026-07-05T15:41:40.366785129Z [err]        flags: undefined,
+2026-07-05T15:41:40.367143645Z [err]        message_reference: undefined,
+2026-07-05T15:41:40.367147745Z [err]        attachments: [Array],
+2026-07-05T15:41:40.367151445Z [err]        sticker_ids: undefined,
+2026-07-05T15:41:40.367154945Z [err]        thread_name: undefined,
+2026-07-05T15:41:40.367158375Z [err]        applied_tags: undefined,
+2026-07-05T15:41:40.367172195Z [err]        poll: undefined
+2026-07-05T15:41:40.367175815Z [err]      }
+2026-07-05T15:41:40.367179965Z [err]    },
+2026-07-05T15:41:40.367183295Z [err]    rawError: { message: 'Unknown Message', code: 10008 },
+2026-07-05T15:41:40.367186435Z [err]    code: 10008,
+2026-07-05T15:41:40.367189975Z [err]    status: 404,
+2026-07-05T15:41:40.367193535Z [err]    method: 'PATCH',
+2026-07-05T15:41:40.367197015Z [err]    url: 'https://discord.com/api/v10/channels/1515030423636279356/messages/1523353140567605308'
+2026-07-05T15:41:40.367200085Z [err]  }
+2026-07-05T15:43:04.775307434Z [err]  2026-07-05 15:43:01.131 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:43:04.775319314Z [err]  2026-07-05 15:43:02.557 UTC [91] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.406 s, sync=0.007 s, total=1.427 s; sync files=7, longest=0.005 s, average=0.001 s; distance=106 kB, estimate=168 kB; lsn=0/661BC560, redo lsn=0/661BC508
+2026-07-05T15:48:05.979906618Z [err]  2026-07-05 15:48:01.655 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:48:05.979910228Z [err]  2026-07-05 15:48:03.896 UTC [91] LOG:  checkpoint complete: wrote 22 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.223 s, sync=0.005 s, total=2.241 s; sync files=6, longest=0.003 s, average=0.001 s; distance=176 kB, estimate=176 kB; lsn=0/661E9650, redo lsn=0/661E8690
+2026-07-05T15:53:07.335727201Z [err]  2026-07-05 15:53:01.996 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:53:07.335740211Z [err]  2026-07-05 15:53:02.718 UTC [91] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.703 s, sync=0.006 s, total=0.723 s; sync files=4, longest=0.003 s, average=0.002 s; distance=64 kB, estimate=165 kB; lsn=0/662052C0, redo lsn=0/661F8878
+2026-07-05T15:58:08.998190033Z [err]  2026-07-05 15:58:01.818 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T15:58:08.998199563Z [err]  2026-07-05 15:58:03.149 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.307 s, sync=0.010 s, total=1.332 s; sync files=7, longest=0.008 s, average=0.002 s; distance=95 kB, estimate=158 kB; lsn=0/66212900, redo lsn=0/662107F0
+2026-07-05T16:03:11.025851342Z [err]  2026-07-05 16:03:01.246 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:03:11.025853972Z [err]  2026-07-05 16:03:02.364 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.106 s, sync=0.004 s, total=1.119 s; sync files=6, longest=0.002 s, average=0.001 s; distance=84 kB, estimate=150 kB; lsn=0/66225940, redo lsn=0/662258E8
+2026-07-05T16:08:01.759944880Z [err]  2026-07-05 16:08:01.463 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:08:02.595839493Z [err]  2026-07-05 16:08:02.587 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.108 s, sync=0.005 s, total=1.125 s; sync files=5, longest=0.003 s, average=0.001 s; distance=88 kB, estimate=144 kB; lsn=0/6623BCF0, redo lsn=0/6623BC98
+2026-07-05T16:13:05.181546605Z [err]  2026-07-05 16:13:01.683 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:13:05.181553785Z [err]  2026-07-05 16:13:02.300 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.604 s, sync=0.005 s, total=0.617 s; sync files=3, longest=0.003 s, average=0.002 s; distance=50 kB, estimate=135 kB; lsn=0/66248718, redo lsn=0/662486C0
+2026-07-05T16:18:07.093379692Z [err]  2026-07-05 16:18:01.399 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:18:07.093391142Z [err]  2026-07-05 16:18:01.828 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.410 s, sync=0.007 s, total=0.430 s; sync files=3, longest=0.004 s, average=0.003 s; distance=29 kB, estimate=124 kB; lsn=0/6624FB70, redo lsn=0/6624FB18
+2026-07-05T16:23:08.543825369Z [err]  2026-07-05 16:23:01.927 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:23:08.543838999Z [err]  2026-07-05 16:23:03.652 UTC [91] LOG:  checkpoint complete: wrote 17 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.706 s, sync=0.006 s, total=1.725 s; sync files=9, longest=0.003 s, average=0.001 s; distance=98 kB, estimate=122 kB; lsn=0/662694B8, redo lsn=0/66268698
+2026-07-05T16:28:10.436215947Z [err]  2026-07-05 16:28:01.754 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:28:10.436223687Z [err]  2026-07-05 16:28:03.883 UTC [91] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.110 s, sync=0.005 s, total=2.130 s; sync files=8, longest=0.004 s, average=0.001 s; distance=145 kB, estimate=145 kB; lsn=0/6628CB78, redo lsn=0/6628CB20
+2026-07-05T16:31:53.271923530Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T16:33:02.127948265Z [err]  2026-07-05 16:33:01.983 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:33:02.210775381Z [err]  2026-07-05 16:33:02.200 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.005 s, total=0.218 s; sync files=3, longest=0.003 s, average=0.002 s; distance=15 kB, estimate=132 kB; lsn=0/66290B00, redo lsn=0/66290AA8
+2026-07-05T16:38:03.373323692Z [err]  2026-07-05 16:38:01.300 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:38:03.373328832Z [err]  2026-07-05 16:38:01.523 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.011 s, total=0.224 s; sync files=3, longest=0.008 s, average=0.004 s; distance=14 kB, estimate=120 kB; lsn=0/662944D8, redo lsn=0/66294480
+2026-07-05T16:41:56.647767908Z [inf]  [LOWO EVENT] Started boss_invasion for 90m.
+2026-07-05T16:48:06.923475924Z [err]  2026-07-05 16:48:01.707 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:48:06.923520234Z [err]  2026-07-05 16:48:02.769 UTC [91] LOG:  checkpoint complete: wrote 10 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.006 s, sync=0.007 s, total=1.062 s; sync files=4, longest=0.004 s, average=0.002 s; distance=78 kB, estimate=116 kB; lsn=0/662A8098, redo lsn=0/662A8040
+2026-07-05T16:53:08.343951614Z [err]  2026-07-05 16:53:01.867 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:53:08.343955064Z [err]  2026-07-05 16:53:02.287 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.405 s, sync=0.008 s, total=0.421 s; sync files=3, longest=0.006 s, average=0.003 s; distance=33 kB, estimate=108 kB; lsn=0/662B0808, redo lsn=0/662B07B0
+2026-07-05T16:58:09.724766037Z [err]  2026-07-05 16:58:01.386 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T16:58:09.724769287Z [err]  2026-07-05 16:58:01.826 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.407 s, sync=0.010 s, total=0.440 s; sync files=3, longest=0.008 s, average=0.004 s; distance=29 kB, estimate=100 kB; lsn=0/662B7C18, redo lsn=0/662B7BC0
+2026-07-05T17:03:11.396378414Z [err]  2026-07-05 17:03:01.925 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:03:11.396384864Z [err]  2026-07-05 17:03:02.944 UTC [91] LOG:  checkpoint complete: wrote 10 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.005 s, sync=0.005 s, total=1.019 s; sync files=5, longest=0.003 s, average=0.001 s; distance=58 kB, estimate=95 kB; lsn=0/662C64F8, redo lsn=0/662C64A0
+2026-07-05T17:08:03.153709069Z [err]  2026-07-05 17:08:02.043 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:08:03.153715009Z [err]  2026-07-05 17:08:02.363 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.005 s, total=0.320 s; sync files=4, longest=0.003 s, average=0.002 s; distance=26 kB, estimate=89 kB; lsn=0/662CD0C8, redo lsn=0/662CD070
+2026-07-05T17:13:04.773364969Z [err]  2026-07-05 17:13:02.462 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:13:04.773369769Z [err]  2026-07-05 17:13:02.879 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.005 s, total=0.418 s; sync files=3, longest=0.003 s, average=0.002 s; distance=28 kB, estimate=82 kB; lsn=0/662D4120, redo lsn=0/662D40C8
+2026-07-05T17:18:06.717002757Z [err]  2026-07-05 17:18:02.979 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:18:06.717006297Z [err]  2026-07-05 17:18:03.416 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.405 s, sync=0.004 s, total=0.437 s; sync files=3, longest=0.003 s, average=0.002 s; distance=40 kB, estimate=78 kB; lsn=0/662DE240, redo lsn=0/662DE1E8
+2026-07-05T17:20:38.322803948Z [inf]  [INTERACTION] /afk received
+2026-07-05T17:20:38.322809978Z [inf]  [INTERACTION] /afk — deferred in 287ms, running handler
+2026-07-05T17:23:08.494562951Z [err]  2026-07-05 17:23:02.507 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:23:08.494568271Z [err]  2026-07-05 17:23:02.623 UTC [91] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.103 s, sync=0.005 s, total=0.116 s; sync files=2, longest=0.003 s, average=0.003 s; distance=6 kB, estimate=71 kB; lsn=0/662DFD48, redo lsn=0/662DFCF0
+2026-07-05T17:28:10.152754057Z [err]  2026-07-05 17:28:02.720 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:28:10.152758467Z [err]  2026-07-05 17:28:03.848 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.109 s, sync=0.008 s, total=1.129 s; sync files=6, longest=0.005 s, average=0.002 s; distance=73 kB, estimate=73 kB; lsn=0/6630A1B8, redo lsn=0/662F2220
+2026-07-05T17:33:10.983556243Z [err]  2026-07-05 17:33:02.947 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:33:10.983560253Z [err]  2026-07-05 17:33:04.871 UTC [91] LOG:  checkpoint complete: wrote 19 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.909 s, sync=0.006 s, total=1.924 s; sync files=8, longest=0.004 s, average=0.001 s; distance=137 kB, estimate=137 kB; lsn=0/66314890, redo lsn=0/66314800
+2026-07-05T17:38:04.082855868Z [err]  2026-07-05 17:38:02.970 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:38:04.082861428Z [err]  2026-07-05 17:38:03.399 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.010 s, total=0.429 s; sync files=3, longest=0.005 s, average=0.004 s; distance=31 kB, estimate=126 kB; lsn=0/6631C6D8, redo lsn=0/6631C680
+2026-07-05T17:43:05.121137994Z [err]  2026-07-05 17:43:02.499 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:43:05.121148584Z [err]  2026-07-05 17:43:02.920 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.006 s, total=0.421 s; sync files=3, longest=0.004 s, average=0.002 s; distance=33 kB, estimate=117 kB; lsn=0/66324CE8, redo lsn=0/66324C90
+2026-07-05T17:48:06.055114396Z [err]  2026-07-05 17:48:03.019 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:48:06.055127506Z [err]  2026-07-05 17:48:03.441 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.010 s, total=0.422 s; sync files=4, longest=0.007 s, average=0.003 s; distance=35 kB, estimate=109 kB; lsn=0/6632DA00, redo lsn=0/6632D9A8
+2026-07-05T17:58:08.359123148Z [err]  2026-07-05 17:58:03.637 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T17:58:08.359128578Z [err]  2026-07-05 17:58:03.765 UTC [91] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.103 s, sync=0.007 s, total=0.129 s; sync files=2, longest=0.005 s, average=0.004 s; distance=8 kB, estimate=99 kB; lsn=0/6632FC60, redo lsn=0/6632FC08
+2026-07-05T18:03:09.486628945Z [err]  2026-07-05 18:03:03.862 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:03:09.486635535Z [err]  2026-07-05 18:03:04.179 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.005 s, total=0.317 s; sync files=3, longest=0.003 s, average=0.002 s; distance=27 kB, estimate=92 kB; lsn=0/66336A70, redo lsn=0/66336A18
+2026-07-05T18:08:10.701155028Z [err]  2026-07-05 18:08:03.277 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:08:10.701160588Z [err]  2026-07-05 18:08:03.409 UTC [91] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.105 s, sync=0.006 s, total=0.133 s; sync files=2, longest=0.004 s, average=0.003 s; distance=8 kB, estimate=83 kB; lsn=0/66338D50, redo lsn=0/66338CF8
+2026-07-05T18:11:55.468097938Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T18:13:12.233915424Z [err]  2026-07-05 18:13:03.507 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:13:12.233918694Z [err]  2026-07-05 18:13:03.723 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.005 s, total=0.216 s; sync files=3, longest=0.003 s, average=0.002 s; distance=17 kB, estimate=77 kB; lsn=0/6633D308, redo lsn=0/6633D2B0
+2026-07-05T18:18:13.533720562Z [err]  2026-07-05 18:18:03.819 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:18:13.533725832Z [err]  2026-07-05 18:18:05.061 UTC [91] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.206 s, sync=0.008 s, total=1.243 s; sync files=7, longest=0.006 s, average=0.002 s; distance=71 kB, estimate=76 kB; lsn=0/6634F260, redo lsn=0/6634F208
+2026-07-05T18:22:58.236334537Z [inf]  [INTERACTION] /leaderboard received
+2026-07-05T18:22:58.236338407Z [inf]  [INTERACTION] /leaderboard — deferred in 257ms, running handler
+2026-07-05T18:23:04.653112948Z [err]  2026-07-05 18:23:03.161 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:23:04.653121157Z [err]  2026-07-05 18:23:03.981 UTC [91] LOG:  checkpoint complete: wrote 8 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.805 s, sync=0.007 s, total=0.820 s; sync files=3, longest=0.004 s, average=0.003 s; distance=63 kB, estimate=75 kB; lsn=0/6635F110, redo lsn=0/6635F0B8
+2026-07-05T18:28:05.884017080Z [err]  2026-07-05 18:28:04.080 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:28:05.884021860Z [err]  2026-07-05 18:28:04.701 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.604 s, sync=0.004 s, total=0.622 s; sync files=3, longest=0.002 s, average=0.002 s; distance=56 kB, estimate=73 kB; lsn=0/6636D370, redo lsn=0/6636D318
+2026-07-05T18:28:49.957468542Z [inf]  [INTERACTION] /leaderboard received
+2026-07-05T18:28:49.957474702Z [inf]  [INTERACTION] /leaderboard — deferred in 372ms, running handler
+2026-07-05T18:32:00.713051267Z [inf]  [LOWO EVENT] Started battle_frenzy for 60m.
+2026-07-05T18:33:08.169431717Z [err]  2026-07-05 18:33:04.771 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:33:08.169442757Z [err]  2026-07-05 18:33:06.292 UTC [91] LOG:  checkpoint complete: wrote 15 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.505 s, sync=0.006 s, total=1.521 s; sync files=7, longest=0.003 s, average=0.001 s; distance=99 kB, estimate=99 kB; lsn=0/66386078, redo lsn=0/66386020
+2026-07-05T18:37:01.977232669Z [inf]  [INTERACTION] /leaderboard received
+2026-07-05T18:37:01.977244239Z [inf]  [INTERACTION] /leaderboard — deferred in 322ms, running handler
+2026-07-05T18:38:08.825156993Z [err]  2026-07-05 18:38:04.391 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:38:08.825161093Z [err]  2026-07-05 18:38:05.009 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.004 s, total=0.618 s; sync files=3, longest=0.003 s, average=0.002 s; distance=48 kB, estimate=94 kB; lsn=0/663921D8, redo lsn=0/66392180
+2026-07-05T18:43:10.355337844Z [err]  2026-07-05 18:43:04.101 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:43:10.355341544Z [err]  2026-07-05 18:43:04.216 UTC [91] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.103 s, sync=0.004 s, total=0.116 s; sync files=2, longest=0.003 s, average=0.002 s; distance=8 kB, estimate=85 kB; lsn=0/66394438, redo lsn=0/663943E0
+2026-07-05T18:48:12.063829081Z [err]  2026-07-05 18:48:04.316 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:48:12.063833461Z [err]  2026-07-05 18:48:04.537 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.206 s, sync=0.004 s, total=0.221 s; sync files=3, longest=0.003 s, average=0.002 s; distance=19 kB, estimate=79 kB; lsn=0/66399320, redo lsn=0/663992C8
+2026-07-05T18:53:13.951099624Z [err]  2026-07-05 18:53:04.639 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:53:13.951101884Z [err]  2026-07-05 18:53:05.259 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.606 s, sync=0.005 s, total=0.621 s; sync files=3, longest=0.003 s, average=0.002 s; distance=45 kB, estimate=75 kB; lsn=0/663A47A0, redo lsn=0/663A4748
+2026-07-05T18:58:04.878407346Z [err]  2026-07-05 18:58:04.359 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T18:58:06.115778337Z [err]  2026-07-05 18:58:06.102 UTC [91] LOG:  checkpoint complete: wrote 17 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.709 s, sync=0.021 s, total=1.744 s; sync files=8, longest=0.010 s, average=0.003 s; distance=110 kB, estimate=110 kB; lsn=0/663C0098, redo lsn=0/663C0040
+2026-07-05T19:02:28.184279400Z [inf]  [GATEWAY] Shard 0 reconnecting...
+2026-07-05T19:02:28.184281810Z [inf]  [GATEWAY] Shard 0 RESUMED (replayed 1 events)
+2026-07-05T19:03:07.378503032Z [err]  2026-07-05 19:03:04.201 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:03:07.378510102Z [err]  2026-07-05 19:03:04.422 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.005 s, total=0.221 s; sync files=3, longest=0.003 s, average=0.002 s; distance=13 kB, estimate=100 kB; lsn=0/663C34D0, redo lsn=0/663C3478
+2026-07-05T19:08:08.548455749Z [err]  2026-07-05 19:08:04.522 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:08:08.548461808Z [err]  2026-07-05 19:08:04.648 UTC [91] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.103 s, sync=0.013 s, total=0.127 s; sync files=2, longest=0.009 s, average=0.007 s; distance=8 kB, estimate=91 kB; lsn=0/663C5730, redo lsn=0/663C56D8
+2026-07-05T19:13:09.561640284Z [err]  2026-07-05 19:13:04.747 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:13:09.561644454Z [err]  2026-07-05 19:13:05.771 UTC [91] LOG:  checkpoint complete: wrote 10 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.006 s, sync=0.004 s, total=1.024 s; sync files=5, longest=0.003 s, average=0.001 s; distance=76 kB, estimate=89 kB; lsn=0/663E6C68, redo lsn=0/663D8738
+2026-07-05T19:18:10.845014960Z [err]  2026-07-05 19:18:04.870 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:18:10.845022650Z [err]  2026-07-05 19:18:06.102 UTC [91] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.206 s, sync=0.005 s, total=1.232 s; sync files=7, longest=0.002 s, average=0.001 s; distance=65 kB, estimate=87 kB; lsn=0/663E8DC8, redo lsn=0/663E8D70
+2026-07-05T19:23:12.395449162Z [err]  2026-07-05 19:23:04.200 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:23:12.395452172Z [err]  2026-07-05 19:23:04.720 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.004 s, total=0.520 s; sync files=3, longest=0.003 s, average=0.002 s; distance=45 kB, estimate=83 kB; lsn=0/663F4448, redo lsn=0/663F43F0
+2026-07-05T19:28:13.981282473Z [err]  2026-07-05 19:28:04.816 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:28:13.981288813Z [err]  2026-07-05 19:28:05.033 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.202 s, sync=0.006 s, total=0.218 s; sync files=2, longest=0.004 s, average=0.003 s; distance=16 kB, estimate=76 kB; lsn=0/663F8530, redo lsn=0/663F84A0
+2026-07-05T19:31:55.758847936Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T19:33:05.041663300Z [err]  2026-07-05 19:33:04.125 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:33:05.041669320Z [err]  2026-07-05 19:33:04.543 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.005 s, total=0.419 s; sync files=3, longest=0.003 s, average=0.002 s; distance=29 kB, estimate=71 kB; lsn=0/66401BA8, redo lsn=0/663FFAA0
+2026-07-05T19:38:06.634096150Z [err]  2026-07-05 19:38:04.643 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:38:06.634100660Z [err]  2026-07-05 19:38:05.968 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.307 s, sync=0.005 s, total=1.325 s; sync files=7, longest=0.003 s, average=0.001 s; distance=85 kB, estimate=85 kB; lsn=0/66415020, redo lsn=0/66414FC8
+2026-07-05T19:43:07.360027456Z [err]  2026-07-05 19:43:05.063 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:43:07.360033696Z [err]  2026-07-05 19:43:05.382 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.005 s, total=0.320 s; sync files=3, longest=0.003 s, average=0.002 s; distance=24 kB, estimate=79 kB; lsn=0/6641B1B8, redo lsn=0/6641B160
+2026-07-05T19:47:00.588409386Z [inf]  [LOWO EVENT] Started shop_sale for 60m.
+2026-07-05T19:48:09.249761668Z [err]  2026-07-05 19:48:05.482 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:48:09.249766888Z [err]  2026-07-05 19:48:05.905 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.008 s, total=0.423 s; sync files=3, longest=0.006 s, average=0.003 s; distance=29 kB, estimate=74 kB; lsn=0/66422630, redo lsn=0/664225D8
+2026-07-05T19:53:10.271146690Z [err]  2026-07-05 19:53:05.980 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:53:10.271151230Z [err]  2026-07-05 19:53:06.699 UTC [91] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.703 s, sync=0.004 s, total=0.719 s; sync files=3, longest=0.002 s, average=0.002 s; distance=58 kB, estimate=72 kB; lsn=0/66430EA0, redo lsn=0/66430E48
+2026-07-05T19:58:10.950387983Z [err]  2026-07-05 19:58:05.798 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T19:58:10.950394303Z [err]  2026-07-05 19:58:07.428 UTC [91] LOG:  checkpoint complete: wrote 16 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.612 s, sync=0.008 s, total=1.631 s; sync files=9, longest=0.006 s, average=0.001 s; distance=87 kB, estimate=87 kB; lsn=0/66446D70, redo lsn=0/66446D18
+2026-07-05T20:03:12.126313937Z [err]  2026-07-05 20:03:05.527 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:03:12.126318977Z [err]  2026-07-05 20:03:05.645 UTC [91] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.103 s, sync=0.004 s, total=0.119 s; sync files=2, longest=0.003 s, average=0.002 s; distance=6 kB, estimate=79 kB; lsn=0/66448858, redo lsn=0/66448800
+2026-07-05T20:13:14.611510857Z [err]  2026-07-05 20:13:05.829 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:13:14.611515907Z [err]  2026-07-05 20:13:06.049 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.006 s, total=0.221 s; sync files=3, longest=0.004 s, average=0.002 s; distance=14 kB, estimate=73 kB; lsn=0/6644C390, redo lsn=0/6644C338
+2026-07-05T20:18:06.573031101Z [err]  2026-07-05 20:18:05.148 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:18:06.573058051Z [err]  2026-07-05 20:18:05.573 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.405 s, sync=0.005 s, total=0.425 s; sync files=3, longest=0.003 s, average=0.002 s; distance=36 kB, estimate=69 kB; lsn=0/664554E8, redo lsn=0/66455490
+2026-07-05T20:18:38.198907322Z [inf]  [GATEWAY] Shard 0 reconnecting...
+2026-07-05T20:18:38.198911582Z [inf]  [GATEWAY] Shard 0 RESUMED (replayed 2 events)
+2026-07-05T20:23:07.609380433Z [err]  2026-07-05 20:23:05.671 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:23:07.609384073Z [err]  2026-07-05 20:23:06.088 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.006 s, total=0.417 s; sync files=3, longest=0.003 s, average=0.002 s; distance=32 kB, estimate=65 kB; lsn=0/6645D6B0, redo lsn=0/6645D658
+2026-07-05T20:28:08.622114219Z [err]  2026-07-05 20:28:05.187 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:28:08.622120869Z [err]  2026-07-05 20:28:05.506 UTC [91] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.306 s, sync=0.004 s, total=0.320 s; sync files=3, longest=0.002 s, average=0.002 s; distance=16 kB, estimate=60 kB; lsn=0/66461998, redo lsn=0/66461940
+2026-07-05T20:33:10.093609911Z [err]  2026-07-05 20:33:05.606 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:33:10.093620781Z [err]  2026-07-05 20:33:06.023 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.005 s, total=0.418 s; sync files=4, longest=0.002 s, average=0.002 s; distance=24 kB, estimate=57 kB; lsn=0/66467BB0, redo lsn=0/66467B58
+2026-07-05T20:43:12.128996987Z [err]  2026-07-05 20:43:05.225 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:43:12.129011217Z [err]  2026-07-05 20:43:06.945 UTC [91] LOG:  checkpoint complete: wrote 17 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.707 s, sync=0.005 s, total=1.721 s; sync files=9, longest=0.003 s, average=0.001 s; distance=97 kB, estimate=97 kB; lsn=0/66480360, redo lsn=0/66480308
+2026-07-05T20:46:57.061113229Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T20:48:13.481866761Z [err]  2026-07-05 20:48:06.044 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:48:13.481871661Z [err]  2026-07-05 20:48:06.669 UTC [91] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.610 s, sync=0.004 s, total=0.625 s; sync files=3, longest=0.002 s, average=0.002 s; distance=52 kB, estimate=93 kB; lsn=0/6648D5E0, redo lsn=0/6648D588
+2026-07-05T20:53:15.083778125Z [err]  2026-07-05 20:53:06.768 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:53:15.083787374Z [err]  2026-07-05 20:53:09.393 UTC [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.610 s, sync=0.005 s, total=2.626 s; sync files=8, longest=0.003 s, average=0.001 s; distance=184 kB, estimate=184 kB; lsn=0/664BB980, redo lsn=0/664BB8F0
+2026-07-05T20:58:16.150487017Z [err]  2026-07-05 20:58:06.491 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T20:58:16.150495207Z [err]  2026-07-05 20:58:07.617 UTC [91] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.109 s, sync=0.005 s, total=1.126 s; sync files=4, longest=0.003 s, average=0.002 s; distance=87 kB, estimate=175 kB; lsn=0/664D18F8, redo lsn=0/664D18A0
+2026-07-05T21:01:51.089331631Z [inf]  [LOWO EVENT] Started xp_bonanza for 60m.
+2026-07-05T21:03:07.185179715Z [err]  2026-07-05 21:03:06.717 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T21:03:08.205756306Z [err]  2026-07-05 21:03:08.036 UTC [91] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.306 s, sync=0.005 s, total=1.319 s; sync files=6, longest=0.003 s, average=0.001 s; distance=104 kB, estimate=168 kB; lsn=0/664EBBD8, redo lsn=0/664EBB80
+2026-07-05T21:08:09.437884314Z [err]  2026-07-05 21:08:06.135 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T21:08:09.437890124Z [err]  2026-07-05 21:08:07.359 UTC [91] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.205 s, sync=0.007 s, total=1.224 s; sync files=6, longest=0.004 s, average=0.002 s; distance=87 kB, estimate=160 kB; lsn=0/66501918, redo lsn=0/665018C0
+2026-07-05T21:08:33.289288906Z [err]  [LEVELING] Role not found: "Rookie" (level 5) in guild 1499320220450295878. Make sure the role name matches exactly (case-insensitive).
+2026-07-05T21:11:13.976151899Z [err]  [LEVELING] Role not found: "Rookie" (level 5) in guild 1499320220450295878. Make sure the role name matches exactly (case-insensitive).
+2026-07-05T21:13:10.712045315Z [err]  2026-07-05 21:13:06.458 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T21:13:10.712050095Z [err]  2026-07-05 21:13:06.977 UTC [91] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.503 s, sync=0.005 s, total=0.520 s; sync files=3, longest=0.003 s, average=0.002 s; distance=52 kB, estimate=149 kB; lsn=0/6650EC30, redo lsn=0/6650EBD8
+2026-07-05T21:13:24.459517033Z [err]  [ANTINUKE] Quarantine | Guild: The Blueprint of Destruction [Legacy] (1499320220450295878) | Executor: 235148962103951360 | Bot: true | Action: ban
+2026-07-05T21:13:24.459522183Z [err]  [ANTINUKE] Bot ban failed: Missing Permissions
+2026-07-05T21:18:12.138521630Z [err]  2026-07-05 21:18:07.077 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T21:18:12.138526290Z [err]  2026-07-05 21:18:07.303 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.204 s, sync=0.011 s, total=0.226 s; sync files=3, longest=0.008 s, average=0.004 s; distance=14 kB, estimate=135 kB; lsn=0/665127F8, redo lsn=0/665127A0
+2026-07-05T21:23:13.878488294Z [err]  2026-07-05 21:23:07.403 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T21:23:13.878499724Z [err]  2026-07-05 21:23:08.625 UTC [91] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.206 s, sync=0.005 s, total=1.222 s; sync files=6, longest=0.002 s, average=0.001 s; distance=78 kB, estimate=130 kB; lsn=0/66526068, redo lsn=0/66525FF8
+2026-07-05T21:28:15.891891932Z [err]  2026-07-05 21:28:07.723 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T21:28:15.891896612Z [err]  2026-07-05 21:28:08.150 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.005 s, total=0.427 s; sync files=3, longest=0.004 s, average=0.002 s; distance=30 kB, estimate=120 kB; lsn=0/6652DC38, redo lsn=0/6652DBE0
+2026-07-05T21:49:04.449659828Z [inf]  [INTERACTION] /afk received
+2026-07-05T21:49:04.449664848Z [inf]  [INTERACTION] /afk — deferred in 439ms, running handler
+2026-07-05T21:53:15.174308596Z [err]  2026-07-05 21:53:07.643 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T21:53:15.174314826Z [err]  2026-07-05 21:53:08.064 UTC [91] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.006 s, total=0.422 s; sync files=3, longest=0.004 s, average=0.002 s; distance=27 kB, estimate=110 kB; lsn=0/66534AC0, redo lsn=0/66534A68
+2026-07-05T22:01:59.249367956Z [inf]  [LOWO EVENT] Expired.
+2026-07-05T22:03:07.844611408Z [err]  2026-07-05 22:03:07.248 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T22:03:07.844623308Z [err]  2026-07-05 22:03:07.466 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.205 s, sync=0.005 s, total=0.219 s; sync files=3, longest=0.003 s, average=0.002 s; distance=16 kB, estimate=101 kB; lsn=0/66538DE0, redo lsn=0/66538D88
+2026-07-05T22:28:15.228338564Z [err]  2026-07-05 22:28:07.963 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T22:28:15.228349954Z [err]  2026-07-05 22:28:08.077 UTC [91] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.103 s, sync=0.004 s, total=0.115 s; sync files=2, longest=0.002 s, average=0.002 s; distance=8 kB, estimate=92 kB; lsn=0/6653B050, redo lsn=0/6653AFF8
+2026-07-05T22:33:16.300111412Z [err]  2026-07-05 22:33:07.175 UTC [91] LOG:  checkpoint starting: time
+2026-07-05T22:33:16.300116392Z [err]  2026-07-05 22:33:07.394 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.006 s, total=0.219 s; sync files=3, longest=0.004 s, average=0.002 s; distance=12 kB, estimate=84 kB; lsn=0/6653E1E8, redo lsn=0/6653E190
+2026-07-05T22:36:59.730458984Z [inf]  [LOWO EVENT] Started mineral_rush for 60m.
+2026-07-05T23:06:27.532139748Z [inf]  [GATEWAY] Shard 0 reconnecting...
+2026-07-05T23:06:27.532144388Z [inf]  [GATEWAY] Shard 0 RESUMED (replayed 1 events)
+2026-07-05T23:36:55.657364997Z [inf]  [LOWO EVENT] Expired.
+2026-07-06T00:57:00.899105695Z [inf]  [LOWO EVENT] Started skill_storm for 60m.
+2026-07-06T01:02:02.676233322Z [inf]  [GATEWAY] Shard 0 reconnecting...
+2026-07-06T01:02:02.676238692Z [inf]  [GATEWAY] Shard 0 RESUMED (replayed 1 events)
+2026-07-06T01:43:18.778853574Z [err]  2026-07-06 01:43:11.119 UTC [91] LOG:  checkpoint starting: time
+2026-07-06T01:43:18.778856094Z [err]  2026-07-06 01:43:11.343 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.206 s, sync=0.006 s, total=0.225 s; sync files=3, longest=0.003 s, average=0.002 s; distance=16 kB, estimate=77 kB; lsn=0/665424D0, redo lsn=0/66542478
+2026-07-06T01:56:58.962378979Z [inf]  [LOWO EVENT] Expired.
+2026-07-06T02:18:18.727280847Z [err]  2026-07-06 02:18:12.043 UTC [91] LOG:  checkpoint starting: time
+2026-07-06T02:18:18.727287088Z [err]  2026-07-06 02:18:12.276 UTC [91] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.205 s, sync=0.005 s, total=0.233 s; sync files=3, longest=0.003 s, average=0.002 s; distance=15 kB, estimate=71 kB; lsn=0/665463E0, redo lsn=0/66546388
+2026-07-06T03:01:58.571215855Z [inf]  [LOWO EVENT] Started skill_storm for 60m.

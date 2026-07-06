@@ -387,44 +387,70 @@ export const cmdDownload: Handler = async (msg, args) => {
 };
 
 async function imagineViaHuggingFace(prompt: string, apiKey: string): Promise<Buffer> {
-  const res = await fetch(
-    "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
-    {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "x-use-cache": "false",
-      },
-      body: JSON.stringify({
-        inputs: prompt,
-        parameters: {
-          num_inference_steps: 4,
-          width: 1024,
-          height: 1024,
-          guidance_scale: 0,
-        },
-      }),
-      signal: AbortSignal.timeout(60000),
-    }
+  // Hard 25-second wall-clock timeout that covers BOTH the response headers
+  // AND the full body download.  The AbortController is kept alive through the
+  // entire operation — clearTimeout only runs in `finally` after arrayBuffer().
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(new Error("HuggingFace request timed out after 25s")),
+    25_000,
   );
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`hf ${res.status}: ${body.slice(0, 300)}`);
+  try {
+    const res = await fetch(
+      "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "x-use-cache": "false",
+        },
+        body: JSON.stringify({
+          inputs: prompt,
+          parameters: {
+            num_inference_steps: 4,
+            width: 1024,
+            height: 1024,
+            guidance_scale: 0,
+          },
+        }),
+        signal: controller.signal,
+      },
+    );
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`hf ${res.status}: ${body.slice(0, 300)}`);
+    }
+    return Buffer.from(await res.arrayBuffer()); // timer still running here
+  } finally {
+    clearTimeout(timer); // cleared AFTER body read — this is intentional
   }
-  return Buffer.from(await res.arrayBuffer());
 }
 
 async function imagineViaPollinations(prompt: string): Promise<{ buffer: Buffer; ext: string }> {
-  const seed = Math.floor(Math.random() * 2147483647);
-  const encoded = encodeURIComponent(prompt);
-  const url = `https://image.pollinations.ai/prompt/${encoded}?model=flux-realism&width=1024&height=1024&seed=${seed}&nologo=true`;
-  const res = await fetch(url, { signal: AbortSignal.timeout(90000) });
-  if (!res.ok) throw new Error(`pollinations ${res.status}`);
-  const contentType = res.headers.get("content-type") ?? "image/jpeg";
-  const ext = contentType.includes("png") ? "png" : "jpg";
-  const buffer = Buffer.from(await res.arrayBuffer());
-  return { buffer, ext };
+  // Hard 20-second wall-clock timeout covering BOTH headers AND body download.
+  // Without this guard, a throttled Pollinations response that drip-feeds the
+  // image body can stall the Node.js event loop for 15+ minutes, causing all
+  // queued slash-command interactions to expire (Discord error 10062 —
+  // "Application did not respond" / "Unknown interaction").
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(new Error("Pollinations request timed out after 20s")),
+    20_000,
+  );
+  try {
+    const seed = Math.floor(Math.random() * 2147483647);
+    const encoded = encodeURIComponent(prompt);
+    const url = `https://image.pollinations.ai/prompt/${encoded}?model=flux-realism&width=1024&height=1024&seed=${seed}&nologo=true`;
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) throw new Error(`pollinations ${res.status}`);
+    const contentType = res.headers.get("content-type") ?? "image/jpeg";
+    const ext = contentType.includes("png") ? "png" : "jpg";
+    const buffer = Buffer.from(await res.arrayBuffer()); // timer still running here
+    return { buffer, ext };
+  } finally {
+    clearTimeout(timer); // cleared AFTER body read — this is intentional
+  }
 }
 
 export const cmdGrokImagine: Handler = async (msg, args) => {
