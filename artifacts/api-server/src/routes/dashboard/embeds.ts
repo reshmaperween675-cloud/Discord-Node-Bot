@@ -1316,12 +1316,36 @@ router.get("/embeds", async (req, res): Promise<void> => {
       overrideRows.map((r: typeof overrideRows[0]) => [r.key.replace("dashboard:embed:", ""), { value: r.value as Partial<EmbedData>, updatedAt: r.updatedAt }]),
     );
 
-    const embeds = DEFAULT_EMBEDS.map((base) => {
+    const defaultEmbeds = DEFAULT_EMBEDS.map((base) => {
       const ov = overrideMap.get(base.id);
       return mergeEmbed(base, ov?.value ?? null, ov?.updatedAt ?? undefined);
     });
 
-    res.json(embeds);
+    // Also include custom embeds created via the dashboard
+    const customRows = await db
+      .select()
+      .from(botKvTable)
+      .where(sql`${botKvTable.key} LIKE 'dashboard:custom-embed:%'`);
+
+    const customEmbeds = customRows.map((r) => {
+      const data = r.value as EmbedData & { id: string; module: string };
+      return {
+        id: data.id ?? r.key.replace("dashboard:custom-embed:", ""),
+        module: data.module ?? "Custom",
+        title: data.title ?? null,
+        description: data.description ?? null,
+        color: data.color ?? null,
+        footer: data.footer ?? null,
+        thumbnail: data.thumbnail ?? null,
+        image: data.image ?? null,
+        fields: data.fields ?? [],
+        isDefault: false,
+        lastModified: r.updatedAt.toISOString(),
+        lastModifiedBy: null,
+      };
+    });
+
+    res.json([...defaultEmbeds, ...customEmbeds]);
   } catch (err) {
     req.log.error({ err }, "Failed to list embeds");
     res.status(500).json({ error: "Failed to list embeds" });
@@ -1340,55 +1364,168 @@ router.get("/embeds/:id", async (req, res): Promise<void> => {
   res.json(mergeEmbed(base, override));
 });
 
-router.put("/embeds/:id", async (req, res): Promise<void> => {
-  const rawId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const id = decodeURIComponent(rawId);
-  const base = DEFAULT_EMBEDS.find((e) => e.id === id);
-  if (!base) {
-    res.status(404).json({ error: "Embed not found" });
-    return;
+router.post("/embeds", async (req, res): Promise<void> => {
+  try {
+    const { id, module: mod, ...embedData } = req.body as { id: string; module: string } & Partial<EmbedData>;
+    if (!id || !mod) {
+      res.status(400).json({ error: "id and module are required" });
+      return;
+    }
+    const fullId = id.startsWith("custom.") ? id : `custom.${id}`;
+    const key = `dashboard:custom-embed:${fullId}`;
+    const fullEmbed = {
+      id: fullId,
+      module: mod,
+      title: (embedData.title as string | null) ?? null,
+      description: (embedData.description as string | null) ?? null,
+      color: (embedData.color as number | null) ?? null,
+      footer: (embedData.footer as string | null) ?? null,
+      thumbnail: (embedData.thumbnail as string | null) ?? null,
+      image: (embedData.image as string | null) ?? null,
+      fields: (embedData.fields as EmbedFieldData[]) ?? [],
+    };
+    await db
+      .insert(botKvTable)
+      .values({ key, value: fullEmbed as unknown as Record<string, unknown> })
+      .onConflictDoUpdate({ target: botKvTable.key, set: { value: fullEmbed as unknown as Record<string, unknown> } });
+    await writeAuditLog({
+      action: `embed.created:${fullId}`,
+      userId: req.session.userId!,
+      username: req.session.username!,
+      before: {},
+      after: fullEmbed as unknown as Record<string, unknown>,
+    });
+    res.status(201).json({ ...fullEmbed, isDefault: false, lastModified: new Date().toISOString(), lastModifiedBy: req.session.username });
+  } catch (err) {
+    req.log.error({ err }, "Failed to create embed");
+    res.status(500).json({ error: "Failed to create embed" });
   }
+});
 
-  const key = `dashboard:embed:${id}`;
-  const existingRow = await db.select().from(botKvTable).where(eq(botKvTable.key, key)).limit(1);
-  const before = existingRow[0]?.value ?? {};
+router.post("/embeds/custom-modules", async (req, res): Promise<void> => {
+  try {
+    const { name } = req.body as { name: string };
+    if (!name?.trim()) {
+      res.status(400).json({ error: "name is required" });
+      return;
+    }
+    const row = await db.select().from(botKvTable).where(eq(botKvTable.key, "dashboard:custom-modules")).limit(1);
+    const current: string[] = row[0] ? (row[0].value as string[]) : [];
+    if (!current.includes(name.trim())) {
+      const updated = [...current, name.trim()];
+      await db
+        .insert(botKvTable)
+        .values({ key: "dashboard:custom-modules", value: updated as unknown as Record<string, unknown> })
+        .onConflictDoUpdate({ target: botKvTable.key, set: { value: updated as unknown as Record<string, unknown> } });
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    req.log.error({ err }, "Failed to create custom module");
+    res.status(500).json({ error: "Failed to create custom module" });
+  }
+});
 
-  const updated = req.body as Partial<EmbedData>;
+router.put("/embeds/:id", async (req, res): Promise<void> => {
+  try {
+    const rawId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const id = decodeURIComponent(rawId);
 
-  await db
-    .insert(botKvTable)
-    .values({ key, value: updated })
-    .onConflictDoUpdate({ target: botKvTable.key, set: { value: updated } });
+    // Check if it's a custom embed
+    const isCustom = !DEFAULT_EMBEDS.find((e) => e.id === id);
+    if (isCustom) {
+      const customKey = `dashboard:custom-embed:${id}`;
+      const existing = await db.select().from(botKvTable).where(eq(botKvTable.key, customKey)).limit(1);
+      if (!existing[0]) {
+        res.status(404).json({ error: "Embed not found" });
+        return;
+      }
+      const before = existing[0].value as Record<string, unknown>;
+      const updated = { ...before, ...(req.body as Partial<EmbedData>) };
+      await db
+        .insert(botKvTable)
+        .values({ key: customKey, value: updated as Record<string, unknown> })
+        .onConflictDoUpdate({ target: botKvTable.key, set: { value: updated as Record<string, unknown> } });
+      await writeAuditLog({
+        action: `embed.updated:${id}`,
+        userId: req.session.userId!,
+        username: req.session.username!,
+        before,
+        after: updated as Record<string, unknown>,
+      });
+      res.json({ ...updated, isDefault: false, lastModified: new Date().toISOString(), lastModifiedBy: req.session.username });
+      return;
+    }
 
-  await writeAuditLog({
-    action: `embed.updated:${id}`,
-    userId: req.session.userId!,
-    username: req.session.username!,
-    before: before as Record<string, unknown>,
-    after: updated as Record<string, unknown>,
-  });
+    const base = DEFAULT_EMBEDS.find((e) => e.id === id)!;
+    const key = `dashboard:embed:${id}`;
+    const existingRow = await db.select().from(botKvTable).where(eq(botKvTable.key, key)).limit(1);
+    const before = existingRow[0]?.value ?? {};
 
-  res.json(mergeEmbed(base, updated, new Date(), req.session.username));
+    const updated = req.body as Partial<EmbedData>;
+
+    await db
+      .insert(botKvTable)
+      .values({ key, value: updated })
+      .onConflictDoUpdate({ target: botKvTable.key, set: { value: updated } });
+
+    await writeAuditLog({
+      action: `embed.updated:${id}`,
+      userId: req.session.userId!,
+      username: req.session.username!,
+      before: before as Record<string, unknown>,
+      after: updated as Record<string, unknown>,
+    });
+
+    res.json(mergeEmbed(base, updated, new Date(), req.session.username));
+  } catch (err) {
+    req.log.error({ err }, "Failed to update embed");
+    res.status(500).json({ error: "Failed to update embed" });
+  }
 });
 
 router.delete("/embeds/:id", async (req, res): Promise<void> => {
-  const rawId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const id = decodeURIComponent(rawId);
-  const key = `dashboard:embed:${id}`;
+  try {
+    const rawId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const id = decodeURIComponent(rawId);
 
-  const existingRow = await db.select().from(botKvTable).where(eq(botKvTable.key, key)).limit(1);
-  if (existingRow[0]) {
-    await db.delete(botKvTable).where(eq(botKvTable.key, key));
-    await writeAuditLog({
-      action: `embed.reset:${id}`,
-      userId: req.session.userId!,
-      username: req.session.username!,
-      before: existingRow[0].value as Record<string, unknown>,
-      after: {},
-    });
+    // Custom embed — delete entirely
+    const isCustom = !DEFAULT_EMBEDS.find((e) => e.id === id);
+    if (isCustom) {
+      const customKey = `dashboard:custom-embed:${id}`;
+      const existing = await db.select().from(botKvTable).where(eq(botKvTable.key, customKey)).limit(1);
+      if (existing[0]) {
+        await db.delete(botKvTable).where(eq(botKvTable.key, customKey));
+        await writeAuditLog({
+          action: `embed.deleted:${id}`,
+          userId: req.session.userId!,
+          username: req.session.username!,
+          before: existing[0].value as Record<string, unknown>,
+          after: {},
+        });
+      }
+      res.json({ ok: true, message: "Custom embed deleted" });
+      return;
+    }
+
+    // Default embed — delete override only (reset to default)
+    const key = `dashboard:embed:${id}`;
+    const existingRow = await db.select().from(botKvTable).where(eq(botKvTable.key, key)).limit(1);
+    if (existingRow[0]) {
+      await db.delete(botKvTable).where(eq(botKvTable.key, key));
+      await writeAuditLog({
+        action: `embed.reset:${id}`,
+        userId: req.session.userId!,
+        username: req.session.username!,
+        before: existingRow[0].value as Record<string, unknown>,
+        after: {},
+      });
+    }
+
+    res.json({ ok: true, message: "Embed reset to default" });
+  } catch (err) {
+    req.log.error({ err }, "Failed to delete embed");
+    res.status(500).json({ error: "Failed to delete embed" });
   }
-
-  res.json({ ok: true, message: "Embed reset to default" });
 });
 
 export default router;

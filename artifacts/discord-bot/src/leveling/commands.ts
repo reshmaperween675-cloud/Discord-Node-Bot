@@ -6,6 +6,7 @@ import {
   PermissionFlagsBits,
   AttachmentBuilder,
 } from "discord.js";
+import { applyEmbedOverride } from "../bot/embedOverrides.js";
 import {
   getUser,
   getAllUsers,
@@ -59,6 +60,17 @@ export async function executeRank(i: ChatInputCommandInteraction): Promise<void>
     )
     .setFooter({ text: `Last Stand Management  ·  Leveling System` })
     .setTimestamp();
+
+  await applyEmbedOverride("leveling.rank", embed, {
+    user:      target.username,
+    level:     String(level),
+    rank:      rank === 0 ? "—" : String(rank),
+    weeklyXp:  userData.weeklyXp.toLocaleString(),
+    currentXp: currentXp.toLocaleString(),
+    neededXp:  neededXp.toLocaleString(),
+    totalXp:   userData.totalXp.toLocaleString(),
+    bar,
+  });
 
   await i.editReply({ embeds: [embed] });
 }

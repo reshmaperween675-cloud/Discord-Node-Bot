@@ -1,5 +1,6 @@
 import type { Client, Guild, Message, GuildAuditLogsEntry } from "discord.js";
 import { Events, AuditLogEvent, EmbedBuilder } from "discord.js";
+import { applyEmbedOverride } from "../bot/embedOverrides.js";
 import { getConfig, getWhitelist, recordAction } from "./store.js";
 import type { ActionType } from "./store.js";
 import { quarantine } from "./mitigation.js";
@@ -104,6 +105,12 @@ async function handleAction(
       "\n\n🔄 **Auto-restoring server from `?copy` snapshot…**",
     )
     .setTimestamp();
+  await applyEmbedOverride("antinuke.alert", alertEmbed, {
+    user:      `<@${executorId}>`,
+    action,
+    count:     String(config.thresholds?.[action] ?? 0),
+    threshold: String(config.thresholds?.[action] ?? 0),
+  });
   await postAntiNukeLog(client, guild, alertEmbed);
 
   // ── Auto-restore from ?copy snapshot ────────────────────────────────────────

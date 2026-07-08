@@ -1,17 +1,18 @@
 import React, { useState, useCallback } from "react";
-import { useListEmbeds, useGetEmbed, useUpdateEmbed, useDeleteEmbed, getListEmbedsQueryKey } from "@workspace/api-client-react";
+import { useListEmbeds, useGetEmbed, useUpdateEmbed, useDeleteEmbed, getListEmbedsQueryKey, useCreateEmbed, useCreateCustomModule } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { EmbedEntry } from "@workspace/api-client-react";
+import { EmbedEntry, EmbedField } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Plus, Save, Trash2, Loader2, RotateCcw, Pencil, Zap, Image as ImageIcon, Type, Hash } from "lucide-react";
+import { Search, Plus, Save, Trash2, Loader2, RotateCcw, Pencil, Zap, Image as ImageIcon, Type, Hash, X, Layers } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const hexToInt = (hex: string) => parseInt(hex.replace("#", ""), 16);
@@ -138,6 +139,8 @@ export default function EmbedsPage() {
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("All");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showNewEmbed, setShowNewEmbed] = useState(false);
+  const [showNewModule, setShowNewModule] = useState(false);
 
   const { data: embeds, isLoading } = useListEmbeds();
 
@@ -179,6 +182,14 @@ export default function EmbedsPage() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          <Button variant="outline" size="sm" className="border-white/10 h-10 gap-1.5 shrink-0" onClick={() => setShowNewModule(true)}>
+            <Layers className="w-4 h-4" />
+            <span className="hidden sm:inline">New Module</span>
+          </Button>
+          <Button size="sm" className="h-10 gap-1.5 shrink-0" onClick={() => setShowNewEmbed(true)}>
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">New Embed</span>
+          </Button>
         </div>
       </div>
 
@@ -234,6 +245,20 @@ export default function EmbedsPage() {
       <EmbedEditorDialog
         embedId={selectedId}
         onClose={() => setSelectedId(null)}
+      />
+
+      {/* New embed dialog */}
+      <NewEmbedDialog
+        open={showNewEmbed}
+        onClose={() => setShowNewEmbed(false)}
+        existingModules={Array.from(new Set(embeds?.map((e) => e.module) ?? []))}
+        onCreated={(id) => { setShowNewEmbed(false); setSelectedId(id); }}
+      />
+
+      {/* New module dialog */}
+      <NewModuleDialog
+        open={showNewModule}
+        onClose={() => setShowNewModule(false)}
       />
     </div>
   );
@@ -402,7 +427,7 @@ function EmbedEditorDialog({ embedId, onClose }: { embedId: string | null; onClo
   const handleSave = () => {
     if (!embedId) return;
     updateMut.mutate(
-      { id: embedId, data: { title: form.title, description: form.description, color: form.color ?? null, footer: form.footer, thumbnail: form.thumbnail, image: form.image } },
+      { id: embedId, data: { title: form.title, description: form.description, color: form.color ?? null, footer: form.footer, thumbnail: form.thumbnail, image: form.image, fields: form.fields ?? [] } },
       {
         onSuccess: () => {
           toast({ title: "✅ Embed saved", description: "Changes are now live." });
@@ -578,6 +603,82 @@ function EmbedEditorDialog({ embedId, onClose }: { embedId: string | null; onClo
                     placeholder="Footer text…"
                   />
                 </div>
+
+                {/* Fields */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                      <Hash className="w-3 h-3" /> Fields ({form.fields?.length ?? 0}/25)
+                    </Label>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-6 px-2 text-xs border-white/10"
+                      onClick={() => setForm((f) => ({ ...f, fields: [...(f.fields ?? []), { name: "", value: "", inline: true }] }))}
+                      disabled={(form.fields?.length ?? 0) >= 25}
+                    >
+                      <Plus className="w-3 h-3 mr-1" /> Add
+                    </Button>
+                  </div>
+                  {(form.fields ?? []).length === 0 && (
+                    <div className="text-[11px] text-muted-foreground/40 italic text-center py-2 border border-white/5 rounded">
+                      No fields — click Add to create one
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    {(form.fields ?? []).map((field: EmbedField, idx: number) => (
+                      <div key={idx} className="border border-white/10 rounded-lg p-3 bg-black/20 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono text-muted-foreground">Field {idx + 1}</span>
+                          <div className="flex items-center gap-3">
+                            <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                              <input
+                                type="checkbox"
+                                checked={field.inline}
+                                onChange={(e) => {
+                                  const next = [...(form.fields ?? [])];
+                                  next[idx] = { ...field, inline: e.target.checked };
+                                  setForm((f) => ({ ...f, fields: next }));
+                                }}
+                                className="w-3 h-3"
+                              />
+                              <span className="text-[11px] text-muted-foreground">Inline</span>
+                            </label>
+                            <button
+                              onClick={() => {
+                                const next = (form.fields ?? []).filter((_: EmbedField, i: number) => i !== idx);
+                                setForm((f) => ({ ...f, fields: next }));
+                              }}
+                              className="text-destructive/60 hover:text-destructive transition-colors"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                        <Input
+                          value={field.name}
+                          onChange={(e) => {
+                            const next = [...(form.fields ?? [])];
+                            next[idx] = { ...field, name: e.target.value };
+                            setForm((f) => ({ ...f, fields: next }));
+                          }}
+                          placeholder="Field name…"
+                          className="bg-black/20 border-white/10 text-xs h-7"
+                        />
+                        <Textarea
+                          value={field.value}
+                          onChange={(e) => {
+                            const next = [...(form.fields ?? [])];
+                            next[idx] = { ...field, value: e.target.value };
+                            setForm((f) => ({ ...f, fields: next }));
+                          }}
+                          placeholder="Field value…"
+                          className="bg-black/20 border-white/10 text-xs min-h-[52px] resize-none"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Actions */}
@@ -650,11 +751,11 @@ function EmbedEditorDialog({ embedId, onClose }: { embedId: string | null; onClo
                           </div>
 
                           {/* Fields */}
-                          {embed.fields && embed.fields.length > 0 && (
+                          {(form.fields ?? []).length > 0 && (
                             <div className="grid grid-cols-3 gap-x-4 gap-y-3 pt-1">
-                              {embed.fields.map((f, i) => (
+                              {(form.fields ?? []).map((f: EmbedField, i: number) => (
                                 <div key={i} className={f.inline ? "" : "col-span-3"}>
-                                  <div className="text-white text-sm font-semibold mb-0.5">{f.name}</div>
+                                  <div className="text-white text-sm font-semibold mb-0.5">{applyPreview(f.name)}</div>
                                   <div className="text-[#dbdee1] text-sm">{applyPreview(f.value)}</div>
                                 </div>
                               ))}
@@ -681,7 +782,7 @@ function EmbedEditorDialog({ embedId, onClose }: { embedId: string | null; onClo
                           )}
 
                           {/* Empty state */}
-                          {!form.title && !form.description && !form.image && !form.footer && !(embed.fields?.length) && (
+                          {!form.title && !form.description && !form.image && !form.footer && !(form.fields?.length) && (
                             <div className="text-[#dbdee1]/30 text-sm italic py-6 text-center">
                               Start typing to see your embed preview
                             </div>
@@ -696,6 +797,226 @@ function EmbedEditorDialog({ embedId, onClose }: { embedId: string | null; onClo
 
           </div>
         )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ─── New Embed Dialog ─────────────────────────────────────────────────────────
+function NewEmbedDialog({
+  open,
+  onClose,
+  existingModules,
+  onCreated,
+}: {
+  open: boolean;
+  onClose: () => void;
+  existingModules: string[];
+  onCreated: (id: string) => void;
+}) {
+  const { toast } = useToast();
+  const createMut = useCreateEmbed();
+  const [form, setForm] = useState({
+    id: "",
+    module: "",
+    customModule: "",
+    title: "",
+    description: "",
+    color: 0x5865f2,
+    footer: "",
+  });
+  const [useCustomModule, setUseCustomModule] = useState(false);
+
+  const handleCreate = () => {
+    const rawId = form.id.trim();
+    const module = useCustomModule ? form.customModule.trim() : form.module;
+    if (!rawId || !module) {
+      toast({ title: "Required", description: "ID and module are required.", variant: "destructive" });
+      return;
+    }
+    const finalId = rawId.startsWith("custom.") ? rawId : `custom.${rawId}`;
+    createMut.mutate(
+      {
+        id: rawId,
+        module,
+        title: form.title || null,
+        description: form.description || null,
+        color: form.color,
+        footer: form.footer || null,
+      },
+      {
+        onSuccess: () => {
+          toast({ title: "✅ Embed created", description: `${finalId} is ready to edit.` });
+          setForm({ id: "", module: "", customModule: "", title: "", description: "", color: 0x5865f2, footer: "" });
+          setUseCustomModule(false);
+          onCreated(finalId);
+        },
+        onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
+      }
+    );
+  };
+
+  const allModules = Array.from(new Set([...existingModules, "Custom"]));
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="w-[500px] max-w-[95vw] bg-background border-white/10">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Plus className="w-4 h-4 text-primary" />
+            New Custom Embed
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Embed ID *</Label>
+            <div className="flex items-center gap-1">
+              <span className="text-xs font-mono text-muted-foreground px-2 py-2 bg-black/30 rounded-l border border-white/10 border-r-0">custom.</span>
+              <Input
+                value={form.id}
+                onChange={(e) => setForm((f) => ({ ...f, id: e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, "") }))}
+                placeholder="my-embed"
+                className="bg-black/20 border-white/10 font-mono text-sm rounded-l-none"
+              />
+            </div>
+            <p className="text-[11px] text-muted-foreground/60">Lowercase letters, numbers, dots, and dashes only.</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Module *</Label>
+            {useCustomModule ? (
+              <div className="flex gap-2">
+                <Input
+                  value={form.customModule}
+                  onChange={(e) => setForm((f) => ({ ...f, customModule: e.target.value }))}
+                  placeholder="Module name…"
+                  className="bg-black/20 border-white/10 text-sm"
+                  autoFocus
+                />
+                <Button size="sm" variant="outline" className="border-white/10 shrink-0" onClick={() => setUseCustomModule(false)}>
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Select value={form.module} onValueChange={(v) => setForm((f) => ({ ...f, module: v }))}>
+                  <SelectTrigger className="bg-black/20 border-white/10 text-sm">
+                    <SelectValue placeholder="Select module…" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allModules.map((m) => (
+                      <SelectItem key={m} value={m}>{m}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button size="sm" variant="outline" className="border-white/10 shrink-0 text-xs" onClick={() => setUseCustomModule(true)}>
+                  New
+                </Button>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Title</Label>
+            <Input
+              value={form.title}
+              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              placeholder="Embed title…"
+              className="bg-black/20 border-white/10 text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Description</Label>
+            <Textarea
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              placeholder="Embed description…"
+              className="bg-black/20 border-white/10 text-sm min-h-[80px] resize-none"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sidebar Color</Label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={intToHex(form.color)}
+                onChange={(e) => setForm((f) => ({ ...f, color: hexToInt(e.target.value) }))}
+                className="w-9 h-9 rounded border border-white/20 bg-transparent cursor-pointer"
+              />
+              <Input
+                value={intToHex(form.color).toUpperCase()}
+                onChange={(e) => {
+                  if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) setForm((f) => ({ ...f, color: hexToInt(e.target.value) }));
+                }}
+                className="bg-black/20 border-white/10 font-mono text-sm"
+              />
+            </div>
+          </div>
+        </div>
+        <DialogFooter className="gap-2">
+          <Button variant="outline" className="border-white/10" onClick={onClose}>Cancel</Button>
+          <Button onClick={handleCreate} disabled={createMut.isPending}>
+            {createMut.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
+            Create Embed
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ─── New Module Dialog ────────────────────────────────────────────────────────
+function NewModuleDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { toast } = useToast();
+  const createMut = useCreateCustomModule();
+  const [name, setName] = useState("");
+
+  const handleCreate = () => {
+    if (!name.trim()) return;
+    createMut.mutate(name.trim(), {
+      onSuccess: () => {
+        toast({ title: "✅ Module created", description: `"${name.trim()}" is now available when creating embeds.` });
+        setName("");
+        onClose();
+      },
+      onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="w-[400px] max-w-[95vw] bg-background border-white/10">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Layers className="w-4 h-4 text-primary" />
+            New Module
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <p className="text-sm text-muted-foreground">
+            Create a new module group to organise custom embeds under.
+          </p>
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Module Name *</Label>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Events, Logging, Tickets…"
+              className="bg-black/20 border-white/10"
+              onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+              autoFocus
+            />
+          </div>
+        </div>
+        <DialogFooter className="gap-2">
+          <Button variant="outline" className="border-white/10" onClick={onClose}>Cancel</Button>
+          <Button onClick={handleCreate} disabled={createMut.isPending || !name.trim()}>
+            {createMut.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Layers className="w-4 h-4 mr-2" />}
+            Create Module
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

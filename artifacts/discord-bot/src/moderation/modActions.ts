@@ -6,6 +6,7 @@ import {
   TextChannel,
   GuildMember,
 } from "discord.js";
+import { applyEmbedOverride } from "../bot/embedOverrides.js";
 
 const MOD   = PermissionFlagsBits.ModerateMembers;
 const ADMIN = PermissionFlagsBits.ManageGuild;
@@ -39,9 +40,12 @@ export async function executeKick(interaction: ChatInputCommandInteraction): Pro
   const member = await interaction.guild?.members.fetch(target.id).catch(() => null);
   if (!member) { await interaction.editReply({ content: "❌ Member not found." }); return; }
   if (!member.kickable) { await interaction.editReply({ content: "❌ I cannot kick this member." }); return; }
-  try { await target.send({ embeds: [modEmbed(0xe74c3c, "👢  YOU WERE KICKED", `**Server:** ${interaction.guild?.name}\n**Reason:** ${reason}`)] }); } catch { /**/ }
+  const vars = { target: target.id, moderator: interaction.user.id, reason, guildName: interaction.guild?.name ?? "" };
+  const dmEmbed = await applyEmbedOverride("mod.kick.dm", modEmbed(0xe74c3c, "👢  YOU WERE KICKED", `**Server:** ${interaction.guild?.name}\n**Reason:** ${reason}`), vars);
+  try { await target.send({ embeds: [dmEmbed] }); } catch { /**/ }
   await member.kick(reason);
-  await interaction.editReply({ embeds: [modEmbed(0xe74c3c, "👢  MEMBER KICKED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL())] });
+  const kickEmbed = await applyEmbedOverride("mod.kick", modEmbed(0xe74c3c, "👢  MEMBER KICKED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL()), vars);
+  await interaction.editReply({ embeds: [kickEmbed] });
 }
 
 // ── /ban ──────────────────────────────────────────────────────────────────────
@@ -60,9 +64,12 @@ export async function executeBan(interaction: ChatInputCommandInteraction): Prom
   if (!interaction.guild) { await interaction.editReply({ content: "❌ Not in a guild." }); return; }
   const member = await interaction.guild.members.fetch(target.id).catch(() => null);
   if (member && !member.bannable) { await interaction.editReply({ content: "❌ I cannot ban this member." }); return; }
-  try { await target.send({ embeds: [modEmbed(0x8b0000, "🔨  YOU WERE BANNED", `**Server:** ${interaction.guild?.name}\n**Reason:** ${reason}`)] }); } catch { /**/ }
+  const vars = { target: target.id, moderator: interaction.user.id, reason, guildName: interaction.guild?.name ?? "" };
+  const dmEmbed = await applyEmbedOverride("mod.ban.dm", modEmbed(0x8b0000, "🔨  YOU WERE BANNED", `**Server:** ${interaction.guild?.name}\n**Reason:** ${reason}`), vars);
+  try { await target.send({ embeds: [dmEmbed] }); } catch { /**/ }
   await interaction.guild.bans.create(target.id, { reason, deleteMessageSeconds: deleteDays * 86400 });
-  await interaction.editReply({ embeds: [modEmbed(0x8b0000, "🔨  MEMBER BANNED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL())] });
+  const banEmbed = await applyEmbedOverride("mod.ban", modEmbed(0x8b0000, "🔨  MEMBER BANNED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL()), vars);
+  await interaction.editReply({ embeds: [banEmbed] });
 }
 
 // ── /tempban ──────────────────────────────────────────────────────────────────
@@ -83,9 +90,12 @@ export async function executeTempban(interaction: ChatInputCommandInteraction): 
   if (member && !member.bannable) { await interaction.editReply({ content: "❌ I cannot ban this member." }); return; }
   const unbanAt = new Date(Date.now() + hours * 3600 * 1000);
   const label = hours < 24 ? `${hours}h` : `${Math.floor(hours / 24)}d ${hours % 24}h`;
-  try { await target.send({ embeds: [modEmbed(0xc0392b, "⏳  TEMP-BAN ISSUED", `**Server:** ${interaction.guild?.name}\n**Duration:** ${label}\n**Reason:** ${reason}\n**Unban:** <t:${Math.floor(unbanAt.getTime() / 1000)}:F>`)] }); } catch { /**/ }
+  const vars = { target: target.id, moderator: interaction.user.id, reason, guildName: interaction.guild?.name ?? "", hours: String(hours), duration: label };
+  const dmEmbed = await applyEmbedOverride("mod.tempban", modEmbed(0xc0392b, "⏳  TEMP-BAN ISSUED", `**Server:** ${interaction.guild?.name}\n**Duration:** ${label}\n**Reason:** ${reason}\n**Unban:** <t:${Math.floor(unbanAt.getTime() / 1000)}:F>`), vars);
+  try { await target.send({ embeds: [dmEmbed] }); } catch { /**/ }
   await interaction.guild.bans.create(target.id, { reason: `[TEMPBAN ${label}] ${reason}` });
-  await interaction.editReply({ embeds: [modEmbed(0xc0392b, `⏳  TEMP-BAN (${label})`, `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n▸  **DURATION** ${DOT} \`${label}\`\n▸  **UNBAN AT** ${DOT} <t:${Math.floor(unbanAt.getTime() / 1000)}:F>\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL())] });
+  const tbEmbed = await applyEmbedOverride("mod.tempban", modEmbed(0xc0392b, `⏳  TEMP-BAN (${label})`, `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n▸  **DURATION** ${DOT} \`${label}\`\n▸  **UNBAN AT** ${DOT} <t:${Math.floor(unbanAt.getTime() / 1000)}:F>\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL()), vars);
+  await interaction.editReply({ embeds: [tbEmbed] });
 }
 
 // ── /mute ──────────────────────────────────────────────────────────────────────
@@ -107,7 +117,8 @@ export async function executeMute(interaction: ChatInputCommandInteraction): Pro
   const ms = minutes * 60 * 1000;
   await member.timeout(ms, reason);
   const label = minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
-  await interaction.editReply({ embeds: [modEmbed(0xf39c12, "🔇  MEMBER MUTED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n▸  **DURATION** ${DOT} \`${label}\`\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL())] });
+  const muteEmbed = await applyEmbedOverride("mod.mute", modEmbed(0xf39c12, "🔇  MEMBER MUTED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n▸  **DURATION** ${DOT} \`${label}\`\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL()), { target: target.id, moderator: interaction.user.id, reason, duration: label });
+  await interaction.editReply({ embeds: [muteEmbed] });
 }
 
 // ── /unmute ────────────────────────────────────────────────────────────────────
@@ -123,7 +134,8 @@ export async function executeUnmute(interaction: ChatInputCommandInteraction): P
   if (!member) { await interaction.editReply({ content: "❌ Member not found." }); return; }
   if (!member.isCommunicationDisabled()) { await interaction.editReply({ content: "ℹ️ That member is not currently muted." }); return; }
   await member.timeout(null);
-  await interaction.editReply({ embeds: [modEmbed(0x2ecc71, "🔊  MEMBER UNMUTED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}`).setThumbnail(target.displayAvatarURL())] });
+  const unmuteEmbed = await applyEmbedOverride("mod.unmute", modEmbed(0x2ecc71, "🔊  MEMBER UNMUTED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}`).setThumbnail(target.displayAvatarURL()), { target: target.id, moderator: interaction.user.id });
+  await interaction.editReply({ embeds: [unmuteEmbed] });
 }
 
 // ── /timeout ───────────────────────────────────────────────────────────────────
@@ -144,12 +156,14 @@ export async function executeTimeout(interaction: ChatInputCommandInteraction): 
   if (!member.moderatable) { await interaction.editReply({ content: "❌ I cannot timeout this member." }); return; }
   if (minutes === 0) {
     await member.timeout(null);
-    await interaction.editReply({ embeds: [modEmbed(0x2ecc71, "⏰  TIMEOUT REMOVED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}`)] });
+    const rmEmbed = await applyEmbedOverride("mod.timeout", modEmbed(0x2ecc71, "⏰  TIMEOUT REMOVED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}`), { target: target.id, moderator: interaction.user.id });
+    await interaction.editReply({ embeds: [rmEmbed] });
     return;
   }
   await member.timeout(minutes * 60 * 1000, reason);
   const label = minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
-  await interaction.editReply({ embeds: [modEmbed(0xf39c12, `⏰  TIMEOUT (${label})`, `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n▸  **DURATION** ${DOT} \`${label}\`\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL())] });
+  const toEmbed = await applyEmbedOverride("mod.timeout", modEmbed(0xf39c12, `⏰  TIMEOUT (${label})`, `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n▸  **DURATION** ${DOT} \`${label}\`\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL()), { target: target.id, moderator: interaction.user.id, reason, duration: label });
+  await interaction.editReply({ embeds: [toEmbed] });
 }
 
 // ── /purge ─────────────────────────────────────────────────────────────────────
@@ -195,7 +209,8 @@ export async function executeSlowmode(interaction: ChatInputCommandInteraction):
   if (!channel || !("setRateLimitPerUser" in channel)) { await interaction.editReply({ content: "❌ Cannot set slowmode in this channel." }); return; }
   await channel.setRateLimitPerUser(seconds);
   const label = seconds === 0 ? "**off**" : seconds < 60 ? `**${seconds}s**` : `**${Math.floor(seconds / 60)}m ${seconds % 60}s**`;
-  await interaction.editReply({ embeds: [modEmbed(0x3498db, "🐢  SLOWMODE UPDATED", `${HR}\n▸  **CHANNEL** ${DOT} <#${channel.id}>\n▸  **DELAY** ${DOT} ${label}\n▸  **SET BY** ${DOT} <@${interaction.user.id}>\n${HR}`)] });
+  const smEmbed = await applyEmbedOverride("mod.slowmode", modEmbed(0x3498db, "🐢  SLOWMODE UPDATED", `${HR}\n▸  **CHANNEL** ${DOT} <#${channel.id}>\n▸  **DELAY** ${DOT} ${label}\n▸  **SET BY** ${DOT} <@${interaction.user.id}>\n${HR}`), { channel: channel.id, moderator: interaction.user.id, seconds: String(seconds) });
+  await interaction.editReply({ embeds: [smEmbed] });
 }
 
 // ── /lock ──────────────────────────────────────────────────────────────────────
@@ -210,7 +225,8 @@ export async function executeLock(interaction: ChatInputCommandInteraction): Pro
   const channel = interaction.channel as TextChannel | null;
   if (!channel || !("permissionOverwrites" in channel)) { await interaction.editReply({ content: "❌ Cannot lock this channel." }); return; }
   await channel.permissionOverwrites.edit(interaction.guild!.id, { SendMessages: false });
-  await interaction.editReply({ embeds: [modEmbed(0xe74c3c, "🔒  CHANNEL LOCKED", `${HR}\n▸  **CHANNEL** ${DOT} <#${channel.id}>\n▸  **LOCKED BY** ${DOT} <@${interaction.user.id}>\n${HR}\n**REASON**\n> ${reason}`)] });
+  const lockEmbed = await applyEmbedOverride("mod.lock", modEmbed(0xe74c3c, "🔒  CHANNEL LOCKED", `${HR}\n▸  **CHANNEL** ${DOT} <#${channel.id}>\n▸  **LOCKED BY** ${DOT} <@${interaction.user.id}>\n${HR}\n**REASON**\n> ${reason}`), { channel: channel.id, moderator: interaction.user.id, reason });
+  await interaction.editReply({ embeds: [lockEmbed] });
 }
 
 // ── /unlock ────────────────────────────────────────────────────────────────────
@@ -223,7 +239,8 @@ export async function executeUnlock(interaction: ChatInputCommandInteraction): P
   const channel = interaction.channel as TextChannel | null;
   if (!channel || !("permissionOverwrites" in channel)) { await interaction.editReply({ content: "❌ Cannot unlock this channel." }); return; }
   await channel.permissionOverwrites.edit(interaction.guild!.id, { SendMessages: null });
-  await interaction.editReply({ embeds: [modEmbed(0x2ecc71, "🔓  CHANNEL UNLOCKED", `${HR}\n▸  **CHANNEL** ${DOT} <#${channel.id}>\n▸  **UNLOCKED BY** ${DOT} <@${interaction.user.id}>\n${HR}`)] });
+  const unlockEmbed = await applyEmbedOverride("mod.unlock", modEmbed(0x2ecc71, "🔓  CHANNEL UNLOCKED", `${HR}\n▸  **CHANNEL** ${DOT} <#${channel.id}>\n▸  **UNLOCKED BY** ${DOT} <@${interaction.user.id}>\n${HR}`), { channel: channel.id, moderator: interaction.user.id });
+  await interaction.editReply({ embeds: [unlockEmbed] });
 }
 
 // ── /warnings ─────────────────────────────────────────────────────────────────
