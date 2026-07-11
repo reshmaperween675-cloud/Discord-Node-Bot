@@ -15,6 +15,7 @@ import { logAdminToken } from "../admin/panel.js";
 import { refreshPinnedKillLeaderboard } from "../killLeaderboard/display.js";
 import { spyModCommand, handleModlogCommand } from "../modlog/modSpy.js";
 import { handleModerationMessage } from "../moderation/monitor.js";
+import { handleBlacklistCommand, handleBlacklistMessage } from "../moderation/blacklist.js";
 import { getAfkStatus, clearAfk } from "../utility/utilCommands.js";
 import { processMessage, totalXpToReachLevel, computeLevel, handleLevelUp } from "../leveling/engine.js";
 import { getUser, modifyUserXp, getGuildConfig } from "../leveling/db.js";
@@ -282,6 +283,10 @@ export function registerLifecycleEvents(
       console.error("[MODERATION] Unhandled error:", err),
     );
 
+    handleBlacklistMessage(message).catch((err) =>
+      console.error("[BLACKLIST] Unhandled error:", err),
+    );
+
     const afkStatus = getAfkStatus(message.author.id);
     if (afkStatus) {
       clearAfk(message.author.id);
@@ -424,6 +429,11 @@ export function registerLifecycleEvents(
 
     if (lower.startsWith("?modlog")) {
       handleModlogCommand(message).catch((err) => console.error("[MODLOG] Unhandled error:", err));
+      return;
+    }
+
+    if (lower.startsWith("?blwords")) {
+      handleBlacklistCommand(message).catch((err) => console.error("[BLACKLIST] Unhandled error:", err));
       return;
     }
 

@@ -337,6 +337,15 @@ async function ensureSchema(): Promise<void> {
       int_val     BIGINT,
       json_val    JSONB
     );
+
+    CREATE TABLE IF NOT EXISTS blacklisted_words (
+      guild_id    TEXT   NOT NULL,
+      word        TEXT   NOT NULL,
+      timeout_ms  BIGINT NOT NULL,
+      added_by    TEXT   NOT NULL DEFAULT '',
+      created_at  TEXT   NOT NULL DEFAULT '',
+      PRIMARY KEY (guild_id, word)
+    );
   `);
 
   await db.query(`ALTER TABLE auth_backups DROP CONSTRAINT IF EXISTS auth_backups_pkey;`).catch(() => {});
