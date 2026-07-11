@@ -277,6 +277,17 @@ export async function handleBlacklistMessage(message: Message): Promise<void> {
     }
   }
 
+  if (timedOut) {
+    try {
+      await message.author.send(
+        `You got timed out for ${formatDuration(match.timeoutMs)} saying ${match.word} which is not allowed in the server.\n` +
+        `Contact EoN, Arc or Mods if you want to appeal.`
+      );
+    } catch (err: any) {
+      console.error(`[BLACKLIST] Failed to DM ${message.author.tag} (likely has DMs disabled). Error: ${err?.message ?? err}`);
+    }
+  }
+
   try {
     await (message.channel as TextChannel).send({
       content: `<@${message.author.id}> ⚠️ Your message was removed for using a blacklisted word${timedOut ? ` and you've been timed out for **${formatDuration(match.timeoutMs)}**` : ""}.`,
