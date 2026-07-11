@@ -1,0 +1,20 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "f_lWOlNc9XdVpzghBFErC"
+uri = "file://backups/railway_backup_20260711.tar.gz"
+type = "unspecified"
+title = "Railway DB Backup (SQL + custom dump + README)"
+
+[[outputs]]
+id = "TphQOGpwOZ8UdKGryU8Bo"
+uri = "file://backups/railway_backup_20260711.sql"
+type = "unspecified"
+title = "railway_backup_20260711.sql (plain SQL dump)"
+
+[[outputs]]
+id = "50xwdPi4Jo0EIWFo-ScIV"
+uri = "file://backups/railway_backup_20260711.dump"
+type = "unspecified"
+title = "railway_backup_20260711.dump (pg_restore format)"
