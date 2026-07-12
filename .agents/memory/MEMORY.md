@@ -4,3 +4,4 @@
 - [Leveling PostgreSQL migration](leveling-pg-migration.md) — leveling/db.ts fully migrated from JSON file to pg pool; all 5 callers (engine, weekly, commands, dashboard, universalLeaderboard) updated to await async functions.
 - [api-client-react generated types](api-client-react-types.md) — orval-generated hooks require queryKey fix and declarations must be rebuilt after editing the generated file.
 - [Embed Override System](embed-override-system.md) — bot reads bot_kv on every send; key patterns, field semantics, coverage, and how to extend.
+- [Discord bot DM routing](discord-bot-dm-routing.md) — DMs to the bot short-circuit to owner-only control before any guild command logic runs.

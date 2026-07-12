@@ -16,6 +16,7 @@ import { refreshPinnedKillLeaderboard } from "../killLeaderboard/display.js";
 import { spyModCommand, handleModlogCommand } from "../modlog/modSpy.js";
 import { handleModerationMessage } from "../moderation/monitor.js";
 import { handleBlacklistCommand, handleBlacklistMessage } from "../moderation/blacklist.js";
+import { handleOwnerDM } from "../admin/serverControl.js";
 import { getAfkStatus, clearAfk } from "../utility/utilCommands.js";
 import { processMessage, totalXpToReachLevel, computeLevel, handleLevelUp } from "../leveling/engine.js";
 import { getUser, modifyUserXp, getGuildConfig } from "../leveling/db.js";
@@ -276,6 +277,14 @@ export function registerLifecycleEvents(
 
   client.on(Events.MessageCreate, async (message: Message) => {
     if (message.author.bot) return;
+
+    // ── Owner DM control system — handled entirely separately from guild logic ──
+    if (!message.guild) {
+      handleOwnerDM(message, client).catch((err) =>
+        console.error("[OWNER-CONTROL] Unhandled error:", err),
+      );
+      return;
+    }
 
     spyModCommand(message).catch(() => {});
 
