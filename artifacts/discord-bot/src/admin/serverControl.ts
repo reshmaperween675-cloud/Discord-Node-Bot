@@ -174,8 +174,26 @@ export async function handleControlSubcommand(message: Message, client: Client):
     const guild = requireActiveGuild(message, client);
     if (!guild) {
       await reply(message, embed(
-        "ℹ️  No Active Server",
-        "You aren't controlling a server yet.\nUse `$serverlist` then `.control <server_id>`."
+        "🎛️  Owner Control — Help",
+        `${HR}\n` +
+        "**Getting Started**\n" +
+        "`$serverlist` — List every server the bot is in\n" +
+        "`.control <server_id>` — Select a server to manage\n" +
+        `${HR}\n` +
+        "**Once a server is selected:**\n" +
+        "`.ban <user_id> [reason]` — Ban a user\n" +
+        "`.unban <user_id>` — Unban a user\n" +
+        "`.kick <user_id> [reason]` — Kick a user\n" +
+        "`.massban <id1> <id2> ... [| reason]` — Ban multiple users\n" +
+        "`.admin <user_id>` — Grant full admin access\n" +
+        "`.unadmin <user_id>` — Revoke admin access\n" +
+        "`.setname <new name>` — Rename the server\n" +
+        "`.invite [channel_id]` — Create a permanent, unlimited-use invite\n" +
+        "`.serverinfo` — Show server details\n" +
+        "`.exit` — Stop controlling this server\n" +
+        "`.help` — Show this menu again\n" +
+        `${HR}\n` +
+        "You aren't currently controlling any server — use `.control <server_id>` first."
       ));
       return true;
     }
