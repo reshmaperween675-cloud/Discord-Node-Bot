@@ -108,6 +108,162 @@ const EIGHTBALL_RESPONSES = [
 ];
 const VERDICTS = ["GUILTY","NOT GUILTY","INNOCENT","FRAMED","SUSPICIOUS","BASED","CRINGE","MID","GOATED","COOKED","UNHINGED","CARRIED","THROWING","SUSSY"];
 
+// ── New basic arrays ───────────────────────────────────────────────────────────
+const RANDOM_PLANETS = ["☿ Mercury","♀ Venus","🌍 Earth","♂ Mars","♃ Jupiter","♄ Saturn","⛢ Uranus","♆ Neptune","✦ Pluto"];
+const RANDOM_SPORTS = ["⚽ Football","🏀 Basketball","🎾 Tennis","🏈 American Football","⚾ Baseball","🏐 Volleyball","🏒 Hockey","🥊 Boxing","🎿 Skiing","🏊 Swimming","🎯 Darts","♟️ Chess"];
+const RANDOM_INSTRUMENTS = ["🎸 Guitar","🎹 Piano","🥁 Drums","🎺 Trumpet","🎻 Violin","🪗 Accordion","🎷 Saxophone","🪘 Bass","🎵 Flute","🪕 Banjo"];
+const RANDOM_COLOR_NAMES = ["Crimson","Azure","Obsidian","Ivory","Scarlet","Cobalt","Emerald","Amber","Violet","Onyx","Sapphire","Magenta","Teal","Maroon","Lavender","Coral","Indigo","Jade","Bronze","Turquoise"];
+const RANDOM_LANGUAGES = ["TypeScript","Python","Rust","Go","C++","Zig","Haskell","Elixir","Kotlin","Swift","Ruby","Lua","Java","Scala","OCaml"];
+const RANDOM_MUSIC_GENRES = ["Pop","Rock","Hip-Hop","Jazz","Classical","Metal","Lo-fi","R&B","Indie","EDM","Reggae","Punk","Soul","Country","Vaporwave"];
+const RANDOM_WEATHERS = ["☀️ Sunny","🌧️ Rainy","⛈️ Thunderstorm","❄️ Snowy","🌫️ Foggy","🌤️ Partly Cloudy","🌪️ Tornado","🌊 Tsunami","🌨️ Blizzard","🌵 Dry Heat"];
+const RANDOM_MYTHICALS = ["🐉 Dragon","🦅 Phoenix","🦄 Unicorn","🧜 Mermaid","👹 Oni","🧛 Vampire","🐍 Basilisk","🦁 Chimera","👁️ Cyclops","🌙 Werewolf","🧚 Fairy","🏔️ Giant","🧞 Djinn","🦋 Mothman"];
+const RANDOM_GEMSTONES = ["💎 Diamond","❤️ Ruby","💙 Sapphire","💚 Emerald","💜 Amethyst","🧡 Amber","💛 Topaz","🩵 Aquamarine","🖤 Obsidian","🤍 Pearl","🩷 Rose Quartz","🟢 Jade"];
+const RANDOM_CLASSES = ["⚔️ Warrior","🔮 Mage","🗡️ Rogue","🛡️ Paladin","🏹 Ranger","⚡ Sorcerer","🌿 Druid","💀 Necromancer","🔥 Pyromancer","🌊 Hydromancer","👊 Monk","🎭 Bard","🗺️ Explorer","🧿 Oracle"];
+const RANDOM_ALIGNMENTS = ["Lawful Good","Neutral Good","Chaotic Good","Lawful Neutral","True Neutral","Chaotic Neutral","Lawful Evil","Neutral Evil","Chaotic Evil"];
+const RANDOM_EXCUSES = [
+  "my dog walked across my keyboard","my internet died mid-round","I was lagging","I had 2fps","someone was talking to me","I sneezed at the worst time",
+  "my mouse ran out of battery","I was eating","skill issue (not mine)","the game cheated","I was testing something","I was going easy on them",
+];
+const RANDOM_FLAGS = ["🇯🇵","🇺🇸","🇬🇧","🇧🇷","🇩🇪","🇫🇷","🇰🇷","🇨🇦","🇦🇺","🇳🇬","🇪🇸","🇲🇽","🇮🇳","🇮🇩","🇸🇪","🇵🇭","🇹🇷","🇦🇷","🇵🇱","🇳🇱"];
+const RANDOM_DRINKS = ["☕ Coffee","🧃 Juice","🍵 Tea","🧋 Boba","🥤 Soda","🍺 Beer","🍷 Wine","🥛 Milk","💧 Water","🍹 Cocktail","🧉 Mate","🫖 Herbal Tea"];
+const RANDOM_PLANTS = ["🌹 Rose","🌻 Sunflower","🌿 Fern","🎋 Bamboo","🌵 Cactus","🍀 Clover","🌸 Cherry Blossom","🌺 Hibiscus","🍄 Mushroom","🌲 Pine","🌴 Palm","🪴 Potted Plant"];
+const RANDOM_GEMS_EMOJI = ["💎","♦️","🔷","🟦","🟩","🔴","🟡","🟣","⬛","🤍"];
+const RANDOM_STATUSES = ["🟢 Online","🌙 Idle","⛔ Do Not Disturb","⚫ Offline","🎮 Playing","📡 Streaming","🎧 Listening"];
+const RANDOM_REGIONS = ["🌎 NA","🌍 EU","🌏 ASIA","🦘 OCE","🌐 GLOBAL","🏔️ SA","🌑 MENA"];
+const RANDOM_GENRES_GAME = ["Battle Royale","MMORPG","FPS","RTS","Roguelike","Sandbox","Visual Novel","MOBA","Rhythm","Platformer","Soulslike","Idle","Horror","Simulation"];
+const RANDOM_PLATFORMS = ["💻 PC","🎮 Console","📱 Mobile","🕹️ Handheld","☁️ Cloud","🖥️ Browser"];
+const RANDOM_PRIORITIES = ["🔴 Critical","🟠 High","🟡 Medium","🟢 Low","⬛ None","🔱 MAXIMUM OVERDRIVE"];
+
+// ── New advanced arrays ────────────────────────────────────────────────────────
+const RANDOM_PROPHECIES = [
+  "The one who {random_verb} shall inherit the server.",
+  "When the {random_element} meets the {random_element}, chaos reigns.",
+  "A {random_rarity} soul walks among you — undetected.",
+  "The {random_rank} shall fall. The {random_rank} shall rise.",
+  "Beware the {random_noun} who speaks in riddles.",
+  "Before the sun sets, a great {random_noun} will be revealed.",
+  "The stars align for {target} — their destiny is {random_rank}.",
+];
+const RANDOM_FORTUNES = [
+  "Your next decision will be questionable but memorable.",
+  "A great opportunity disguised as a W is coming your way.",
+  "Someone is thinking about you right now. It's not flattering.",
+  "The answer you seek is 42.",
+  "You will experience great lag at a critical moment.",
+  "Beware of strangers bearing gift cards.",
+  "Your true power will be unlocked after you touch grass.",
+  "A plot twist approaches. You are not the main character.",
+  "Unexpected XP incoming. Prepare your grind.",
+  "The best loot drops when you least expect it.",
+];
+const RANDOM_QUESTS = [
+  "The {random_adjective} Hunt for the {random_gemstone}",
+  "Siege of the {random_adjective} Fortress",
+  "Curse of the {random_mythical}",
+  "The Last {random_element} Keeper",
+  "Trial of the {random_alignment} Champion",
+  "Descent into the {random_adjective} Void",
+  "The {random_rarity} Artifact Recovery",
+  "Confronting the {random_class} of Doom",
+];
+const RANDOM_SPELLS = [
+  "Arcane Obliteration","Temporal Fracture","Voidstep","Soul Burn","Null Cascade",
+  "Shadow Collapse","Ember Nova","Glacial Rupture","Mindshatter","Spectral Lance",
+  "Divine Reckoning","Chaos Pulse","Ethereal Bind","Storm Surge","Death Knell",
+];
+const RANDOM_TITLES = [
+  "Lord of the Forgotten Realm","Grand Sentinel of Chaos","Keeper of Lost Memes",
+  "Destroyer of Sanity","Warden of the Void","High Priest of Cringe",
+  "Eternal Champion of Mid","Overlord of Overthinking","Duke of Disaster",
+  "Archmage of the Obvious","Baron of Bad Takes","Knight of the Throwing Arc",
+];
+const RANDOM_THREATS = [
+  "I will find your IP and switch you to 144Hz.",
+  "One more word and I'm muting your music.",
+  "Keep it up and I'll tell everyone your browser history.",
+  "Say that again and I'm voting to kick.",
+  "Touch my loadout one more time. I dare you.",
+  "I will lag switch you into the shadow realm.",
+  "One more bad take and I'm NFT-ing your profile picture.",
+];
+const RANDOM_PICKUP_LINES = [
+  "Are you a Discord server? Because I want to join you.",
+  "Is your name Google? Because you have everything I've been searching for.",
+  "Are you a keyboard? Because you're just my type.",
+  "Do you have a map? I keep getting lost in your eyes.",
+  "Are you Wi-Fi? Because I'm feeling a connection.",
+  "Are you a GPU? Because you're making everything look better.",
+  "Is your ping low? Because you seem like a keeper.",
+  "Are you 144Hz? Because you're smooth.",
+];
+const RANDOM_DIAGNOSES = [
+  "chronically online","terminally mid","skill issue (hereditary)","main character syndrome",
+  "acute W deficiency","advanced NPC behavior","severe lore addiction","critical overthinking disorder",
+  "hyper-fixation on side quests","irreversible sigma grindset","stage 4 copium dependency",
+  "terminal sussy-ness","chronic plot armor reliance",
+];
+const RANDOM_CATCHPHRASES = [
+  "trust the process","it is what it is","no cap fr fr","on god","we move","we stay winning",
+  "diff","let him cook","he's cooked","not like this","this is the way","skill issue",
+  "stay mad","ratio","touch grass","L + bozo","real","based and redpilled","certified W",
+];
+const RANDOM_ANIMES = [
+  "Attack on Titan","Jujutsu Kaisen","Demon Slayer","One Piece","Naruto","Hunter x Hunter",
+  "Fullmetal Alchemist: Brotherhood","Death Note","Steins;Gate","Mob Psycho 100",
+  "Chainsaw Man","Spy x Family","Bleach","Dragon Ball Z","Tokyo Revengers",
+];
+const RANDOM_LORE = [
+  "It is said that in the ancient times, {user} once carried an entire server on their back.",
+  "The scrolls speak of a great {random_rarity} warrior who {random_verb} their way to glory.",
+  "Legend has it that {target} was once a {random_class} of immense power.",
+  "Ancient texts describe a calamity triggered by a single bad take.",
+  "The elders whisper of a time when the {random_element} was balanced.",
+  "It was foretold: when two {random_nouns} meet, the server will be forever changed.",
+];
+const RANDOM_MOTIVATIONS = [
+  "You miss 100% of the shots you don't take. You also miss most of the shots you do take. Keep shooting.",
+  "Every expert was once a disaster. You're halfway there.",
+  "The grind doesn't stop just because you're tired. It stops when you're dead.",
+  "Be the main character you wish to see in the world.",
+  "Failure is just success that hasn't respawned yet.",
+  "You are not cooked. You are marinating.",
+  "Go beyond. Plus ultra. Touch grass. Come back stronger.",
+];
+const RANDOM_WARNINGS = [
+  "⚠️ WARNING: Prolonged exposure to this user may cause brain cell loss.",
+  "⚠️ CAUTION: Contents may be unhinged.",
+  "⚠️ ALERT: This message contains {random_percentage} cringe.",
+  "⚠️ NOTICE: Viewer discretion is advised. Mostly for your own sanity.",
+  "⚠️ DANGER: This is not a drill. Actually it might be.",
+  "⚠️ SYSTEM: Anomaly detected. Source: {user}.",
+];
+const RANDOM_ERRORS = [
+  "Error 404: Brain not found.","NullPointerException: skill is null.",
+  "SEGFAULT at address 0xDEADBEEF","RuntimeError: too much cringe in one message.",
+  "TypeError: expected W, got L instead.","Stack overflow: too many bad takes.",
+  "FATAL: copium levels critical.","IndexError: argument out of range (of reason).",
+  "UnhandledPromiseRejection: reality check failed.",
+];
+const RANDOM_REVIEWS = [
+  "⭐☆☆☆☆ — Would not recommend. Brought too much chaos.",
+  "⭐⭐⭐⭐⭐ — Absolute menace. 10/10 would be destroyed by again.",
+  "⭐⭐⭐☆☆ — Mid but in a weirdly charming way.",
+  "⭐⭐☆☆☆ — Showed up, caused problems, left. Classic.",
+  "⭐⭐⭐⭐☆ — Carried hard but refuses to acknowledge it.",
+  "⭐☆☆☆☆ — Still don't know what they were trying to do.",
+];
+const RANDOM_MISSIONS = [
+  "Operation Silent Goblin","Mission: Absolute Chaos","Task: Undo the Undoable",
+  "Protocol OMEGA","Directive: Speedrun Reality","Assignment: Cope and Seethe",
+  "Project Null Pointer","Initiative: Main Character Arc","Directive Sigma",
+  "Mission: Touch Grass","Operation: Find the W","Task Force: NPC Patrol",
+];
+const RANDOM_USERNAMES = [
+  "DarkNova_99","xXProSlayer420Xx","goblin_mode_on","certified_menace","NPC_7734",
+  "voidwalker_irl","silent_chaos","that_one_guy","404_skill_not_found","omega_grinder",
+  "based_enjoyer","plot_armor_user","gg_ez_fr","lag_excuse_guy","lore_accurate",
+];
+
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]!;
 }
@@ -290,6 +446,257 @@ export function resolveVariables(template: string, message: Message, triggerArgs
   result = result.replace(/\{newline\}/gi, "\n");
   result = result.replace(/\{empty\}/gi, "");
   result = result.replace(/\{zero_width\}/gi, "\u200b");
+  result = result.replace(/\{space\}/gi, " ");
+
+  // ════════════════════════════════════════════════════════════════════════
+  // NEW BASIC VARIABLES (60)
+  // ════════════════════════════════════════════════════════════════════════
+
+  // ── Time extras ───────────────────────────────────────────────────────────
+  result = result.replace(/\{second\}/gi, String(now.getUTCSeconds()));
+  result = result.replace(/\{week\}/gi, () => {
+    const start = new Date(Date.UTC(now.getUTCFullYear(), 0, 1));
+    return String(Math.ceil(((now.getTime() - start.getTime()) / 86400000 + start.getUTCDay() + 1) / 7));
+  });
+  result = result.replace(/\{quarter\}/gi, `Q${Math.ceil((now.getUTCMonth() + 1) / 3)}`);
+  result = result.replace(/\{time\.12\}/gi, () => {
+    const h = now.getUTCHours();
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h % 12 || 12;
+    return `${h12}:${pad(now.getUTCMinutes())} ${ampm} UTC`;
+  });
+  result = result.replace(/\{morning\}/gi, () => {
+    const h = now.getUTCHours();
+    if (h < 6) return "🌙 Night";
+    if (h < 12) return "🌅 Morning";
+    if (h < 17) return "☀️ Afternoon";
+    if (h < 21) return "🌆 Evening";
+    return "🌙 Night";
+  });
+
+  // ── User extras ───────────────────────────────────────────────────────────
+  result = result.replace(/\{user\.boosting\}/gi, member?.premiumSince ? "✅ Yes" : "❌ No");
+  result = result.replace(/\{user\.timeout\}/gi, member?.communicationDisabledUntil ? "⏸️ Yes" : "✅ No");
+  result = result.replace(/\{user\.in_voice\}/gi, member?.voice.channel ? "🔊 Yes" : "🔇 No");
+  result = result.replace(/\{user\.voice_channel\}/gi, member?.voice.channel?.name ?? "Not in voice");
+  result = result.replace(/\{user\.pending\}/gi, member?.pending ? "⏳ Pending" : "✅ Verified");
+
+  // ── Target extras ─────────────────────────────────────────────────────────
+  result = result.replace(/\{target\.color\}/gi, mentioned?.roles.highest.hexColor ?? "#ffffff");
+  result = result.replace(/\{target\.roles\}/gi, String((mentioned?.roles.cache.size ?? 1) - 1));
+  result = result.replace(/\{target\.boosting\}/gi, mentioned?.premiumSince ? "✅ Yes" : "❌ No");
+  result = result.replace(/\{target\.in_voice\}/gi, mentioned?.voice.channel ? "🔊 Yes" : "🔇 No");
+  result = result.replace(/\{target\.timeout\}/gi, mentioned?.communicationDisabledUntil ? "⏸️ Yes" : "✅ No");
+
+  // ── Server extras ─────────────────────────────────────────────────────────
+  result = result.replace(/\{server\.verification\}/gi, () => {
+    const levels = ["None","Low","Medium","High","Very High"];
+    return levels[guild?.verificationLevel ?? 0] ?? "Unknown";
+  });
+  result = result.replace(/\{server\.age\}/gi, () => {
+    if (!guild) return "Unknown";
+    const days = Math.floor((Date.now() - guild.createdTimestamp) / 86400000);
+    return `${days} days`;
+  });
+  result = result.replace(/\{server\.nsfw\}/gi, () => {
+    const levels = ["Default","Explicit Disabled","Safe","Age Restricted"];
+    return levels[guild?.nsfwLevel ?? 0] ?? "Unknown";
+  });
+
+  // ── New random numbers ────────────────────────────────────────────────────
+  result = result.replace(/\{random_number:(\d+)\}/gi, (_, n) => String(rng(1, Number(n))));
+  result = result.replace(/\{random_age\}/gi, () => String(rng(1, 99)));
+  result = result.replace(/\{random_iq\}/gi, () => String(rng(60, 200)));
+  result = result.replace(/\{random_temperature\}/gi, () => `${rng(-20, 50)}°C`);
+  result = result.replace(/\{random_speed\}/gi, () => `${rng(1, 300)} km/h`);
+  result = result.replace(/\{random_weight\}/gi, () => `${rng(1, 200)} kg`);
+  result = result.replace(/\{random_height\}/gi, () => `${rng(100, 220)} cm`);
+  result = result.replace(/\{random_level\}/gi, () => String(rng(1, 100)));
+  result = result.replace(/\{random_xp\}/gi, () => String(rng(0, 99999)));
+  result = result.replace(/\{random_gold\}/gi, () => String(rng(0, 10000)));
+  result = result.replace(/\{random_ping\}/gi, () => `${rng(1, 999)}ms`);
+  result = result.replace(/\{random_fps\}/gi, () => pick(["30","60","75","120","144","240"]));
+  result = result.replace(/\{random_percentage_decimal\}/gi, () => `${(Math.random() * 100).toFixed(2)}%`);
+  result = result.replace(/\{random_bool\}/gi, () => (Math.random() < 0.5 ? "true" : "false"));
+
+  // ── New random text ───────────────────────────────────────────────────────
+  result = result.replace(/\{random_planet\}/gi, () => pick(RANDOM_PLANETS));
+  result = result.replace(/\{random_sport\}/gi, () => pick(RANDOM_SPORTS));
+  result = result.replace(/\{random_instrument\}/gi, () => pick(RANDOM_INSTRUMENTS));
+  result = result.replace(/\{random_color_name\}/gi, () => pick(RANDOM_COLOR_NAMES));
+  result = result.replace(/\{random_language\}/gi, () => pick(RANDOM_LANGUAGES));
+  result = result.replace(/\{random_music_genre\}/gi, () => pick(RANDOM_MUSIC_GENRES));
+  result = result.replace(/\{random_weather\}/gi, () => pick(RANDOM_WEATHERS));
+  result = result.replace(/\{random_mythical\}/gi, () => pick(RANDOM_MYTHICALS));
+  result = result.replace(/\{random_gemstone\}/gi, () => pick(RANDOM_GEMSTONES));
+  result = result.replace(/\{random_class\}/gi, () => pick(RANDOM_CLASSES));
+  result = result.replace(/\{random_alignment\}/gi, () => pick(RANDOM_ALIGNMENTS));
+  result = result.replace(/\{random_excuse\}/gi, () => pick(RANDOM_EXCUSES));
+  result = result.replace(/\{random_flag\}/gi, () => pick(RANDOM_FLAGS));
+  result = result.replace(/\{random_drink\}/gi, () => pick(RANDOM_DRINKS));
+  result = result.replace(/\{random_plant\}/gi, () => pick(RANDOM_PLANTS));
+  result = result.replace(/\{random_gem\}/gi, () => pick(RANDOM_GEMS_EMOJI));
+  result = result.replace(/\{random_status\}/gi, () => pick(RANDOM_STATUSES));
+  result = result.replace(/\{random_region\}/gi, () => pick(RANDOM_REGIONS));
+  result = result.replace(/\{random_genre\}/gi, () => pick(RANDOM_GENRES_GAME));
+  result = result.replace(/\{random_platform\}/gi, () => pick(RANDOM_PLATFORMS));
+  result = result.replace(/\{random_priority\}/gi, () => pick(RANDOM_PRIORITIES));
+  result = result.replace(/\{random_grade\}/gi, () => pick(["A+","A","B+","B","C+","C","D","F"]));
+  result = result.replace(/\{random_username\}/gi, () => pick(RANDOM_USERNAMES));
+  result = result.replace(/\{random_direction\}/gi, () => pick(["⬆️ North","⬇️ South","➡️ East","⬅️ West","↗️ Northeast","↙️ Southwest"]));
+
+  // ── Visual bars & meters ──────────────────────────────────────────────────
+  result = result.replace(/\{random_stars\}/gi, () => {
+    const n = rng(1, 5);
+    return "⭐".repeat(n) + "☆".repeat(5 - n);
+  });
+  result = result.replace(/\{random_battery\}/gi, () => {
+    const pct = rng(0, 100);
+    const icon = pct > 60 ? "🔋" : pct > 20 ? "🪫" : "❌";
+    return `${icon} ${pct}%`;
+  });
+  result = result.replace(/\{random_wifi\}/gi, () => {
+    const bars = rng(0, 4);
+    return ["📵 No Signal","📶 Weak","📶📶 Fair","📶📶📶 Good","📶📶📶📶 Excellent"][bars]!;
+  });
+  result = result.replace(/\{random_loading\}/gi, () => {
+    const filled = rng(0, 10);
+    return `[${"▓".repeat(filled)}${"░".repeat(10 - filled)}] ${filled * 10}%`;
+  });
+  result = result.replace(/\{random_poll\}/gi, () => {
+    const yes = rng(0, 100);
+    return `✅ Yes: ${yes}% | ❌ No: ${100 - yes}%`;
+  });
+
+  // ── Args extras ───────────────────────────────────────────────────────────
+  result = result.replace(/\{args\.count\}/gi, String(args.length));
+  result = result.replace(/\{args\.last\}/gi, args[args.length - 1] ?? "");
+  result = result.replace(/\{args\.rest:(\d+)\}/gi, (_, n) => args.slice(Number(n) - 1).join(" "));
+  result = result.replace(/\{random_from_args\}/gi, () => args.length > 0 ? pick(args) : "");
+  result = result.replace(/\{args\.upper\}/gi, triggerArgs.trim().toUpperCase());
+  result = result.replace(/\{args\.lower\}/gi, triggerArgs.trim().toLowerCase());
+
+  // ════════════════════════════════════════════════════════════════════════
+  // NEW ADVANCED VARIABLES (40)
+  // ════════════════════════════════════════════════════════════════════════
+
+  // ── Text transforms ───────────────────────────────────────────────────────
+  result = result.replace(/\{uppercase:([^}]+)\}/gi, (_, t) => t.toUpperCase());
+  result = result.replace(/\{lowercase:([^}]+)\}/gi, (_, t) => t.toLowerCase());
+  result = result.replace(/\{titlecase:([^}]+)\}/gi, (_, t) =>
+    t.replace(/\b\w/g, (c: string) => c.toUpperCase())
+  );
+  result = result.replace(/\{reverse:([^}]+)\}/gi, (_, t) => t.split("").reverse().join(""));
+  result = result.replace(/\{length:([^}]+)\}/gi, (_, t) => String(t.length));
+  result = result.replace(/\{bold:([^}]+)\}/gi, (_, t) => `**${t}**`);
+  result = result.replace(/\{italic:([^}]+)\}/gi, (_, t) => `*${t}*`);
+  result = result.replace(/\{code:([^}]+)\}/gi, (_, t) => `\`${t}\``);
+  result = result.replace(/\{spoiler:([^}]+)\}/gi, (_, t) => `||${t}||`);
+  result = result.replace(/\{strike:([^}]+)\}/gi, (_, t) => `~~${t}~~`);
+
+  // ── Math extras ───────────────────────────────────────────────────────────
+  result = result.replace(/\{min:(-?[\d.]+):(-?[\d.]+)\}/gi, (_, a, b) => String(Math.min(Number(a), Number(b))));
+  result = result.replace(/\{max:(-?[\d.]+):(-?[\d.]+)\}/gi, (_, a, b) => String(Math.max(Number(a), Number(b))));
+  result = result.replace(/\{clamp:(-?[\d.]+):(-?[\d.]+):(-?[\d.]+)\}/gi, (_, v, mn, mx) =>
+    String(Math.min(Math.max(Number(v), Number(mn)), Number(mx)))
+  );
+  result = result.replace(/\{bar:(\d+)\}/gi, (_, n) => {
+    const pct = Math.min(100, Math.max(0, Number(n)));
+    const filled = Math.round(pct / 10);
+    return `[${"▓".repeat(filled)}${"░".repeat(10 - filled)}] ${pct}%`;
+  });
+  result = result.replace(/\{percentage_bar:(\d+)\}/gi, (_, n) => {
+    const pct = Math.min(100, Math.max(0, Number(n)));
+    const filled = Math.round(pct / 10);
+    return `[${"▓".repeat(filled)}${"░".repeat(10 - filled)}] ${pct}%`;
+  });
+
+  // ── Advanced random ───────────────────────────────────────────────────────
+  result = result.replace(/\{random_prophecy\}/gi, () => {
+    let p = pick(RANDOM_PROPHECIES);
+    p = p.replace(/\{random_element\}/g, () => pick(RANDOM_ELEMENTS));
+    p = p.replace(/\{random_rarity\}/g, () => pick(RANDOM_RARITIES));
+    p = p.replace(/\{random_rank\}/g, () => pick(RANDOM_RANKS));
+    p = p.replace(/\{random_noun\}/g, () => pick(RANDOM_NOUNS));
+    p = p.replace(/\{random_verb\}/g, () => pick(RANDOM_VERBS));
+    p = p.replace(/\{target\}/g, mentionedUser ? `<@${mentionedUser.id}>` : `<@${author.id}>`);
+    return p;
+  });
+  result = result.replace(/\{random_fortune\}/gi, () => pick(RANDOM_FORTUNES));
+  result = result.replace(/\{random_quest\}/gi, () => {
+    let q = pick(RANDOM_QUESTS);
+    q = q.replace(/\{random_adjective\}/g, () => pick(RANDOM_ADJECTIVES));
+    q = q.replace(/\{random_gemstone\}/g, () => pick(RANDOM_GEMSTONES));
+    q = q.replace(/\{random_mythical\}/g, () => pick(RANDOM_MYTHICALS));
+    q = q.replace(/\{random_element\}/g, () => pick(RANDOM_ELEMENTS));
+    q = q.replace(/\{random_alignment\}/g, () => pick(RANDOM_ALIGNMENTS));
+    q = q.replace(/\{random_rarity\}/g, () => pick(RANDOM_RARITIES));
+    q = q.replace(/\{random_class\}/g, () => pick(RANDOM_CLASSES));
+    return q;
+  });
+  result = result.replace(/\{random_spell\}/gi, () => pick(RANDOM_SPELLS));
+  result = result.replace(/\{random_title\}/gi, () => pick(RANDOM_TITLES));
+  result = result.replace(/\{random_threat\}/gi, () => pick(RANDOM_THREATS));
+  result = result.replace(/\{random_pickup_line\}/gi, () => pick(RANDOM_PICKUP_LINES));
+  result = result.replace(/\{random_diagnosis\}/gi, () => pick(RANDOM_DIAGNOSES));
+  result = result.replace(/\{random_catchphrase\}/gi, () => pick(RANDOM_CATCHPHRASES));
+  result = result.replace(/\{random_anime\}/gi, () => pick(RANDOM_ANIMES));
+  result = result.replace(/\{random_lore\}/gi, () => {
+    let l = pick(RANDOM_LORE);
+    l = l.replace(/\{user\}/g, `<@${author.id}>`);
+    l = l.replace(/\{target\}/g, mentionedUser ? `<@${mentionedUser.id}>` : `<@${author.id}>`);
+    l = l.replace(/\{random_rarity\}/g, () => pick(RANDOM_RARITIES));
+    l = l.replace(/\{random_class\}/g, () => pick(RANDOM_CLASSES));
+    l = l.replace(/\{random_element\}/g, () => pick(RANDOM_ELEMENTS));
+    l = l.replace(/\{random_noun\}/g, () => pick(RANDOM_NOUNS));
+    l = l.replace(/\{random_nouns\}/g, () => pick(RANDOM_NOUNS) + "s");
+    l = l.replace(/\{random_verb\}/g, () => pick(RANDOM_VERBS));
+    return l;
+  });
+  result = result.replace(/\{random_motivation\}/gi, () => pick(RANDOM_MOTIVATIONS));
+  result = result.replace(/\{random_warning\}/gi, () => {
+    let w = pick(RANDOM_WARNINGS);
+    w = w.replace(/\{random_percentage\}/g, () => `${rng(0, 100)}%`);
+    w = w.replace(/\{user\}/g, `<@${author.id}>`);
+    return w;
+  });
+  result = result.replace(/\{random_error\}/gi, () => pick(RANDOM_ERRORS));
+  result = result.replace(/\{random_review\}/gi, () => pick(RANDOM_REVIEWS));
+  result = result.replace(/\{random_mission\}/gi, () => pick(RANDOM_MISSIONS));
+  result = result.replace(/\{random_power_level\}/gi, () => `${rng(1000, 9999999).toLocaleString()} 💥`);
+  result = result.replace(/\{random_skill\}/gi, () => `${rng(1, 100)}% skill in ${pick(RANDOM_VERBS).replace(/ing$/, "")}`);
+  result = result.replace(/\{random_confession\}/gi, () => {
+    const subject = pick([`<@${author.id}>`, "someone in this server", "a certain individual"]);
+    return `${subject} confesses: they have ${pick(RANDOM_DIAGNOSES)} and they know it.`;
+  });
+
+  // ── Timestamp variants ────────────────────────────────────────────────────
+  result = result.replace(/\{random_timestamp_past\}/gi, () => {
+    const past = Math.floor((Date.now() - rng(3600000, 2592000000)) / 1000);
+    return `<t:${past}:R>`;
+  });
+  result = result.replace(/\{random_timestamp_future\}/gi, () => {
+    const future = Math.floor((Date.now() + rng(3600000, 2592000000)) / 1000);
+    return `<t:${future}:R>`;
+  });
+  result = result.replace(/\{timestamp\.d\}/gi, `<t:${Math.floor(now.getTime() / 1000)}:D>`);
+  result = result.replace(/\{timestamp\.t\}/gi, `<t:${Math.floor(now.getTime() / 1000)}:T>`);
+
+  // ── Fake tech ─────────────────────────────────────────────────────────────
+  result = result.replace(/\{random_ip\}/gi, () => `${rng(1,254)}.${rng(0,255)}.${rng(0,255)}.${rng(1,254)}`);
+  result = result.replace(/\{random_version\}/gi, () => `v${rng(1,9)}.${rng(0,19)}.${rng(0,99)}`);
+  result = result.replace(/\{random_hash\}/gi, () => Math.floor(Math.random() * 0xffffff).toString(16).padStart(6,"0") + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6,"0").slice(0,1));
+  result = result.replace(/\{random_password\}/gi, () => "•".repeat(rng(8, 16)));
+
+  // ── Conditional ───────────────────────────────────────────────────────────
+  // {if:VALUE==CHECK:THEN:ELSE}  — simple string equality check
+  result = result.replace(/\{if:([^:}]+)==([^:}]*):([^:}]*):([^}]*)\}/gi, (_, val, check, then_, else_) => {
+    return val.trim() === check.trim() ? then_ : else_;
+  });
+  // {if:VALUE!=CHECK:THEN:ELSE}
+  result = result.replace(/\{if:([^:}]+)!=([^:}]*):([^:}]*):([^}]*)\}/gi, (_, val, check, then_, else_) => {
+    return val.trim() !== check.trim() ? then_ : else_;
+  });
 
   return result;
 }
@@ -479,13 +886,159 @@ async function handleModuleHelp(message: Message): Promise<void> {
         ].join("\n"),
       },
       {
-        name: "⚙️ Utility",
+        name: "⚙️ Utility & Transforms",
         value: [
-          "`{math:2+2}` — evaluate a math expression",
+          "`{math:2+2}` — evaluate math expression",
           "`{repeat:3:word}` — repeat text N times (max 20)",
-          "`{newline}` — line break",
-          "`{prefix}` — ?m",
-          "`{empty}` — empty string",
+          "`{choose:a|b|c}` — pick random from list",
+          "`{bar:75}` — visual bar `[▓▓▓▓▓▓▓░░░] 75%`",
+          "`{uppercase:text}` — UPPERCASE",
+          "`{lowercase:TEXT}` — lowercase",
+          "`{titlecase:text}` — Title Case",
+          "`{reverse:text}` — txet esreveR",
+          "`{length:text}` — character count",
+          "`{bold:text}` — **bold**",
+          "`{italic:text}` — *italic*",
+          "`{code:text}` — `code`",
+          "`{spoiler:text}` — ||spoiler||",
+          "`{strike:text}` — ~~strikethrough~~",
+          "`{min:5:10}` / `{max:5:10}` — math min/max",
+          "`{clamp:150:0:100}` — clamp value to range",
+          "`{if:VALUE==CHECK:then:else}` — conditional",
+          "`{newline}` / `{space}` / `{prefix}` / `{empty}`",
+        ].join("\n"),
+      },
+      {
+        name: "🕐 Time (new)",
+        value: [
+          "`{second}` — current UTC second",
+          "`{week}` — week number of year",
+          "`{quarter}` — Q1 / Q2 / Q3 / Q4",
+          "`{time.12}` — 12-hour format (e.g. 3:42 PM UTC)",
+          "`{morning}` — 🌅 Morning / ☀️ Afternoon / 🌆 Evening / 🌙 Night",
+          "`{timestamp.d}` — Discord date stamp",
+          "`{timestamp.t}` — Discord time stamp",
+          "`{random_timestamp_past}` — relative timestamp in past",
+          "`{random_timestamp_future}` — relative timestamp in future",
+        ].join("\n"),
+      },
+      {
+        name: "👤 User & Target (new)",
+        value: [
+          "`{user.boosting}` — ✅ Yes / ❌ No (boosting server)",
+          "`{user.timeout}` — timed out status",
+          "`{user.in_voice}` — 🔊 Yes / 🔇 No",
+          "`{user.voice_channel}` — voice channel name",
+          "`{user.pending}` — membership screening status",
+          "`{target.color}` — target top role color hex",
+          "`{target.roles}` — target role count",
+          "`{target.boosting}` — target boosting status",
+          "`{target.in_voice}` — target in voice?",
+          "`{target.timeout}` — target timed out?",
+        ].join("\n"),
+      },
+      {
+        name: "🏰 Server (new)",
+        value: [
+          "`{server.verification}` — None/Low/Medium/High/Very High",
+          "`{server.age}` — server age in days",
+          "`{server.nsfw}` — NSFW content level",
+        ].join("\n"),
+      },
+      {
+        name: "🎲 Random — Numbers (new)",
+        value: [
+          "`{random_number:50}` — 1 to N shorthand",
+          "`{random_age}` — 1–99",
+          "`{random_iq}` — 60–200",
+          "`{random_temperature}` — −20 to 50°C",
+          "`{random_speed}` — 1–300 km/h",
+          "`{random_weight}` / `{random_height}`",
+          "`{random_level}` — 1–100",
+          "`{random_xp}` — 0–99999",
+          "`{random_gold}` — 0–10000",
+          "`{random_ping}` — 1–999ms",
+          "`{random_fps}` — 30/60/144/240",
+          "`{random_percentage_decimal}` — 73.42%",
+          "`{random_bool}` — true / false",
+          "`{random_power_level}` — 1,000–9,999,999 💥",
+        ].join("\n"),
+      },
+      {
+        name: "💬 Random — Text (new)",
+        value: [
+          "`{random_planet}` — ♂ Mars, ♃ Jupiter…",
+          "`{random_sport}` — ⚽ Football, 🏀 Basketball…",
+          "`{random_instrument}` — 🎸 Guitar, 🎹 Piano…",
+          "`{random_color_name}` — Crimson, Azure, Obsidian…",
+          "`{random_language}` — TypeScript, Rust, Python…",
+          "`{random_music_genre}` — Pop, Metal, Lo-fi…",
+          "`{random_weather}` — ☀️ Sunny, ⛈️ Thunderstorm…",
+          "`{random_mythical}` — 🐉 Dragon, 🦅 Phoenix…",
+          "`{random_gemstone}` — 💎 Diamond, ❤️ Ruby…",
+          "`{random_class}` — ⚔️ Warrior, 🔮 Mage, 🗡️ Rogue…",
+          "`{random_alignment}` — Lawful Good, Chaotic Evil…",
+          "`{random_excuse}` — gaming excuse",
+          "`{random_flag}` — 🇯🇵 🇺🇸 🇬🇧…",
+          "`{random_drink}` — ☕ Coffee, 🧋 Boba…",
+          "`{random_plant}` — 🌹 Rose, 🌵 Cactus…",
+          "`{random_gem}` — 💎 ♦️ 🔷…",
+          "`{random_status}` — 🟢 Online, 🌙 Idle…",
+          "`{random_region}` — 🌎 NA, 🌍 EU, 🌏 ASIA…",
+          "`{random_genre}` — Battle Royale, MMORPG, FPS…",
+          "`{random_platform}` — 💻 PC, 🎮 Console…",
+          "`{random_priority}` — 🔴 Critical, 🟡 Medium…",
+          "`{random_grade}` — A+, A, B, C, F",
+          "`{random_direction}` — ⬆️ North, ➡️ East…",
+          "`{random_username}` — random Discord-style username",
+        ].join("\n"),
+      },
+      {
+        name: "🎨 Random — Visual (new)",
+        value: [
+          "`{random_stars}` — ⭐⭐⭐☆☆ rating",
+          "`{random_battery}` — 🔋 73%",
+          "`{random_wifi}` — 📶📶📶 Good",
+          "`{random_loading}` — [▓▓▓▓▓░░░░░] 50%",
+          "`{random_poll}` — ✅ Yes: 73% | ❌ No: 27%",
+        ].join("\n"),
+      },
+      {
+        name: "✉️ Args (new)",
+        value: [
+          "`{args.count}` — number of words in args",
+          "`{args.last}` — last word in args",
+          "`{args.rest:2}` — args starting from word N",
+          "`{args.upper}` — all args uppercased",
+          "`{args.lower}` — all args lowercased",
+          "`{random_from_args}` — pick random word from args",
+        ].join("\n"),
+      },
+      {
+        name: "🔮 Advanced Random (new)",
+        value: [
+          "`{random_prophecy}` — auto-generated prophecy",
+          "`{random_fortune}` — fortune cookie",
+          "`{random_quest}` — generated quest name",
+          "`{random_spell}` — random spell name",
+          "`{random_title}` — noble title",
+          "`{random_threat}` — playful threat",
+          "`{random_pickup_line}` — pickup line",
+          "`{random_diagnosis}` — e.g. chronically online",
+          "`{random_catchphrase}` — no cap fr fr, skill issue…",
+          "`{random_anime}` — random anime title",
+          "`{random_lore}` — generated lore line",
+          "`{random_motivation}` — motivational quote",
+          "`{random_warning}` — ⚠️ warning label",
+          "`{random_error}` — fake error message",
+          "`{random_review}` — ⭐ fake review",
+          "`{random_mission}` — operation/mission name",
+          "`{random_skill}` — 90% skill in procrastin…",
+          "`{random_confession}` — auto-generated confession",
+          "`{random_ip}` — fake IP address",
+          "`{random_version}` — v2.4.1 style version",
+          "`{random_hash}` — fake git hash",
+          "`{random_password}` — ••••••••",
         ].join("\n"),
       },
       {
@@ -498,7 +1051,11 @@ async function handleModuleHelp(message: Message): Promise<void> {
           "`?m create ? fact 💡 {random_fact}`",
           "`?m create ? verdict {target} — verdict: **{random_verdict}**`",
           "`?m create ? roll 🎲 you rolled a {dice:20}!`",
-          "`?m create ? choose {choose:pizza|burger|sushi} for dinner`",
+          "`?m create ? class your class is {random_class} ({random_alignment})`",
+          "`?m create ? prophecy 🔮 {random_prophecy}`",
+          "`?m create ? diagnose {target} has been diagnosed with: **{random_diagnosis}**`",
+          "`?m create ? excuse I lost because {random_excuse}`",
+          "`?m create ? weather today's vibe: {random_weather} {random_temperature}`",
         ].join("\n"),
       }
     )
