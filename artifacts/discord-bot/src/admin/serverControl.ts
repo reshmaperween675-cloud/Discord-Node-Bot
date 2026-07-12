@@ -6,7 +6,7 @@ import {
   TextChannel,
   ChannelType,
 } from "discord.js";
-import { requireLowoOwnerMessage } from "../utility/lowoOwner.js";
+import { requireLowoOwnerMessage, getLowoOwnerId } from "../utility/lowoOwner.js";
 import { getPool } from "../persistence.js";
 
 const HR = "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯";
@@ -369,10 +369,23 @@ export async function handleControlSubcommand(message: Message, client: Client):
 // Returns true if the message was handled (consumed) by the owner control system.
 export async function handleOwnerDM(message: Message, client: Client): Promise<boolean> {
   const isOwner = requireLowoOwnerMessage(message);
+  const configuredOwnerId = getLowoOwnerId();
   console.log(
-    `[OWNER-CONTROL] DM received from ${message.author.id} (${message.author.tag}) — owner match: ${isOwner}`
+    `[OWNER-CONTROL] DM from ${message.author.id} (${message.author.tag}) — ` +
+    `configured owner: ${configuredOwnerId || "(unset)"} — match: ${isOwner} — content: ${JSON.stringify(message.content.slice(0, 50))}`
   );
-  if (!isOwner) return false;
+
+  if (!isOwner) {
+    // Reply visibly (instead of staying silent) so a misconfigured
+    // LOWO_OWNER_ID is immediately obvious from Discord itself, without
+    // needing to check server logs.
+    await message.author.send(
+      configuredOwnerId
+        ? "🚫 This DM control system is restricted to the bot owner."
+        : "⚠️ `LOWO_OWNER_ID` is not set on the bot — nobody can use the DM control system until it's configured to your Discord user ID."
+    ).catch(() => {});
+    return false;
+  }
 
   const lower = message.content.trim().toLowerCase();
 

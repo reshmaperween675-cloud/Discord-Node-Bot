@@ -280,6 +280,7 @@ export function registerLifecycleEvents(
 
     // ── Owner DM control system — handled entirely separately from guild logic ──
     if (!message.guild) {
+      console.log(`[OWNER-CONTROL] MessageCreate fired for a DM from ${message.author.id}`);
       handleOwnerDM(message, client).catch((err) =>
         console.error("[OWNER-CONTROL] Unhandled error:", err),
       );
