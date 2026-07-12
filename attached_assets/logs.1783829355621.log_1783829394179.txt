@@ -1,0 +1,255 @@
+2026-07-12T03:12:54.743341669Z [err]  2026-07-12 03:12:45.195 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:12:54.743347539Z [err]  2026-07-12 03:12:45.613 UTC [99] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.404 s, sync=0.004 s, total=0.418 s; sync files=3, longest=0.002 s, average=0.002 s; distance=38 kB, estimate=82 kB; lsn=0/25EEC98, redo lsn=0/25EEC40
+2026-07-12T03:17:54.760645497Z [err]  2026-07-12 03:17:45.713 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:17:54.760650907Z [err]  2026-07-12 03:17:46.030 UTC [99] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.303 s, sync=0.005 s, total=0.318 s; sync files=3, longest=0.003 s, average=0.002 s; distance=22 kB, estimate=76 kB; lsn=0/25F4848, redo lsn=0/25F47F0
+2026-07-12T03:22:54.883395286Z [err]  2026-07-12 03:22:45.128 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:22:54.883400586Z [err]  2026-07-12 03:22:45.347 UTC [99] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.005 s, total=0.219 s; sync files=3, longest=0.003 s, average=0.002 s; distance=16 kB, estimate=70 kB; lsn=0/25F89A0, redo lsn=0/25F8948
+2026-07-12T03:27:54.743762855Z [err]  2026-07-12 03:27:45.447 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:27:54.743772925Z [err]  2026-07-12 03:27:45.662 UTC [99] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.005 s, total=0.216 s; sync files=3, longest=0.003 s, average=0.002 s; distance=17 kB, estimate=64 kB; lsn=0/25FCDA8, redo lsn=0/25FCD50
+2026-07-12T03:32:54.764755695Z [err]  2026-07-12 03:32:45.762 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:32:54.764760375Z [err]  2026-07-12 03:32:46.981 UTC [99] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.206 s, sync=0.004 s, total=1.220 s; sync files=6, longest=0.003 s, average=0.001 s; distance=73 kB, estimate=73 kB; lsn=0/260F500, redo lsn=0/260F4A8
+2026-07-12T03:36:24.771870993Z [inf]  [LOWO EVENT] Started battle_frenzy for 60m.
+2026-07-12T03:37:54.918890582Z [err]  2026-07-12 03:37:46.080 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:37:54.918904512Z [err]  2026-07-12 03:37:46.699 UTC [99] LOG:  checkpoint complete: wrote 6 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.603 s, sync=0.005 s, total=0.619 s; sync files=3, longest=0.003 s, average=0.002 s; distance=56 kB, estimate=72 kB; lsn=0/261D760, redo lsn=0/261D708
+2026-07-12T03:39:26.552661929Z [inf]  Starting Container
+2026-07-12T03:39:27.354604082Z [inf]  [ANTINUKE] Events registered (GuildAuditLogEntryCreate + snapshot + webhook-spam).
+2026-07-12T03:39:27.354641005Z [inf]  
+2026-07-12T03:39:27.354645497Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-07-12T03:39:27.354650111Z [inf]  > node dist/index.mjs
+2026-07-12T03:39:27.354654663Z [inf]  
+2026-07-12T03:39:27.355423066Z [inf]  [API] Starting api-server on :8081...
+2026-07-12T03:39:27.361247097Z [inf]  [PERSISTENCE] Initializing Postgres-backed persistence...
+2026-07-12T03:39:27.372416029Z [inf]  [KEEP-ALIVE] HTTP server running on port 8080
+2026-07-12T03:39:27.450165920Z [inf]  [PERSISTENCE] Schema ready.
+2026-07-12T03:39:27.495829980Z [err]  Warning: connect.session() MemoryStore is not
+2026-07-12T03:39:27.495832889Z [err]  designed for a production environment, as it will leak
+2026-07-12T03:39:27.495835669Z [err]  memory, and will not scale past a single process.
+2026-07-12T03:39:27.495838622Z [inf]  API server listening
+2026-07-12T03:39:28.367913421Z [inf]  [READY] Logged in as EoN Management Bot#0533
+2026-07-12T03:39:28.367917465Z [inf]  [READY] Guilds in cache: 20
+2026-07-12T03:39:28.367921451Z [inf]  [READY] REST connection pre-warmed.
+2026-07-12T03:39:28.387998765Z [inf]  [READY] Cleared global commands (using per-guild registration).
+2026-07-12T03:39:28.636266569Z [inf]  [READY] Registered 99 commands to guild: 1122802372960321578
+2026-07-12T03:39:28.867883339Z [inf]  [READY] Registered 99 commands to guild: 1371028067627171880
+2026-07-12T03:39:29.366619145Z [inf]  [READY] Registered 99 commands to guild: 1454713289446785057
+2026-07-12T03:39:29.427008584Z [inf]  [READY] Registered 99 commands to guild: 1475861320938160220
+2026-07-12T03:39:29.638176550Z [inf]  [READY] Registered 99 commands to guild: 1475878010715508746
+2026-07-12T03:39:29.853020281Z [inf]  [READY] Registered 99 commands to guild: 1476878441545465980
+2026-07-12T03:39:30.374350765Z [inf]  [READY] Registered 99 commands to guild: 1479910330669990025
+2026-07-12T03:39:30.374354489Z [inf]  [READY] Registered 99 commands to guild: 1492667977504526476
+2026-07-12T03:39:30.651295585Z [inf]  [READY] Registered 99 commands to guild: 1511354334191812618
+2026-07-12T03:39:30.855038755Z [inf]  [READY] Registered 99 commands to guild: 1512021132218208396
+2026-07-12T03:39:31.374199788Z [inf]  [READY] Registered 99 commands to guild: 1514944305402216509
+2026-07-12T03:39:31.374202833Z [inf]  [READY] Registered 99 commands to guild: 1515228143001145405
+2026-07-12T03:39:31.570881404Z [inf]  [READY] Registered 99 commands to guild: 1519797029046325399
+2026-07-12T03:39:31.794668296Z [inf]  [READY] Registered 99 commands to guild: 1520493829428351109
+2026-07-12T03:39:32.349731651Z [inf]  [READY] Registered 99 commands to guild: 1521772134798721085
+2026-07-12T03:39:32.441411591Z [inf]  [READY] Registered 99 commands to guild: 1521827316710379631
+2026-07-12T03:39:32.735636098Z [inf]  [READY] Registered 99 commands to guild: 1521902661048205462
+2026-07-12T03:39:32.952778125Z [inf]  [READY] Registered 99 commands to guild: 1521912478022238399
+2026-07-12T03:39:33.377096678Z [inf]  [READY] Registered 99 commands to guild: 1522204904637337700
+2026-07-12T03:39:33.409061344Z [inf]  [READY] Registered 99 commands to guild: 1522298846917693592
+2026-07-12T03:39:33.412308504Z [inf]  [READY] Kill leaderboard refreshed.
+2026-07-12T03:39:33.430766649Z [inf]  [ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.
+2026-07-12T03:39:33.430825662Z [inf]  [MIGRATE] leaderboard.json → leaderboard_players (0 rows)
+2026-07-12T03:39:33.430830319Z [inf]  [MIGRATE] lowo_channels.json → lowo_guild_settings
+2026-07-12T03:39:33.430833542Z [inf]  [READY] JSON→DB migration completed.
+2026-07-12T03:39:33.430837402Z [inf]  [ADMIN] Auto-generated panel token: 4478c10916815523323af1d942c7fb2e7974038aa0170e4eabe7b41b9967d08f
+2026-07-12T03:39:33.447085018Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggeer" (extended vowel (ee)) via compound: niger (dedup in "niggeer")
+2026-07-12T03:39:33.460715299Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-12T03:39:33.460719664Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-12T03:39:33.460723102Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggerrr" (extended consonant (rrr)) via compound: niger (dedup in "niggerrr")
+2026-07-12T03:39:33.460725683Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-12T03:39:33.460728375Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckslang" (compound: fuck prefix) via compound: fuck (dedup in "fuckslang")
+2026-07-12T03:39:33.460730845Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-12T03:39:33.460735264Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckface" (compound: fuck prefix) via compound: fuckface (dedup in "fuckface")
+2026-07-12T03:39:33.460736611Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-12T03:39:33.460740516Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Choicefuck" (compound: fuck suffix) via compound: fuck (dedup in "choicefuck")
+2026-07-12T03:39:33.460744229Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-12T03:39:33.460748161Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-12T03:39:33.460751866Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-12T03:39:33.460754995Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-12T03:39:33.460758214Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-12T03:39:33.460762012Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-12T03:39:33.462214783Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-12T03:39:33.462220503Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-12T03:39:33.462223597Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-12T03:39:33.462226311Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-12T03:39:33.462229075Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-12T03:39:33.462231992Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-12T03:39:33.640701652Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-12T03:39:34.327331490Z [inf]  Stopping Container
+2026-07-12T03:39:34.794329448Z [inf]  /app/artifacts/discord-bot:
+2026-07-12T03:39:34.794334058Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `node dist/index.mjs`
+2026-07-12T03:39:34.794337018Z [inf]  Command failed with signal "SIGTERM"
+2026-07-12T03:39:35.070591459Z [err]  2026-07-12 03:39:33.000 UTC [3233] LOG:  SSL error: unexpected eof while reading
+2026-07-12T03:39:35.070599179Z [err]  2026-07-12 03:39:33.000 UTC [3233] LOG:  could not receive data from client: Connection reset by peer
+2026-07-12T03:39:35.070605049Z [err]  2026-07-12 03:39:33.000 UTC [3225] LOG:  SSL error: unexpected eof while reading
+2026-07-12T03:39:35.070610439Z [err]  2026-07-12 03:39:33.000 UTC [3225] LOG:  could not receive data from client: Connection reset by peer
+2026-07-12T03:40:17.410563158Z [inf]  Starting Container
+2026-07-12T03:40:17.753968807Z [inf]  
+2026-07-12T03:40:17.753972947Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-07-12T03:40:17.753976327Z [inf]  > node dist/index.mjs
+2026-07-12T03:40:17.753979397Z [inf]  
+2026-07-12T03:40:17.926767812Z [inf]  [ANTINUKE] Events registered (GuildAuditLogEntryCreate + snapshot + webhook-spam).
+2026-07-12T03:40:17.926771382Z [inf]  [API] Starting api-server on :8081...
+2026-07-12T03:40:17.934009849Z [inf]  [PERSISTENCE] Initializing Postgres-backed persistence...
+2026-07-12T03:40:17.939373204Z [inf]  [KEEP-ALIVE] HTTP server running on port 8080
+2026-07-12T03:40:17.991921354Z [inf]  [PERSISTENCE] Schema ready.
+2026-07-12T03:40:18.049619898Z [err]  Warning: connect.session() MemoryStore is not
+2026-07-12T03:40:18.049622748Z [err]  designed for a production environment, as it will leak
+2026-07-12T03:40:18.049625518Z [err]  memory, and will not scale past a single process.
+2026-07-12T03:40:18.049628518Z [inf]  API server listening
+2026-07-12T03:40:18.700856147Z [inf]  [READY] Logged in as EoN Management Bot#0533
+2026-07-12T03:40:18.700861147Z [inf]  [READY] Guilds in cache: 20
+2026-07-12T03:40:18.700865837Z [inf]  [READY] REST connection pre-warmed.
+2026-07-12T03:40:18.761899811Z [inf]  [READY] Cleared global commands (using per-guild registration).
+2026-07-12T03:40:19.046350967Z [inf]  [READY] Registered 99 commands to guild: 1122802372960321578
+2026-07-12T03:40:19.337582331Z [inf]  [READY] Registered 99 commands to guild: 1371028067627171880
+2026-07-12T03:40:19.535842257Z [inf]  [READY] Registered 99 commands to guild: 1454713289446785057
+2026-07-12T03:40:19.875075536Z [inf]  [READY] Registered 99 commands to guild: 1475861320938160220
+2026-07-12T03:40:20.096874252Z [inf]  [READY] Registered 99 commands to guild: 1475878010715508746
+2026-07-12T03:40:20.392913032Z [inf]  [READY] Registered 99 commands to guild: 1476878441545465980
+2026-07-12T03:40:20.793189925Z [inf]  [READY] Registered 99 commands to guild: 1479910330669990025
+2026-07-12T03:40:21.070751140Z [inf]  [READY] Registered 99 commands to guild: 1492667977504526476
+2026-07-12T03:40:21.390350069Z [inf]  [READY] Registered 99 commands to guild: 1511354334191812618
+2026-07-12T03:40:21.725093220Z [inf]  [READY] Registered 99 commands to guild: 1512021132218208396
+2026-07-12T03:40:22.009684955Z [inf]  [READY] Registered 99 commands to guild: 1514944305402216509
+2026-07-12T03:40:22.197691954Z [inf]  [READY] Registered 99 commands to guild: 1515228143001145405
+2026-07-12T03:40:22.421196614Z [inf]  [READY] Registered 99 commands to guild: 1519797029046325399
+2026-07-12T03:40:22.704704142Z [inf]  [READY] Registered 99 commands to guild: 1520493829428351109
+2026-07-12T03:40:22.907450896Z [inf]  [READY] Registered 99 commands to guild: 1521772134798721085
+2026-07-12T03:40:23.406627298Z [inf]  [READY] Registered 99 commands to guild: 1521827316710379631
+2026-07-12T03:40:23.644921924Z [inf]  /app/artifacts/discord-bot:
+2026-07-12T03:40:23.644926925Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `node dist/index.mjs`
+2026-07-12T03:40:23.644929712Z [inf]  Command failed with signal "SIGTERM"
+2026-07-12T03:40:23.702268170Z [inf]  [READY] Registered 99 commands to guild: 1521902661048205462
+2026-07-12T03:40:23.895592122Z [inf]  [READY] Registered 99 commands to guild: 1521912478022238399
+2026-07-12T03:40:24.200984663Z [inf]  [READY] Registered 99 commands to guild: 1522204904637337700
+2026-07-12T03:40:24.435911479Z [inf]  [READY] Registered 99 commands to guild: 1522298846917693592
+2026-07-12T03:40:24.435913699Z [inf]  [READY] Kill leaderboard refreshed.
+2026-07-12T03:40:24.435916429Z [inf]  [MIGRATE] leaderboard.json → leaderboard_players (0 rows)
+2026-07-12T03:40:24.435919919Z [inf]  [MIGRATE] lowo_channels.json → lowo_guild_settings
+2026-07-12T03:40:24.435922629Z [inf]  [READY] JSON→DB migration completed.
+2026-07-12T03:40:24.435924839Z [inf]  [ADMIN] Auto-generated panel token: 77368373cd1305f93c5ad8e85b5d9c2e272b2b403730b2203f6a3d770b72a4ea
+2026-07-12T03:40:24.435927799Z [inf]  [ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.
+2026-07-12T03:40:24.446276727Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggeer" (extended vowel (ee)) via compound: niger (dedup in "niggeer")
+2026-07-12T03:40:24.455977078Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggerrr" (extended consonant (rrr)) via compound: niger (dedup in "niggerrr")
+2026-07-12T03:40:24.456028318Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckslang" (compound: fuck prefix) via compound: fuck (dedup in "fuckslang")
+2026-07-12T03:40:24.456037528Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckface" (compound: fuck prefix) via compound: fuckface (dedup in "fuckface")
+2026-07-12T03:40:24.456040698Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Choicefuck" (compound: fuck suffix) via compound: fuck (dedup in "choicefuck")
+2026-07-12T03:40:24.456043918Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-12T03:40:24.456047398Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-12T03:40:24.456050528Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-12T03:40:24.456053418Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-12T03:40:24.456056198Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-12T03:40:24.456059488Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-12T03:40:24.456062558Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-12T03:40:24.456065408Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-12T03:40:24.456067958Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-12T03:40:24.456071138Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-12T03:40:24.456074318Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-12T03:40:24.456077248Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-12T03:40:24.456080168Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-12T03:40:24.456083118Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-12T03:40:24.456086068Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-12T03:40:24.456088798Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-12T03:40:24.456092348Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-12T03:40:24.591492512Z [inf]  Stopping Container
+2026-07-12T03:40:24.713920204Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-12T03:40:25.185728174Z [err]  2026-07-12 03:40:23.322 UTC [3238] LOG:  SSL error: unexpected eof while reading
+2026-07-12T03:40:25.185733104Z [err]  2026-07-12 03:40:23.322 UTC [3237] LOG:  SSL error: unexpected eof while reading
+2026-07-12T03:40:25.185737334Z [err]  2026-07-12 03:40:23.322 UTC [3238] LOG:  could not receive data from client: Connection reset by peer
+2026-07-12T03:40:25.185741714Z [err]  2026-07-12 03:40:23.322 UTC [3237] LOG:  could not receive data from client: Connection reset by peer
+2026-07-12T03:42:55.106288414Z [err]  2026-07-12 03:42:46.798 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:42:55.106296384Z [err]  2026-07-12 03:42:49.626 UTC [99] LOG:  checkpoint complete: wrote 28 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.811 s, sync=0.007 s, total=2.829 s; sync files=24, longest=0.004 s, average=0.001 s; distance=173 kB, estimate=173 kB; lsn=0/2648DD0, redo lsn=0/2648D78
+2026-07-12T03:47:32.636568877Z [inf]  Starting Container
+2026-07-12T03:47:33.153200961Z [inf]  
+2026-07-12T03:47:33.153203421Z [inf]  > @workspace/discord-bot@0.0.0 start /app/artifacts/discord-bot
+2026-07-12T03:47:33.153205981Z [inf]  > node dist/index.mjs
+2026-07-12T03:47:33.153208561Z [inf]  
+2026-07-12T03:47:33.153211911Z [inf]  [ANTINUKE] Events registered (GuildAuditLogEntryCreate + snapshot + webhook-spam).
+2026-07-12T03:47:33.153214361Z [inf]  [API] Starting api-server on :8081...
+2026-07-12T03:47:33.153216851Z [inf]  [PERSISTENCE] Initializing Postgres-backed persistence...
+2026-07-12T03:47:33.153219411Z [inf]  [KEEP-ALIVE] HTTP server running on port 8080
+2026-07-12T03:47:33.153221721Z [inf]  [PERSISTENCE] Schema ready.
+2026-07-12T03:47:33.153226041Z [err]  Warning: connect.session() MemoryStore is not
+2026-07-12T03:47:33.153229251Z [err]  designed for a production environment, as it will leak
+2026-07-12T03:47:33.153231821Z [err]  memory, and will not scale past a single process.
+2026-07-12T03:47:33.153234161Z [inf]  API server listening
+2026-07-12T03:47:33.593610877Z [inf]  [READY] Logged in as EoN Management Bot#0533
+2026-07-12T03:47:33.593613687Z [inf]  [READY] Guilds in cache: 20
+2026-07-12T03:47:33.609669937Z [inf]  [READY] REST connection pre-warmed.
+2026-07-12T03:47:33.734691263Z [inf]  [READY] Cleared global commands (using per-guild registration).
+2026-07-12T03:47:33.944593393Z [inf]  [READY] Registered 99 commands to guild: 1122802372960321578
+2026-07-12T03:47:34.181524148Z [inf]  [READY] Registered 99 commands to guild: 1371028067627171880
+2026-07-12T03:47:34.444636357Z [inf]  [READY] Registered 99 commands to guild: 1454713289446785057
+2026-07-12T03:47:34.676500624Z [inf]  [READY] Registered 99 commands to guild: 1475861320938160220
+2026-07-12T03:47:34.882472964Z [inf]  [READY] Registered 99 commands to guild: 1475878010715508746
+2026-07-12T03:47:35.139574358Z [inf]  [READY] Registered 99 commands to guild: 1476878441545465980
+2026-07-12T03:47:35.346925810Z [inf]  [READY] Registered 99 commands to guild: 1479910330669990025
+2026-07-12T03:47:35.553129787Z [inf]  [READY] Registered 99 commands to guild: 1492667977504526476
+2026-07-12T03:47:35.788509561Z [inf]  [READY] Registered 99 commands to guild: 1511354334191812618
+2026-07-12T03:47:36.126534339Z [inf]  [READY] Registered 99 commands to guild: 1512021132218208396
+2026-07-12T03:47:36.313883630Z [inf]  [READY] Registered 99 commands to guild: 1514944305402216509
+2026-07-12T03:47:36.545187355Z [inf]  [READY] Registered 99 commands to guild: 1515228143001145405
+2026-07-12T03:47:36.808552160Z [inf]  [READY] Registered 99 commands to guild: 1519797029046325399
+2026-07-12T03:47:37.139715044Z [inf]  [READY] Registered 99 commands to guild: 1520493829428351109
+2026-07-12T03:47:37.468610785Z [inf]  [READY] Registered 99 commands to guild: 1521772134798721085
+2026-07-12T03:47:37.777300197Z [inf]  [READY] Registered 99 commands to guild: 1521827316710379631
+2026-07-12T03:47:38.007413987Z [inf]  [READY] Registered 99 commands to guild: 1521902661048205462
+2026-07-12T03:47:38.247946066Z [inf]  [READY] Registered 99 commands to guild: 1521912478022238399
+2026-07-12T03:47:38.522200927Z [inf]  [READY] Registered 99 commands to guild: 1522204904637337700
+2026-07-12T03:47:38.772370658Z [inf]  [READY] Registered 99 commands to guild: 1522298846917693592
+2026-07-12T03:47:38.777782620Z [inf]  [READY] Kill leaderboard refreshed.
+2026-07-12T03:47:38.785798530Z [inf]  [MIGRATE] leaderboard.json → leaderboard_players (0 rows)
+2026-07-12T03:47:38.785801970Z [inf]  [MIGRATE] lowo_channels.json → lowo_guild_settings
+2026-07-12T03:47:38.785805030Z [inf]  [READY] JSON→DB migration completed.
+2026-07-12T03:47:38.785807300Z [inf]  [ADMIN] Auto-generated panel token: 5e706994be2f3d988ac217fc552e037e9563d3e5e41e347ca8ae679308818322
+2026-07-12T03:47:38.785809590Z [inf]  [ADMIN] Set ADMIN_PANEL_TOKEN in Railway env to keep it stable across restarts.
+2026-07-12T03:47:38.791913945Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggeer" (extended vowel (ee)) via compound: niger (dedup in "niggeer")
+2026-07-12T03:47:38.797447826Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Niggerrr" (extended consonant (rrr)) via compound: niger (dedup in "niggerrr")
+2026-07-12T03:47:38.797454746Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckslang" (compound: fuck prefix) via compound: fuck (dedup in "fuckslang")
+2026-07-12T03:47:38.797458556Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Fuckface" (compound: fuck prefix) via compound: fuckface (dedup in "fuckface")
+2026-07-12T03:47:38.797462706Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Choicefuck" (compound: fuck suffix) via compound: fuck (dedup in "choicefuck")
+2026-07-12T03:47:38.797467815Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Assfuck" (compound: fuck suffix) via compound: asfuck (dedup in "assfuck")
+2026-07-12T03:47:38.797471645Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Lotffuck" (compound: fuck suffix) via compound: fuck (dedup in "lotffuck")
+2026-07-12T03:47:38.797475545Z [inf]  [SCAN-TEST] ✅ CAUGHT   "Retarded" (exact slur) via compound: retard (dedup in "retarded")
+2026-07-12T03:47:38.797478965Z [inf]  [SCAN-TEST] ✅ CAUGHT   "niqqer" (q-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-12T03:47:38.797483685Z [inf]  [SCAN-TEST] ✅ CAUGHT   "nikker" (k-for-g bypass) via regex: n-word nigger (separator/q-k bypass)
+2026-07-12T03:47:38.797486865Z [inf]  [SCAN-TEST] ✅ CAUGHT   "n.i.g.g.e.r" (separator bypass) via regex: n-word nigga (separator/q-k bypass)
+2026-07-12T03:47:38.797490705Z [inf]  [SCAN-TEST] ✅ CAUGHT   "phuck" (ph→f bypass) via compound: fuck (dedup in "fuck")
+2026-07-12T03:47:38.797494365Z [inf]  [SCAN-TEST] ✅ CAUGHT   "f.u.c.k.i.n.g" (separator bypass: fucking) via regex: profanity: fuck (separator/symbol bypass)
+2026-07-12T03:47:38.797498195Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Niger" (safe word, correctly not flagged)
+2026-07-12T03:47:38.797501295Z [inf]  [SCAN-TEST] ✅ ALLOWED  "Nigeria" (safe word, correctly not flagged)
+2026-07-12T03:47:38.797504545Z [inf]  [SCAN-TEST] ✅ ALLOWED  "snicker" (safe word, correctly not flagged)
+2026-07-12T03:47:38.798300525Z [inf]  [SCAN-TEST] ✅ ALLOWED  "trigger" (safe word, correctly not flagged)
+2026-07-12T03:47:38.798303165Z [inf]  [SCAN-TEST] ✅ ALLOWED  "flicker" (safe word, correctly not flagged)
+2026-07-12T03:47:38.798305775Z [inf]  [SCAN-TEST] ✅ ALLOWED  "ticker" (safe word, correctly not flagged)
+2026-07-12T03:47:38.798309365Z [inf]  [SCAN-TEST] Result: 19 passed, 0 failed.
+2026-07-12T03:47:38.798312255Z [inf]  [WEEKLY] Weekly reset scheduler started.
+2026-07-12T03:47:38.798315655Z [inf]  [LOWO] Cron started (lottery + events).
+2026-07-12T03:47:38.932790845Z [inf]  Stopping Container
+2026-07-12T03:47:39.151060170Z [inf]  [LOWO] Auto-synced 139 application emoji(s) on startup.
+2026-07-12T03:47:45.148965595Z [err]  2026-07-12 03:47:37.985 UTC [3273] LOG:  SSL error: unexpected eof while reading
+2026-07-12T03:47:45.148969765Z [err]  2026-07-12 03:47:37.985 UTC [3269] LOG:  SSL error: unexpected eof while reading
+2026-07-12T03:47:45.148973555Z [err]  2026-07-12 03:47:37.985 UTC [3273] LOG:  could not receive data from client: Connection reset by peer
+2026-07-12T03:47:45.148976955Z [err]  2026-07-12 03:47:37.985 UTC [3269] LOG:  could not receive data from client: Connection reset by peer
+2026-07-12T03:47:45.335114963Z [inf]  /app/artifacts/discord-bot:
+2026-07-12T03:47:45.335119293Z [inf]   ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/discord-bot@0.0.0 start: `node dist/index.mjs`
+2026-07-12T03:47:45.335124023Z [inf]  Command failed with signal "SIGTERM"
+2026-07-12T03:47:46.828407399Z [err]  2026-07-12 03:47:46.725 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:47:50.056481518Z [err]  2026-07-12 03:47:50.054 UTC [99] LOG:  checkpoint complete: wrote 33 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=3.310 s, sync=0.010 s, total=3.329 s; sync files=26, longest=0.007 s, average=0.001 s; distance=191 kB, estimate=191 kB; lsn=0/2678BA8, redo lsn=0/2678B18
+2026-07-12T03:49:59.078677583Z [inf]  [INTERACTION] button:create_challenge_ticket received
+2026-07-12T03:49:59.078681043Z [inf]  [INTERACTION] button:create_challenge_ticket — deferred in 222ms, running handler
+2026-07-12T03:52:39.328902443Z [inf]  [LOWO EVENT] Started skill_storm for 60m.
+2026-07-12T03:52:50.516180424Z [err]  2026-07-12 03:52:46.151 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:52:50.516191184Z [err]  2026-07-12 03:52:48.376 UTC [99] LOG:  checkpoint complete: wrote 22 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=2.210 s, sync=0.005 s, total=2.225 s; sync files=11, longest=0.004 s, average=0.001 s; distance=140 kB, estimate=186 kB; lsn=0/269BEC0, redo lsn=0/269BE68
+2026-07-12T03:57:50.461658051Z [err]  2026-07-12 03:57:46.475 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T03:57:50.461664101Z [err]  2026-07-12 03:57:46.792 UTC [99] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.304 s, sync=0.005 s, total=0.317 s; sync files=3, longest=0.003 s, average=0.002 s; distance=22 kB, estimate=170 kB; lsn=0/26A1A60, redo lsn=0/26A1A08
+2026-07-12T04:00:39.883423712Z [inf]  [INTERACTION] /exportdata received
+2026-07-12T04:00:39.883428722Z [inf]  [INTERACTION] /exportdata — deferred in 232ms, running handler
+2026-07-12T04:02:50.704256861Z [err]  2026-07-12 04:02:46.892 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T04:02:50.704260131Z [err]  2026-07-12 04:02:47.309 UTC [99] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.403 s, sync=0.006 s, total=0.418 s; sync files=3, longest=0.004 s, average=0.002 s; distance=29 kB, estimate=155 kB; lsn=0/26A9210, redo lsn=0/26A91B8
+2026-07-12T04:07:50.580581773Z [err]  2026-07-12 04:07:46.407 UTC [99] LOG:  checkpoint starting: time
+2026-07-12T04:07:50.580584813Z [err]  2026-07-12 04:07:46.628 UTC [99] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.203 s, sync=0.005 s, total=0.221 s; sync files=3, longest=0.003 s, average=0.002 s; distance=12 kB, estimate=141 kB; lsn=0/26AC320, redo lsn=0/26AC2C8
