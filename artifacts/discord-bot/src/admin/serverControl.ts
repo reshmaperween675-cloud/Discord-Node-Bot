@@ -368,7 +368,11 @@ export async function handleControlSubcommand(message: Message, client: Client):
 // ── Entry point — call for every DM the bot receives ─────────────────────────
 // Returns true if the message was handled (consumed) by the owner control system.
 export async function handleOwnerDM(message: Message, client: Client): Promise<boolean> {
-  if (!requireLowoOwnerMessage(message)) return false;
+  const isOwner = requireLowoOwnerMessage(message);
+  console.log(
+    `[OWNER-CONTROL] DM received from ${message.author.id} (${message.author.tag}) — owner match: ${isOwner}`
+  );
+  if (!isOwner) return false;
 
   const lower = message.content.trim().toLowerCase();
 

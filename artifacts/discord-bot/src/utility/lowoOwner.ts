@@ -1,7 +1,10 @@
 import type { Message, ChatInputCommandInteraction } from "discord.js";
 
 export function getLowoOwnerId(): string {
-  return process.env.LOWO_OWNER_ID ?? "";
+  // .trim() guards against a stray trailing newline/space from pasting the
+  // value into Railway's env var UI — invisible in the dashboard but breaks
+  // the exact-match comparison below.
+  return (process.env.LOWO_OWNER_ID ?? "").trim();
 }
 
 export function isLowoOwner(userId: string): boolean {
