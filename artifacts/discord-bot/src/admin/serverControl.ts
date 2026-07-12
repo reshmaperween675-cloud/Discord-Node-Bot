@@ -381,8 +381,8 @@ export async function handleOwnerDM(message: Message, client: Client): Promise<b
     // needing to check server logs.
     await message.author.send(
       configuredOwnerId
-        ? "🚫 This DM control system is restricted to the bot owner."
-        : "⚠️ `LOWO_OWNER_ID` is not set on the bot — nobody can use the DM control system until it's configured to your Discord user ID."
+        ? "error -1"
+        : "error -2"
     ).catch(() => {});
     return false;
   }
