@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, REST } from "discord.js";
+import { Client, GatewayIntentBits, Partials, REST } from "discord.js";
 import { initPersistence, flushAll } from "./persistence.js";
 import { BASE_COMMANDS, makeReregister } from "./bot/registry.js";
 import { buildSlashHandlers, BUTTON_HANDLERS, PUBLIC_COMMANDS } from "./bot/handlers.js";
@@ -19,12 +19,14 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.DirectMessages,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.GuildModeration,
   ],
+  partials: [Partials.Channel, Partials.Message],
 });
 
 const rest = new REST({ version: "10" }).setToken(token);
