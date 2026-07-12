@@ -33,6 +33,14 @@ const rest = new REST({ version: "10" }).setToken(token);
 const reregister = makeReregister(client, rest);
 const slashHandlers = buildSlashHandlers(client, reregister);
 
+client.on("raw", (packet: { t?: string; d?: { guild_id?: string; author?: { id?: string } } }) => {
+  if (packet.t === "MESSAGE_CREATE") {
+    console.log(
+      `[RAW-GATEWAY] MESSAGE_CREATE received — guild_id=${packet.d?.guild_id ?? "(none, i.e. DM)"} author=${packet.d?.author?.id}`,
+    );
+  }
+});
+
 registerAntiNukeEvents(client);
 registerLifecycleEvents(client, rest, BASE_COMMANDS);
 registerInteractionHandler(client, slashHandlers, BUTTON_HANDLERS, PUBLIC_COMMANDS);
