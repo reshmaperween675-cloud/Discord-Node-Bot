@@ -6,6 +6,7 @@ import {
   getUserMemory,
 } from "./memory.js";
 import { isAiAvailable } from "./ai.js";
+import { THEMES, DEFAULT_THEME } from "./personality.js";
 
 function isAdmin(message: Message): boolean {
   return !!message.member?.permissions.has("Administrator");
@@ -69,15 +70,52 @@ export async function handleChatbotCommand(message: Message): Promise<void> {
       break;
     }
 
+    case "t":
+    case "theme": {
+      const themeName = parts[2]?.toLowerCase();
+      if (!themeName) {
+        const themeList = Object.entries(THEMES)
+          .map(([key, val]) => `\`${key}\` — ${val.description}${key === (config.theme || DEFAULT_THEME) ? " ✅ current" : ""}`)
+          .join("\n");
+        await message.reply({
+          embeds: [new EmbedBuilder()
+            .setColor(0x5865F2)
+            .setTitle("🎭 Chatbot Themes")
+            .setDescription(themeList)
+            .setFooter({ text: "Usage: ?chatbot theme <name>" })
+          ],
+        }).catch(() => {});
+        return;
+      }
+      if (!THEMES[themeName]) {
+        const valid = Object.keys(THEMES).join(", ");
+        await message.reply(`❌ Unknown theme \`${themeName}\`. Available: ${valid}`).catch(() => {});
+        return;
+      }
+      config.theme = themeName;
+      await saveConfig(config);
+      const themeInfo = THEMES[themeName]!;
+      await message.reply({
+        embeds: [new EmbedBuilder()
+          .setColor(0x57F287)
+          .setTitle(`🎭 Theme changed to: ${themeInfo.label}`)
+          .setDescription(themeInfo.description)
+        ],
+      }).catch(() => {});
+      break;
+    }
+
     case "status": {
       const serverMem = await getServerMemory(guildId);
       const activeChannels = config.enabledChannels.map((id) => `<#${id}>`).join(", ") || "None";
+      const currentTheme = THEMES[config.theme ?? DEFAULT_THEME];
       await message.reply({
         embeds: [new EmbedBuilder()
           .setColor(0x5865F2)
           .setTitle("🤖 Chatbot Status")
           .addFields(
             { name: "Active Channels", value: activeChannels },
+            { name: "Theme", value: currentTheme ? currentTheme.label : config.theme, inline: true },
             { name: "Response Rate", value: `${config.respondRate}%`, inline: true },
             { name: "Model", value: `\`${config.model}\``, inline: true },
             { name: "Bot Name", value: config.botName, inline: true },
@@ -223,6 +261,15 @@ export async function handleChatbotCommand(message: Message): Promise<void> {
               "`?chatbot enable` / `e` — enable in current channel",
               "`?chatbot disable` / `d` — disable in current channel",
               "`?chatbot status` — view current config",
+            ].join("\n"),
+          }, {
+            name: "Themes",
+            value: [
+              "`?chatbot theme` / `t` — list all themes",
+              "`?chatbot theme bro` — 💀 chaotic online friend (default)",
+              "`?chatbot theme casual` — 😎 chill and friendly",
+              "`?chatbot theme unhinged` — 🤪 absurdist chaos energy",
+              "`?chatbot theme nerd` — 🤓 geeky, games/anime/tech",
             ].join("\n"),
           }, {
             name: "Personality",

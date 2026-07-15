@@ -55,7 +55,7 @@ export async function reactToImage(
   });
 
   const messages: ChatMessage[] = [
-    { role: "system", content: buildVisionPrompt() },
+    { role: "system", content: buildVisionPrompt(config.theme) },
     { role: "user", content: contentParts },
   ];
 

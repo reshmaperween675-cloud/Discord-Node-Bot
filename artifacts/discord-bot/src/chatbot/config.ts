@@ -8,6 +8,7 @@ export interface ChatbotConfig {
   model: string;
   botName: string;
   customPrompt: string;
+  theme: string;
 }
 
 const DEFAULT_CONFIG: Omit<ChatbotConfig, "guildId"> = {
@@ -17,6 +18,7 @@ const DEFAULT_CONFIG: Omit<ChatbotConfig, "guildId"> = {
   model: "openai/gpt-4o-mini",
   botName: "mewo",
   customPrompt: "",
+  theme: "bro",
 };
 
 const cache = new Map<string, ChatbotConfig>();
@@ -30,7 +32,8 @@ async function ensureTable(): Promise<void> {
       respond_rate     INT     NOT NULL DEFAULT 15,
       model            TEXT    NOT NULL DEFAULT 'openai/gpt-4o-mini',
       bot_name         TEXT    NOT NULL DEFAULT 'mewo',
-      custom_prompt    TEXT    NOT NULL DEFAULT ''
+      custom_prompt    TEXT    NOT NULL DEFAULT '',
+      theme            TEXT    NOT NULL DEFAULT 'bro'
     );
 
     CREATE TABLE IF NOT EXISTS chatbot_memory (
@@ -57,6 +60,10 @@ async function ensureTable(): Promise<void> {
     CREATE INDEX IF NOT EXISTS chatbot_messages_channel_time
       ON chatbot_messages (channel_id, created_at DESC);
   `).catch(() => {});
+  // Migrate existing rows — add theme column if missing
+  await getPool().query(`
+    ALTER TABLE chatbot_config ADD COLUMN IF NOT EXISTS theme TEXT NOT NULL DEFAULT 'bro';
+  `).catch(() => {});
 }
 
 let tableReady = false;
@@ -76,6 +83,7 @@ export async function getConfig(guildId: string): Promise<ChatbotConfig> {
     model: string;
     bot_name: string;
     custom_prompt: string;
+    theme: string;
   }>(
     "SELECT * FROM chatbot_config WHERE guild_id = $1",
     [guildId],
@@ -90,6 +98,7 @@ export async function getConfig(guildId: string): Promise<ChatbotConfig> {
         model: row.model,
         botName: row.bot_name,
         customPrompt: row.custom_prompt,
+        theme: row.theme ?? "bro",
       }
     : { guildId, ...DEFAULT_CONFIG };
   cache.set(guildId, config);
@@ -99,15 +108,16 @@ export async function getConfig(guildId: string): Promise<ChatbotConfig> {
 export async function saveConfig(config: ChatbotConfig): Promise<void> {
   await ready();
   await getPool().query(
-    `INSERT INTO chatbot_config (guild_id, enabled_channels, ignored_users, respond_rate, model, bot_name, custom_prompt)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
+    `INSERT INTO chatbot_config (guild_id, enabled_channels, ignored_users, respond_rate, model, bot_name, custom_prompt, theme)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
      ON CONFLICT (guild_id) DO UPDATE SET
        enabled_channels = $2,
        ignored_users    = $3,
        respond_rate     = $4,
        model            = $5,
        bot_name         = $6,
-       custom_prompt    = $7`,
+       custom_prompt    = $7,
+       theme            = $8`,
     [
       config.guildId,
       config.enabledChannels,
@@ -116,6 +126,7 @@ export async function saveConfig(config: ChatbotConfig): Promise<void> {
       config.model,
       config.botName,
       config.customPrompt,
+      config.theme,
     ],
   );
   cache.set(config.guildId, config);
