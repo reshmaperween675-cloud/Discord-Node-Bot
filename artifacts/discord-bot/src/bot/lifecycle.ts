@@ -27,6 +27,8 @@ import { handleNsfwCommand } from "../commands/nsfw.js";
 import { handleCaptionCommand } from "../commands/caption.js";
 import { handleModuleCommand, runCustomModules } from "../commands/moduleManager.js";
 import { handleAssystCommand } from "../commands/assyst.js";
+import { handleChatbot } from "../chatbot/index.js";
+import { handleChatbotCommand } from "../chatbot/commands.js";
 import { handleLowoCommand } from "../lowo/router.js";
 import { isLowoEnabled } from "../lowo/toggle.js";
 import { handleMewoCommand } from "../mewo/router.js";
@@ -399,6 +401,11 @@ export function registerLifecycleEvents(
       return;
     }
 
+    if (lower.startsWith("?chatbot")) {
+      handleChatbotCommand(message).catch((err) => console.error("[CHATBOT CMD] Unhandled error:", err));
+      return;
+    }
+
     if ((content.startsWith("?") || content.startsWith(",")) && !content.startsWith("? ") && !content.startsWith(", ")) {
       const handled = await handleAssystCommand(message).catch((err) => {
         console.error("[ASSYST]", err);
@@ -498,6 +505,9 @@ export function registerLifecycleEvents(
 
     const handledByModule = await runCustomModules(message).catch(() => false);
     if (handledByModule) return;
+
+    // Passive chatbot listener — runs for every message in enabled channels
+    handleChatbot(message).catch((err) => console.error("[CHATBOT] Unhandled error:", err));
 
     upsertMessageActivity(message.author.id).catch(() => {});
 
