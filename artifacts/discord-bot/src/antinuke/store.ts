@@ -29,6 +29,19 @@ export type ActionType =
  */
 export type PunishAction = "ban" | "kick" | "strip";
 
+/**
+ * Whitelist tier for a user:
+ *   immune  — completely ignored; no action ever taken regardless of what they do
+ *   lenient — trusted staff with much higher thresholds; if triggered, always strips
+ *   none    — normal user subject to default thresholds + configured punishment
+ */
+export type WhitelistStatus = "immune" | "lenient" | "none";
+
+export interface WhitelistData {
+  lenient: Set<string>;
+  immune:  Set<string>;
+}
+
 export interface AntiNukeConfig {
   enabled: boolean;
   logChannelId: string | null;
@@ -38,8 +51,8 @@ export interface AntiNukeConfig {
 }
 
 /**
- * Defaults — tuned for fast detection:
- *   - 10 second sliding window (tighter than the old 20s)
+ * Default thresholds — tuned for fast detection:
+ *   - 10 second sliding window
  *   - Destructive actions (delete) trigger on 2 events; creative (create)
  *     trigger on 4 since some legitimate bots do batch-create.
  */
@@ -55,12 +68,29 @@ export const DEFAULT_THRESHOLDS: AntiNukeConfig["thresholds"] = {
   emojiDelete:   { count: 3, window: 10_000 },
 };
 
+/**
+ * Lenient thresholds — applied to whitelisted trusted staff.
+ * Only triggers on sustained mass-action (10+ destructive actions in 60 s).
+ * Punishment is always "strip" — never ban/kick a trusted staff member.
+ */
+export const LENIENT_THRESHOLDS: AntiNukeConfig["thresholds"] = {
+  channelDelete: { count: 10, window: 60_000 },
+  channelCreate: { count: 20, window: 60_000 },
+  roleDelete:    { count: 10, window: 60_000 },
+  roleCreate:    { count: 20, window: 60_000 },
+  ban:           { count: 10, window: 60_000 },
+  kick:          { count: 10, window: 60_000 },
+  guildUpdate:   { count:  5, window: 60_000 },
+  webhookCreate: { count: 10, window: 60_000 },
+  emojiDelete:   { count: 15, window: 60_000 },
+};
+
 // ── In-memory sliding window ───────────────────────────────────────────────────
 // guildId → executorId → actionType → timestamps[]
 const actionMap = new Map<string, Map<string, Map<ActionType, number[]>>>();
 
 // ── In-memory caches ──────────────────────────────────────────────────────────
-const whitelistCache = new Map<string, Set<string>>();
+const whitelistCache = new Map<string, WhitelistData>();
 const configCache    = new Map<string, AntiNukeConfig>();
 
 // ── Sliding-window counter ────────────────────────────────────────────────────
@@ -70,8 +100,9 @@ export function recordAction(
   executorId: string,
   action: ActionType,
   config: AntiNukeConfig,
+  overrideThresholds?: AntiNukeConfig["thresholds"],
 ): boolean {
-  const { count, window } = config.thresholds[action];
+  const { count, window } = (overrideThresholds ?? config.thresholds)[action];
   const now    = Date.now();
   const cutoff = now - window;
 
@@ -94,7 +125,7 @@ export function clearActions(guildId: string, executorId: string): void {
 
 // ── Whitelist ──────────────────────────────────────────────────────────────────
 
-export async function getWhitelist(guildId: string): Promise<Set<string>> {
+export async function getWhitelistData(guildId: string): Promise<WhitelistData> {
   if (whitelistCache.has(guildId)) return whitelistCache.get(guildId)!;
   try {
     const db   = getDb();
@@ -103,22 +134,41 @@ export async function getWhitelist(guildId: string): Promise<Set<string>> {
       .from(antiNukeWhitelistTable)
       .where(eq(antiNukeWhitelistTable.guildId, guildId))
       .limit(1);
-    const s = new Set<string>(rows[0]?.userIds ?? []);
-    whitelistCache.set(guildId, s);
-    return s;
-  } catch { return new Set(); }
+    const row = rows[0];
+    const data: WhitelistData = {
+      lenient: new Set<string>(row?.userIds   ?? []),
+      immune:  new Set<string>(row?.immuneIds ?? []),
+    };
+    whitelistCache.set(guildId, data);
+    return data;
+  } catch {
+    return { lenient: new Set(), immune: new Set() };
+  }
 }
 
-export async function saveWhitelist(guildId: string, whitelist: Set<string>): Promise<void> {
-  whitelistCache.set(guildId, whitelist);
+export async function saveWhitelistData(guildId: string, data: WhitelistData): Promise<void> {
+  whitelistCache.set(guildId, data);
   const db = getDb();
   await db
     .insert(antiNukeWhitelistTable)
-    .values({ guildId, userIds: [...whitelist] })
+    .values({ guildId, userIds: [...data.lenient], immuneIds: [...data.immune] })
     .onConflictDoUpdate({
       target: antiNukeWhitelistTable.guildId,
-      set: { userIds: [...whitelist] },
+      set: { userIds: [...data.lenient], immuneIds: [...data.immune] },
     });
+}
+
+/**
+ * Returns the whitelist tier for a given user in a guild.
+ * "immune"  — in the immune list (full bypass)
+ * "lenient" — in the lenient list (higher thresholds, always strip)
+ * "none"    — not whitelisted
+ */
+export async function getWhitelistStatus(guildId: string, userId: string): Promise<WhitelistStatus> {
+  const data = await getWhitelistData(guildId);
+  if (data.immune.has(userId))  return "immune";
+  if (data.lenient.has(userId)) return "lenient";
+  return "none";
 }
 
 // ── Config ─────────────────────────────────────────────────────────────────────
@@ -181,7 +231,6 @@ export async function saveConfig(guildId: string, cfg: AntiNukeConfig): Promise<
   configCache.set(guildId, cfg);
   const db = getDb();
 
-  // Merge punishAction back into the thresholds JSONB blob
   const thresholdsBlob = {
     ...cfg.thresholds,
     [PUNISH_KEY]: cfg.punishAction,

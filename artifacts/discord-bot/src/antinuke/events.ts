@@ -1,18 +1,14 @@
 import type { Client, Guild, Message, GuildAuditLogsEntry } from "discord.js";
 import { Events, AuditLogEvent, EmbedBuilder } from "discord.js";
 import { applyEmbedOverride } from "../bot/embedOverrides.js";
-import { getConfig, getWhitelist, recordAction } from "./store.js";
+import { getConfig, getWhitelistStatus, recordAction, LENIENT_THRESHOLDS } from "./store.js";
 import type { ActionType } from "./store.js";
-import { quarantine } from "./mitigation.js";
+import { quarantine, lenientQuarantine } from "./mitigation.js";
 import { recordChannelSnap, recordRoleSnap, recordBanSnap } from "./snapshot.js";
 import { postAntiNukeLog } from "./logger.js";
 import { runPasteRestore } from "../admin/serverCopy.js";
 
 // ── Webhook message spam tracking (per webhookId) ──────────────────────────────
-// Separate from audit-log detection — message spam doesn't appear in audit logs.
-// Two-layer detector:
-//   Layer 1 — volume: 3+ messages from the same webhook in 8s (fast spam)
-//   Layer 2 — duplicate content: same webhook sends identical text twice in 60s
 const webhookMsgTimestamps = new Map<string, number[]>();
 const WEBHOOK_MSG_LIMIT   = 3;
 const WEBHOOK_MSG_WINDOW  = 8_000;
@@ -21,7 +17,6 @@ const webhookContentSeen  = new Map<string, Map<string, number>>();
 const WEBHOOK_DUPE_WINDOW = 60_000;
 
 // ── Audit-event → ActionType map ───────────────────────────────────────────────
-// Used by the GuildAuditLogEntryCreate handler (zero-delay, instant detection).
 const AUDIT_TO_ACTION = new Map<AuditLogEvent, ActionType>([
   [AuditLogEvent.ChannelDelete,  "channelDelete"],
   [AuditLogEvent.ChannelCreate,  "channelCreate"],
@@ -52,15 +47,6 @@ function buildDetails(entry: GuildAuditLogsEntry): string {
 }
 
 // ── Central detection & punishment pipeline ────────────────────────────────────
-//
-// KEY ARCHITECTURE:
-//   GuildAuditLogEntryCreate fires INSTANTLY when Discord creates an audit log
-//   entry — the executor is already attached to the entry, so we never need to
-//   wait or re-fetch. This eliminates the old 1.5 s delay entirely.
-//
-//   Bots operating at machine speed bypass the sliding-window threshold; they
-//   are quarantined on the very first destructive action.
-//
 async function handleAction(
   client: Client,
   guild: Guild,
@@ -75,18 +61,36 @@ async function handleAction(
   // Always exempt: server owner + this bot
   if (executorId === guild.ownerId || executorId === client.user!.id) return false;
 
-  // Whitelist check (human trusted staff)
-  const whitelist = await getWhitelist(guild.id);
-  if (whitelist.has(executorId)) return false;
+  // ── Whitelist tier check ──────────────────────────────────────────────────
+  // Bots are never whitelisted — check first to skip the DB lookup for bots.
+  if (!isBotExecutor) {
+    const wlStatus = await getWhitelistStatus(guild.id, executorId);
 
+    if (wlStatus === "immune") {
+      // Completely ignore — no action regardless of what they do
+      return false;
+    }
+
+    if (wlStatus === "lenient") {
+      // Apply higher thresholds (10+ actions / 60 s)
+      const triggered = recordAction(guild.id, executorId, action, config, LENIENT_THRESHOLDS);
+      if (!triggered) return false;
+
+      // Strip only — never ban/kick a trusted staff member
+      await lenientQuarantine(client, guild, executorId, action, details);
+      return true;
+    }
+  }
+
+  // ── Normal / bot path ─────────────────────────────────────────────────────
   // Bots operate at machine speed — threshold is meaningless; quarantine immediately.
-  // Humans: use sliding-window counter.
+  // Humans: use sliding-window counter with default thresholds.
   const triggered = isBotExecutor || recordAction(guild.id, executorId, action, config);
 
   if (!triggered) return false;
 
   const didQuarantine = await quarantine(client, guild, executorId, isBotExecutor, action, details);
-  if (!didQuarantine) return true; // already handled — skip duplicate alert + restore
+  if (!didQuarantine) return true;
 
   const alertEmbed = new EmbedBuilder()
     .setColor(0xFF0000)
@@ -113,8 +117,7 @@ async function handleAction(
   });
   await postAntiNukeLog(client, guild, alertEmbed);
 
-  // ── Auto-restore from ?copy snapshot ────────────────────────────────────────
-  // Runs in the background so quarantine is never delayed.
+  // ── Auto-restore from ?copy snapshot ─────────────────────────────────────
   void (async () => {
     try {
       const { embed: restoreEmbed } = await runPasteRestore(guild, client);
@@ -153,7 +156,6 @@ async function triggerWebhookSpamAction(
     .setTimestamp();
   await postAntiNukeLog(client, guild, embed);
 
-  // Delete all webhooks created in the last 2 minutes
   try {
     const all    = await guild.fetchWebhooks();
     const cutoff = Date.now() - 120_000;
@@ -180,24 +182,12 @@ async function triggerWebhookSpamAction(
 
 export function registerAntiNukeEvents(client: Client): void {
 
-  // ════════════════════════════════════════════════════════════════════════════
-  // PRIMARY DETECTOR — GuildAuditLogEntryCreate
-  // ════════════════════════════════════════════════════════════════════════════
-  //
-  // This event fires the moment Discord creates an audit log entry, delivering
-  // the entry (including the executor) with ZERO delay. This is the approach
-  // used by production-grade security bots (e.g. Secure-bot / Python's
-  // on_audit_log_entry_create). No sleep, no re-fetch, no race condition.
-  //
-  // Requires: GatewayIntentBits.GuildModeration (already in client intents)
-  //           and the bot must have VIEW_AUDIT_LOG permission.
-  //
   client.on(Events.GuildAuditLogEntryCreate, (entry, guild) => {
     const action = AUDIT_TO_ACTION.get(entry.action as AuditLogEvent);
     if (!action) return;
 
     const executor = entry.executor;
-    if (!executor) return; // no executor — nothing to act on
+    if (!executor) return;
 
     const details       = buildDetails(entry as GuildAuditLogsEntry);
     const isBotExecutor = executor.bot;
@@ -206,21 +196,8 @@ export function registerAntiNukeEvents(client: Client): void {
       .catch(err => console.error(`[ANTINUKE] handleAction(${action}):`, err));
   });
 
-  // ════════════════════════════════════════════════════════════════════════════
-  // SNAPSHOT RECORDERS — individual events
-  // ════════════════════════════════════════════════════════════════════════════
-  //
-  // These fire with the full Discord object (GuildChannel, Role, GuildBan)
-  // which we need to store enough detail for ?antinuke restore.
-  // Detection is handled above; these ONLY record snapshots.
-  //
-  // We still need to resolve the executor here because the snapshot must be
-  // keyed to the executor, not the channel/role itself.  We use a short
-  // audit-log lookup (800 ms delay — faster than the old 1.5 s).
-  //
-
-  const SNAP_DELAY_MS   = 800;
-  const SNAP_AUDIT_LIMIT = 10; // fetch more entries to survive audit log floods
+  const SNAP_DELAY_MS    = 800;
+  const SNAP_AUDIT_LIMIT = 10;
 
   async function resolveExecutorForSnap(
     guild: Guild,
@@ -237,14 +214,12 @@ export function registerAntiNukeEvents(client: Client): void {
     } catch { return null; }
   }
 
-  // ── Channel Delete → snapshot ──────────────────────────────────────────────
   client.on(Events.ChannelDelete, (channel) => {
     if (channel.isDMBased()) return;
     const guild = channel.guild;
-    const snap  = channel; // capture before GC
+    const snap  = channel;
 
     void (async () => {
-      // Log the deletion for informational purposes
       const name = "name" in channel ? String(channel.name) : "unknown";
       const infoEmbed = new EmbedBuilder()
         .setColor(0xFF6B35)
@@ -256,13 +231,11 @@ export function registerAntiNukeEvents(client: Client): void {
         .setTimestamp();
       await postAntiNukeLog(client, guild, infoEmbed);
 
-      // Record snapshot (for restore) — need executor ID
       const executorId = await resolveExecutorForSnap(guild, AuditLogEvent.ChannelDelete, snap.id);
       if (executorId) recordChannelSnap(guild.id, executorId, snap);
     })().catch(err => console.error("[ANTINUKE] channelDelete snap:", err));
   });
 
-  // ── Role Delete → snapshot ─────────────────────────────────────────────────
   client.on(Events.GuildRoleDelete, (role) => {
     const guild = role.guild;
     const snap  = role;
@@ -283,7 +256,6 @@ export function registerAntiNukeEvents(client: Client): void {
     })().catch(err => console.error("[ANTINUKE] roleDelete snap:", err));
   });
 
-  // ── Ban Add → snapshot ─────────────────────────────────────────────────────
   client.on(Events.GuildBanAdd, (ban) => {
     const guild = ban.guild;
     const snap  = ban;
@@ -306,13 +278,6 @@ export function registerAntiNukeEvents(client: Client): void {
     })().catch(err => console.error("[ANTINUKE] guildBanAdd snap:", err));
   });
 
-  // ════════════════════════════════════════════════════════════════════════════
-  // WEBHOOK MESSAGE SPAM DETECTOR
-  // ════════════════════════════════════════════════════════════════════════════
-  //
-  // Webhook messages don't appear in audit logs, so this stays as a
-  // separate messageCreate handler.
-  //
   client.on(Events.MessageCreate, async (message) => {
     if (!message.webhookId || !message.guild) return;
     const guild     = message.guild;
@@ -322,7 +287,6 @@ export function registerAntiNukeEvents(client: Client): void {
 
     const now = Date.now();
 
-    // ── Layer 1: Volume (3+ in 8 s) ──────────────────────────────────────
     const times = webhookMsgTimestamps.get(webhookId) ?? [];
     const fresh = times.filter(t => now - t < WEBHOOK_MSG_WINDOW);
     fresh.push(now);
@@ -337,7 +301,6 @@ export function registerAntiNukeEvents(client: Client): void {
       return;
     }
 
-    // ── Layer 2: Duplicate content (same text twice in 60 s) ─────────────
     const normalised = message.content.replace(/\s+/g, " ").trim().toLowerCase();
     if (!normalised) return;
 
@@ -353,7 +316,6 @@ export function registerAntiNukeEvents(client: Client): void {
       );
     } else {
       seen.set(normalised, now);
-      // Clean up old entries
       for (const [k, ts] of seen) {
         if (now - ts > WEBHOOK_DUPE_WINDOW) seen.delete(k);
       }

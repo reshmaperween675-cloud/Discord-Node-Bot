@@ -3,8 +3,8 @@ import { EmbedBuilder, ChannelType, OverwriteType, PermissionFlagsBits } from "d
 import {
   getConfig,
   saveConfig,
-  getWhitelist,
-  saveWhitelist,
+  getWhitelistData,
+  saveWhitelistData,
 } from "./store.js";
 import type { PunishAction } from "./store.js";
 import { getSnap, clearSnap } from "./snapshot.js";
@@ -13,6 +13,7 @@ const COLOR_OK  = 0x00FFFF;
 const COLOR_ERR = 0xFF4444;
 const COLOR_INF = 0x2F3136;
 const COLOR_WIN = 0x00FF99;
+const COLOR_WRN = 0xFF8C00;
 
 function isAdmin(message: Message): boolean {
   if (!message.guild || !message.member) return false;
@@ -207,6 +208,12 @@ async function runRestore(message: Message, client: Client, offenderId: string):
   ]});
 }
 
+// ── Helpers ────────────────────────────────────────────────────────────────────
+
+function resolveTarget(message: Message, parts: string[], offset: number) {
+  return message.mentions.users.first() ?? (parts[offset] ? { id: parts[offset] } : null);
+}
+
 // ─── MAIN COMMAND ROUTER ──────────────────────────────────────────────────────
 
 export async function handleAntiNukeCommand(message: Message, client: Client): Promise<void> {
@@ -319,7 +326,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     cfg.logPingIds ??= [];
 
     if (modifier === "add") {
-      const target = message.mentions.users.first() ?? (parts[4] ? { id: parts[4] } : null);
+      const target = resolveTarget(message, parts, 4);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
           .setDescription("❌ Mention a user: `?antinuke logs p add @user`")] });
@@ -335,7 +342,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     }
 
     if (modifier === "remove") {
-      const target = message.mentions.users.first() ?? (parts[4] ? { id: parts[4] } : null);
+      const target = resolveTarget(message, parts, 4);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
           .setDescription("❌ Mention a user: `?antinuke logs p remove @user`")] });
@@ -366,47 +373,159 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     return;
   }
 
-  // ── ?antinuke whitelist add/remove/list ───────────────────────────────────
+  // ── ?antinuke whitelist [@user | add/remove/list @user] ───────────────────
+  //
+  // LENIENT whitelist — higher thresholds (10+ actions / 60 s), always strip.
+  // Direct mention shorthand: `?antinuke whitelist @user` → adds to lenient list.
+  //
   if (sub === "whitelist") {
-    const action    = parts[2]?.toLowerCase();
-    const target    = message.mentions.users.first() ?? (parts[3] ? { id: parts[3] } : null);
-    const whitelist = await getWhitelist(guildId);
+    const action = parts[2]?.toLowerCase();
+    const wl     = await getWhitelistData(guildId);
 
-    if (action === "add") {
+    // Detect direct mention: ?antinuke whitelist @user (no action keyword)
+    const isDirect = !!message.mentions.users.size && action !== "remove" && action !== "list";
+
+    if (action === "add" || isDirect) {
+      const target = resolveTarget(message, parts, 3);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention a user: `?antinuke whitelist add @user`")] });
+          .setDescription("❌ Mention a user: `?antinuke whitelist @user`")] });
         return;
       }
-      whitelist.add(target.id);
-      await saveWhitelist(guildId, whitelist);
+      // Remove from immune if they were immune (can't be in both)
+      wl.immune.delete(target.id);
+      wl.lenient.add(target.id);
+      await saveWhitelistData(guildId, wl);
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
-        .setDescription(`✅ <@${target.id}> added to the Anti-Nuke whitelist.`)] });
+        .setTitle("🛡️ Lenient Whitelist — Added")
+        .setDescription(
+          `<@${target.id}> added to the **lenient whitelist**.\n\n` +
+          `They can perform up to **10 bans/kicks/deletes per minute** before their roles are stripped. ` +
+          `They will never be banned or kicked — only stripped.`,
+        )] });
       return;
     }
 
     if (action === "remove") {
+      const target = resolveTarget(message, parts, 3);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
           .setDescription("❌ Mention a user: `?antinuke whitelist remove @user`")] });
         return;
       }
-      whitelist.delete(target.id);
-      await saveWhitelist(guildId, whitelist);
+      const wasThere = wl.lenient.has(target.id) || wl.immune.has(target.id);
+      wl.lenient.delete(target.id);
+      wl.immune.delete(target.id);
+      await saveWhitelistData(guildId, wl);
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
-        .setDescription(`✅ <@${target.id}> removed from the whitelist.`)] });
+        .setDescription(
+          wasThere
+            ? `✅ <@${target.id}> removed from all whitelist tiers. They are now subject to normal anti-nuke thresholds.`
+            : `ℹ️ <@${target.id}> was not on the whitelist.`,
+        )] });
       return;
     }
 
-    const ids = [...whitelist];
+    // list
+    const lenientIds = [...wl.lenient];
+    const immuneIds  = [...wl.immune];
     await message.reply({ embeds: [
-      new EmbedBuilder().setColor(COLOR_INF).setTitle("🛡️ Anti-Nuke Whitelist")
-        .setDescription(
-          ids.length === 0
-            ? "*No users whitelisted. Guild owner + bot are always exempt.*"
-            : ids.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
+      new EmbedBuilder().setColor(COLOR_INF)
+        .setTitle("🛡️ Anti-Nuke Whitelist")
+        .addFields(
+          {
+            name: "🟡 Lenient (10+ actions/min → strip)",
+            value: lenientIds.length === 0
+              ? "*None*"
+              : lenientIds.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
+            inline: false,
+          },
+          {
+            name: "🟢 Immune (fully ignored — no limits)",
+            value: immuneIds.length === 0
+              ? "*None*"
+              : immuneIds.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
+            inline: false,
+          },
         )
-        .setFooter({ text: "Guild owner + bot are always exempt — no need to add them" }),
+        .setFooter({ text: "Guild owner + this bot are always exempt — no need to add them" }),
+    ]});
+    return;
+  }
+
+  // ── ?antinuke whitelist-i [@user | add/remove/list @user] ─────────────────
+  //
+  // IMMUNE whitelist — completely ignores all actions, no matter what they do.
+  //
+  if (sub === "whitelist-i") {
+    const action = parts[2]?.toLowerCase();
+    const wl     = await getWhitelistData(guildId);
+
+    const isDirect = !!message.mentions.users.size && action !== "remove" && action !== "list";
+
+    if (action === "add" || isDirect) {
+      const target = resolveTarget(message, parts, 3);
+      if (!target) {
+        await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
+          .setDescription("❌ Mention a user: `?antinuke whitelist-i @user`")] });
+        return;
+      }
+      // Remove from lenient — immune takes priority
+      wl.lenient.delete(target.id);
+      wl.immune.add(target.id);
+      await saveWhitelistData(guildId, wl);
+      await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_WRN)
+        .setTitle("🟢 Immune Whitelist — Added")
+        .setDescription(
+          `<@${target.id}> added to the **immune whitelist**.\n\n` +
+          `⚠️ Their actions will be **completely ignored** by anti-nuke — no limits, no punishment, ever. ` +
+          `Only add accounts you fully trust.`,
+        )] });
+      return;
+    }
+
+    if (action === "remove") {
+      const target = resolveTarget(message, parts, 3);
+      if (!target) {
+        await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
+          .setDescription("❌ Mention a user: `?antinuke whitelist-i remove @user`")] });
+        return;
+      }
+      const wasThere = wl.immune.has(target.id);
+      wl.immune.delete(target.id);
+      await saveWhitelistData(guildId, wl);
+      await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
+        .setDescription(
+          wasThere
+            ? `✅ <@${target.id}> removed from the immune whitelist. They are now subject to normal anti-nuke limits.`
+            : `ℹ️ <@${target.id}> was not on the immune whitelist.`,
+        )] });
+      return;
+    }
+
+    // list (redirect to whitelist list)
+    const lenientIds = [...wl.lenient];
+    const immuneIds  = [...wl.immune];
+    await message.reply({ embeds: [
+      new EmbedBuilder().setColor(COLOR_INF)
+        .setTitle("🛡️ Anti-Nuke Whitelist")
+        .addFields(
+          {
+            name: "🟡 Lenient (10+ actions/min → strip)",
+            value: lenientIds.length === 0
+              ? "*None*"
+              : lenientIds.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
+            inline: false,
+          },
+          {
+            name: "🟢 Immune (fully ignored — no limits)",
+            value: immuneIds.length === 0
+              ? "*None*"
+              : immuneIds.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
+            inline: false,
+          },
+        )
+        .setFooter({ text: "Guild owner + this bot are always exempt — no need to add them" }),
     ]});
     return;
   }
@@ -414,7 +533,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
   // ── ?antinuke status ──────────────────────────────────────────────────────
   if (sub === "status") {
     const cfg        = await getConfig(guildId);
-    const whitelist  = await getWhitelist(guildId);
+    const wl         = await getWhitelistData(guildId);
     const statusIcon = cfg.enabled ? "🟢" : "🔴";
     const logRef     = cfg.logChannelId ? `<#${cfg.logChannelId}>` : "*not set*";
     const pingIds    = cfg.logPingIds ?? [];
@@ -435,9 +554,18 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
           { name: "Status",       value: cfg.enabled ? "**Enabled**" : "**Disabled**",    inline: true },
           { name: "Punishment",   value: punishLabels[cfg.punishAction],                   inline: true },
           { name: "Log Channel",  value: logRef,                                            inline: true },
-          { name: "Whitelisted",  value: `${whitelist.size} user(s)`,                      inline: true },
-          { name: "Log Pings",    value: pingsRef,                                          inline: false },
-          { name: "Thresholds",   value: thresholdLines,                                    inline: false },
+          {
+            name: "🟡 Lenient WL",
+            value: wl.lenient.size > 0 ? `${wl.lenient.size} user(s)` : "*None*",
+            inline: true,
+          },
+          {
+            name: "🟢 Immune WL",
+            value: wl.immune.size > 0 ? `${wl.immune.size} user(s)` : "*None*",
+            inline: true,
+          },
+          { name: "Log Pings",    value: pingsRef,         inline: false },
+          { name: "Thresholds",   value: thresholdLines,   inline: false },
         )
         .setFooter({ text: "Bots are always banned regardless of punishment setting" }),
     ]});
@@ -491,11 +619,27 @@ function buildHelpEmbed(): EmbedBuilder {
         ].join("\n"),
       },
       {
-        name: "🛡️ Whitelist & Info",
+        name: "🟡 Lenient Whitelist — trusted staff with higher limits",
         value: [
-          "`?antinuke whitelist add @user` — Trust a staff member",
-          "`?antinuke whitelist remove @user` — Revoke trust",
-          "`?antinuke whitelist list` — Show trusted users",
+          "`?antinuke whitelist @user` — Add (shorthand)",
+          "`?antinuke whitelist add @user` — Add",
+          "`?antinuke whitelist remove @user` — Remove from all tiers",
+          "`?antinuke whitelist list` — Show both tiers",
+          "*Trigger: 10+ bans/kicks/deletes in 60 s → roles stripped only*",
+        ].join("\n"),
+      },
+      {
+        name: "🟢 Immune Whitelist — fully bypasses anti-nuke",
+        value: [
+          "`?antinuke whitelist-i @user` — Add (shorthand)",
+          "`?antinuke whitelist-i add @user` — Add",
+          "`?antinuke whitelist-i remove @user` — Remove",
+          "*Their actions are completely ignored, no limits, no punishment*",
+        ].join("\n"),
+      },
+      {
+        name: "🔧 Info & Restore",
+        value: [
           "`?antinuke status` — Full status + thresholds",
           "`?antinuke restore @user` — ⚠️ Undo damage (owner only, `strip` mode only)",
         ].join("\n"),
@@ -507,5 +651,5 @@ function buildHelpEmbed(): EmbedBuilder {
           "`guildUpdate` `webhookCreate` `emojiDelete` + webhook message spam",
       },
     )
-    .setFooter({ text: "Guild owner + bot are always exempt • Bots = instant ban on first action" });
+    .setFooter({ text: "Guild owner + bot always exempt • Bots = instant ban on first action" });
 }

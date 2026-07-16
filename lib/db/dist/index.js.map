@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/index.ts"],
+  "sourcesContent": ["import { drizzle } from \"drizzle-orm/node-postgres\";\nimport pg from \"pg\";\nimport * as schema from \"./schema\";\n\nconst { Pool } = pg;\n\nif (!process.env.DATABASE_URL) {\n  throw new Error(\n    \"DATABASE_URL must be set. Did you forget to provision a database?\",\n  );\n}\n\nexport const pool = new Pool({ connectionString: process.env.DATABASE_URL });\nexport const db = drizzle(pool, { schema });\n\nexport * from \"./schema\";\n"],
+  "mappings": "AAAA,SAAS,eAAe;AACxB,OAAO,QAAQ;AACf,YAAY,YAAY;AAExB,MAAM,EAAE,KAAK,IAAI;AAEjB,IAAI,CAAC,QAAQ,IAAI,cAAc;AAC7B,QAAM,IAAI;AAAA,IACR;AAAA,EACF;AACF;AAEO,MAAM,OAAO,IAAI,KAAK,EAAE,kBAAkB,QAAQ,IAAI,aAAa,CAAC;AACpE,MAAM,KAAK,QAAQ,MAAM,EAAE,OAAO,CAAC;AAE1C,cAAc;",
+  "names": []
+}

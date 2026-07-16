@@ -282,8 +282,9 @@ export const mvpsTable = pgTable("mvps", {
 // ── Anti-nuke ──────────────────────────────────────────────────────────────────
 
 export const antiNukeWhitelistTable = pgTable("antinuke_whitelist", {
-  guildId: text("guild_id").primaryKey(),
-  userIds: text("user_ids").array().notNull().default([]),
+  guildId:   text("guild_id").primaryKey(),
+  userIds:   text("user_ids").array().notNull().default([]),
+  immuneIds: text("immune_ids").array().notNull().default([]),
 });
 
 export const antiNukeConfigTable = pgTable("antinuke_config", {

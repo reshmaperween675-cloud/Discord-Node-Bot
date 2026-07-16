@@ -28,9 +28,6 @@ export async function quarantine(
 
   // ── Punish ────────────────────────────────────────────────────────────────
   if (effectivePunish === "ban") {
-    // For bots: ban-only (managed roles can't be stripped by other bots).
-    // For humans on ban mode: strip roles AND ban concurrently — roles gone
-    // instantly while ban processes, stops damage as fast as possible.
     if (isBotExecutor) {
       try {
         await guild.bans.create(executorId, {
@@ -140,6 +137,84 @@ export async function quarantine(
       const owner = await guild.fetchOwner();
       await owner.send({
         content: `some random ass nigga got caught in **${guild.name}**`,
+        embeds: [embed],
+      });
+    } catch { /* DMs closed */ }
+  })();
+
+  setTimeout(() => quarantineActive.delete(key), 60_000);
+  return true;
+}
+
+/**
+ * Lenient quarantine — applied when a WHITELISTED user crosses the higher
+ * lenient threshold. Always strips roles (never bans or kicks).
+ * Posts a distinct warning embed to the log channel.
+ * Does NOT trigger auto-restore — owner should review manually.
+ */
+export async function lenientQuarantine(
+  client: Client,
+  guild: Guild,
+  executorId: string,
+  action: ActionType,
+  details: string,
+): Promise<boolean> {
+  const key = `lenient:${guild.id}:${executorId}`;
+  if (quarantineActive.has(key)) return false;
+  quarantineActive.add(key);
+  clearActions(guild.id, executorId);
+
+  console.warn(
+    `[ANTINUKE] Lenient quarantine | Guild: ${guild.name} (${guild.id}) | Executor: ${executorId} | Action: ${action}`,
+  );
+
+  const config = await getConfig(guild.id);
+
+  // Always strip — never ban/kick a whitelisted user
+  const member = guild.members.cache.get(executorId)
+    ?? await guild.members.fetch(executorId).catch(() => null);
+
+  if (member) {
+    await member.roles.set([], "Anti-Nuke: whitelisted user exceeded lenient threshold — roles stripped").catch((e) => {
+      console.error("[ANTINUKE] Lenient strip failed:", (e as Error).message);
+    });
+  }
+
+  const embed = new EmbedBuilder()
+    .setColor(0xFF8C00)
+    .setTitle("⚠️ WHITELISTED USER WENT ROGUE")
+    .setDescription(
+      `<@${executorId}> is on the **lenient whitelist** but exceeded the extended threshold for \`${action}\`.\n\n` +
+      `**Action:** ${details}\n\n` +
+      `Their roles have been **stripped**. Review and restore manually if needed.\n` +
+      `Use \`?antinuke restore <@${executorId}>\` to give roles back.`,
+    )
+    .addFields(
+      { name: "User",      value: `<@${executorId}> (\`${executorId}\`)`, inline: true },
+      { name: "Trigger",   value: `\`${action}\``,                         inline: true },
+      { name: "Punishment", value: "Roles stripped (whitelist — strip only)", inline: false },
+    )
+    .setFooter({ text: guild.name })
+    .setTimestamp();
+
+  void (async () => {
+    if (config.logChannelId) {
+      try {
+        const ch = await client.channels.fetch(config.logChannelId);
+        if (ch && !ch.isDMBased() && ch.isTextBased()) {
+          const pingIds = config.logPingIds ?? [];
+          const content = pingIds.length > 0 ? pingIds.map(id => `<@${id}>`).join(" ") : undefined;
+          await (ch as TextChannel).send({ content, embeds: [embed] });
+        }
+      } catch (e) {
+        console.error("[ANTINUKE] Lenient log send failed:", (e as Error).message);
+      }
+    }
+
+    try {
+      const owner = await guild.fetchOwner();
+      await owner.send({
+        content: `⚠️ A whitelisted staff member went rogue in **${guild.name}** — their roles have been stripped.`,
         embeds: [embed],
       });
     } catch { /* DMs closed */ }
