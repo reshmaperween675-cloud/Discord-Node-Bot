@@ -14,7 +14,7 @@ export interface ChatbotConfig {
 const DEFAULT_CONFIG: Omit<ChatbotConfig, "guildId"> = {
   enabledChannels: [],
   ignoredUsers: [],
-  respondRate: 15,
+  respondRate: 50,
   model: "google/gemini-flash-1.5:free",
   botName: "mewo",
   customPrompt: "",
