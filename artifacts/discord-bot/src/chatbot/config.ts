@@ -15,7 +15,7 @@ const DEFAULT_CONFIG: Omit<ChatbotConfig, "guildId"> = {
   enabledChannels: [],
   ignoredUsers: [],
   respondRate: 15,
-  model: "meta-llama/llama-3.1-8b-instruct:free",
+  model: "google/gemini-flash-1.5:free",
   botName: "mewo",
   customPrompt: "",
   theme: "bro",
