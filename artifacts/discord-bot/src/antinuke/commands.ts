@@ -30,7 +30,7 @@ async function runRestore(message: Message, client: Client, offenderId: string):
   if (message.author.id !== guild.ownerId) {
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_ERR)
-        .setDescription("❌ Only the **server owner** can run a restore."),
+        .setDescription("only the server owner can run a restore"),
     ]});
     return;
   }
@@ -40,9 +40,8 @@ async function runRestore(message: Message, client: Client, offenderId: string):
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_ERR)
         .setDescription(
-          "❌ No snapshot found for that user.\n" +
-          "Snapshots are captured when the anti-nuke fires and cleared after a restore.\n" +
-          "They are also lost if the bot restarts.",
+          "no snapshot found for that user\n\n" +
+          "snapshots get saved when antinuke fires and cleared after a restore — they're also lost if the bot restarts",
         ),
     ]});
     return;
@@ -50,10 +49,10 @@ async function runRestore(message: Message, client: Client, offenderId: string):
 
   const status = await message.reply({ embeds: [
     new EmbedBuilder().setColor(0xFFAA00)
-      .setTitle("🔄 Restore in progress…")
+      .setTitle("restoring...")
       .setDescription(
-        `Restoring **${snap.roles.length}** role(s), **${snap.channels.length}** channel(s), ` +
-        `and unbanning **${snap.bans.length}** member(s).\nThis may take a moment…`,
+        `working on **${snap.roles.length}** role(s), **${snap.channels.length}** channel(s) ` +
+        `and unbanning **${snap.bans.length}** member(s) — hang tight`,
       ),
   ]});
 
@@ -156,13 +155,13 @@ async function runRestore(message: Message, client: Client, offenderId: string):
         const user    = await client.users.fetch(ban.userId);
         const dmEmbed = new EmbedBuilder()
           .setColor(COLOR_WIN)
-          .setTitle(`Sorry about that — ${guild.name}`)
+          .setTitle(`sorry about that — ${guild.name}`)
           .setThumbnail(guild.iconURL({ size: 256 }))
           .setDescription(
-            `Hey ${ban.username},\n\n` +
-            `someone got into our server and went on a banning spree — you got caught in it, which wasn't your fault at all.\n\n` +
-            `You've been unbanned. Come back whenever you're ready:\n\n` +
-            `**[Rejoin ${guild.name}](${inviteUrl})**\n` +
+            `hey ${ban.username}\n\n` +
+            `someone got into the server and went on a banning spree — you got caught in it, which wasn't your fault at all\n\n` +
+            `you've been unbanned, come back whenever you're ready\n\n` +
+            `**[rejoin ${guild.name}](${inviteUrl})**\n` +
             `*(this link is just for you)*`,
           )
           .setFooter({ text: guild.name })
@@ -181,27 +180,27 @@ async function runRestore(message: Message, client: Client, offenderId: string):
   await status.edit({ embeds: [
     new EmbedBuilder()
       .setColor(COLOR_WIN)
-      .setTitle("✅ Anti-Nuke Restore Complete")
-      .setDescription(`Offender: <@${offenderId}>`)
+      .setTitle("restore done")
+      .setDescription(`dealt with <@${offenderId}>`)
       .addFields(
         {
-          name: "🎭 Roles",
-          value: `✅ Recreated: **${rolesOk}**${rolesFail > 0 ? `\n❌ Failed: **${rolesFail}**` : ""}`,
+          name: "roles",
+          value: `recreated **${rolesOk}**${rolesFail > 0 ? ` — **${rolesFail}** failed` : ""}`,
           inline: true,
         },
         {
-          name: "📁 Channels",
-          value: `✅ Recreated: **${chOk}**${chFail > 0 ? `\n❌ Failed: **${chFail}**` : ""}`,
+          name: "channels",
+          value: `recreated **${chOk}**${chFail > 0 ? ` — **${chFail}** failed` : ""}`,
           inline: true,
         },
         {
-          name: "🔓 Unbans",
-          value: `✅ Unbanned: **${unbanOk}**\n📬 DM'd: **${dmOk}**${unbanFail > 0 ? `\n❌ Failed: **${unbanFail}**` : ""}`,
+          name: "unbans",
+          value: `unbanned **${unbanOk}**, dm'd **${dmOk}**${unbanFail > 0 ? ` — **${unbanFail}** failed` : ""}`,
           inline: true,
         },
         {
-          name: "ℹ️ Note",
-          value: "Role positions are approximate — re-order manually if needed. Restore only works if punishment was `strip`.",
+          name: "heads up",
+          value: "role positions might be a little off, fix them manually if needed — restore only works when punishment is set to strip",
         },
       )
       .setTimestamp(),
@@ -221,7 +220,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
   if (!isAdmin(message)) {
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_ERR)
-        .setDescription("❌ You need the **Administrator** permission to use anti-nuke commands."),
+        .setDescription("you need admin perms to use antinuke commands"),
     ]});
     return;
   }
@@ -246,8 +245,8 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
         .setColor(cfg.enabled ? COLOR_OK : COLOR_ERR)
         .setDescription(
           cfg.enabled
-            ? "✅ Anti-Nuke **enabled**. Monitoring is active."
-            : "⛔ Anti-Nuke **disabled**.",
+            ? "antinuke is on, watching for anything suspicious"
+            : "antinuke is off",
         ),
     ]});
     return;
@@ -260,11 +259,11 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     if (!choice || !valid.includes(choice as PunishAction)) {
       await message.reply({ embeds: [
         new EmbedBuilder().setColor(COLOR_ERR).setDescription(
-          "❌ Choose a punishment:\n" +
-          "`?antinuke setpunish ban` — permanently ban the offender\n" +
-          "`?antinuke setpunish kick` — kick (they can rejoin, but lose admin access immediately)\n" +
-          "`?antinuke setpunish strip` — remove all roles *(default, reversible via restore)*\n\n" +
-          "⚠️ **Bots are always banned regardless of this setting.**",
+          "pick one of these\n\n" +
+          "`?antinuke setpunish ban` — perma ban the offender\n" +
+          "`?antinuke setpunish kick` — kick them (they can come back but lose access immediately)\n" +
+          "`?antinuke setpunish strip` — take all their roles away, reversible with restore\n\n" +
+          "bots always get banned no matter what you pick here",
         ),
       ]});
       return;
@@ -272,16 +271,13 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     const cfg = await getConfig(guildId);
     cfg.punishAction = choice as PunishAction;
     await saveConfig(guildId, cfg);
-    const icons: Record<PunishAction, string> = { ban: "🔨", kick: "👢", strip: "🎭" };
     const desc: Record<PunishAction, string> = {
-      ban:   "Offenders will be **permanently banned** when a threshold is crossed.",
-      kick:  "Offenders will be **kicked** from the server.",
-      strip: "Offenders will have **all roles removed**. Use `?antinuke restore @user` to undo.",
+      ban:   "punishment set to ban — offenders get permanently banned when they cross the line",
+      kick:  "punishment set to kick — offenders get kicked from the server",
+      strip: "punishment set to strip — offenders lose all their roles, use `?antinuke restore @user` to undo it",
     };
     await message.reply({ embeds: [
-      new EmbedBuilder().setColor(COLOR_OK).setDescription(
-        `${icons[cfg.punishAction]} Punishment set to **\`${cfg.punishAction}\`**.\n\n${desc[cfg.punishAction]}`,
-      ),
+      new EmbedBuilder().setColor(COLOR_OK).setDescription(desc[cfg.punishAction]),
     ]});
     return;
   }
@@ -293,7 +289,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     if (!channel || channel.type !== ChannelType.GuildText) {
       await message.reply({ embeds: [
         new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention a valid text channel. Example: `?antinuke log #security-logs`"),
+          .setDescription("mention a text channel — example: `?antinuke log #security-logs`"),
       ]});
       return;
     }
@@ -302,7 +298,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     await saveConfig(guildId, cfg);
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_OK)
-        .setDescription(`✅ Anti-Nuke logs → <#${channel.id}>`),
+        .setDescription(`logs will go to <#${channel.id}>`),
     ]});
     return;
   }
@@ -315,7 +311,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     if (action !== "p") {
       await message.reply({ embeds: [
         new EmbedBuilder().setColor(COLOR_ERR).setDescription(
-          "❌ Unknown sub-command.\n\n" +
+          "not sure what you meant — here's what you can do\n\n" +
           "`?antinuke logs p add @user`\n`?antinuke logs p remove @user`\n`?antinuke logs p list`",
         ),
       ]});
@@ -329,7 +325,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       const target = resolveTarget(message, parts, 4);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention a user: `?antinuke logs p add @user`")] });
+          .setDescription("mention who you want to add — example: `?antinuke logs p add @user`")] });
         return;
       }
       if (!cfg.logPingIds.includes(target.id)) {
@@ -337,7 +333,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
         await saveConfig(guildId, cfg);
       }
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
-        .setDescription(`✅ <@${target.id}> will be pinged on every anti-nuke log.`)] });
+        .setDescription(`<@${target.id}> will get pinged whenever antinuke fires`)] });
       return;
     }
 
@@ -345,26 +341,26 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       const target = resolveTarget(message, parts, 4);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention a user: `?antinuke logs p remove @user`")] });
+          .setDescription("mention who you want to remove — example: `?antinuke logs p remove @user`")] });
         return;
       }
       cfg.logPingIds = cfg.logPingIds.filter(id => id !== target.id);
       await saveConfig(guildId, cfg);
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
-        .setDescription(`✅ <@${target.id}> removed from log pings.`)] });
+        .setDescription(`<@${target.id}> won't be pinged anymore`)] });
       return;
     }
 
     const ids    = cfg.logPingIds;
     const logRef = cfg.logChannelId ? `<#${cfg.logChannelId}>` : "*not set*";
     await message.reply({ embeds: [
-      new EmbedBuilder().setColor(COLOR_INF).setTitle("📋 Anti-Nuke Log Pings")
+      new EmbedBuilder().setColor(COLOR_INF).setTitle("log pings")
         .addFields(
-          { name: "Log Channel", value: logRef, inline: false },
+          { name: "log channel", value: logRef, inline: false },
           {
-            name: "Pinged Users",
+            name: "who gets pinged",
             value: ids.length === 0
-              ? "*None — add with `?antinuke logs p add @user`*"
+              ? "*nobody yet — add someone with `?antinuke logs p add @user`*"
               : ids.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
             inline: false,
           },
@@ -374,34 +370,27 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
   }
 
   // ── ?antinuke whitelist [@user | add/remove/list @user] ───────────────────
-  //
-  // LENIENT whitelist — higher thresholds (10+ actions / 60 s), always strip.
-  // Direct mention shorthand: `?antinuke whitelist @user` → adds to lenient list.
-  //
   if (sub === "whitelist") {
     const action = parts[2]?.toLowerCase();
     const wl     = await getWhitelistData(guildId);
 
-    // Detect direct mention: ?antinuke whitelist @user (no action keyword)
     const isDirect = !!message.mentions.users.size && action !== "remove" && action !== "list";
 
     if (action === "add" || isDirect) {
       const target = resolveTarget(message, parts, 3);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention a user: `?antinuke whitelist @user`")] });
+          .setDescription("mention who you want to whitelist — example: `?antinuke whitelist @user`")] });
         return;
       }
-      // Remove from immune if they were immune (can't be in both)
       wl.immune.delete(target.id);
       wl.lenient.add(target.id);
       await saveWhitelistData(guildId, wl);
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
-        .setTitle("🛡️ Lenient Whitelist — Added")
+        .setTitle("lenient whitelist updated")
         .setDescription(
-          `<@${target.id}> added to the **lenient whitelist**.\n\n` +
-          `They can perform up to **10 bans/kicks/deletes per minute** before their roles are stripped. ` +
-          `They will never be banned or kicked — only stripped.`,
+          `<@${target.id}> is now on the lenient whitelist\n\n` +
+          `they can do up to **10 bans/kicks/deletes a minute** before their roles get stripped — they won't be banned or kicked`,
         )] });
       return;
     }
@@ -410,7 +399,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       const target = resolveTarget(message, parts, 3);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention a user: `?antinuke whitelist remove @user`")] });
+          .setDescription("mention who you want to remove — example: `?antinuke whitelist remove @user`")] });
         return;
       }
       const wasThere = wl.lenient.has(target.id) || wl.immune.has(target.id);
@@ -420,8 +409,8 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
         .setDescription(
           wasThere
-            ? `✅ <@${target.id}> removed from all whitelist tiers. They are now subject to normal anti-nuke thresholds.`
-            : `ℹ️ <@${target.id}> was not on the whitelist.`,
+            ? `<@${target.id}> is off the whitelist, back to normal limits`
+            : `<@${target.id}> wasn't on the whitelist`,
         )] });
       return;
     }
@@ -431,32 +420,29 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     const immuneIds  = [...wl.immune];
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_INF)
-        .setTitle("🛡️ Anti-Nuke Whitelist")
+        .setTitle("whitelist")
         .addFields(
           {
-            name: "🟡 Lenient (10+ actions/min → strip)",
+            name: "lenient — higher limits, strip only",
             value: lenientIds.length === 0
-              ? "*None*"
+              ? "*nobody*"
               : lenientIds.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
             inline: false,
           },
           {
-            name: "🟢 Immune (fully ignored — no limits)",
+            name: "immune — completely ignored",
             value: immuneIds.length === 0
-              ? "*None*"
+              ? "*nobody*"
               : immuneIds.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
             inline: false,
           },
         )
-        .setFooter({ text: "Guild owner + this bot are always exempt — no need to add them" }),
+        .setFooter({ text: "server owner and this bot are always exempt, no need to add them" }),
     ]});
     return;
   }
 
   // ── ?antinuke whitelist-i [@user | add/remove/list @user] ─────────────────
-  //
-  // IMMUNE whitelist — completely ignores all actions, no matter what they do.
-  //
   if (sub === "whitelist-i") {
     const action = parts[2]?.toLowerCase();
     const wl     = await getWhitelistData(guildId);
@@ -467,19 +453,17 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       const target = resolveTarget(message, parts, 3);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention a user: `?antinuke whitelist-i @user`")] });
+          .setDescription("mention who you want to add — example: `?antinuke whitelist-i @user`")] });
         return;
       }
-      // Remove from lenient — immune takes priority
       wl.lenient.delete(target.id);
       wl.immune.add(target.id);
       await saveWhitelistData(guildId, wl);
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_WRN)
-        .setTitle("🟢 Immune Whitelist — Added")
+        .setTitle("immune whitelist updated")
         .setDescription(
-          `<@${target.id}> added to the **immune whitelist**.\n\n` +
-          `⚠️ Their actions will be **completely ignored** by anti-nuke — no limits, no punishment, ever. ` +
-          `Only add accounts you fully trust.`,
+          `<@${target.id}> is now fully immune — antinuke won't touch them no matter what they do\n\n` +
+          `only add people you fully trust here`,
         )] });
       return;
     }
@@ -488,7 +472,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       const target = resolveTarget(message, parts, 3);
       if (!target) {
         await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention a user: `?antinuke whitelist-i remove @user`")] });
+          .setDescription("mention who you want to remove — example: `?antinuke whitelist-i remove @user`")] });
         return;
       }
       const wasThere = wl.immune.has(target.id);
@@ -497,8 +481,8 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
         .setDescription(
           wasThere
-            ? `✅ <@${target.id}> removed from the immune whitelist. They are now subject to normal anti-nuke limits.`
-            : `ℹ️ <@${target.id}> was not on the immune whitelist.`,
+            ? `<@${target.id}> is off the immune whitelist, back to normal limits`
+            : `<@${target.id}> wasn't on the immune whitelist`,
         )] });
       return;
     }
@@ -508,24 +492,24 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     const immuneIds  = [...wl.immune];
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_INF)
-        .setTitle("🛡️ Anti-Nuke Whitelist")
+        .setTitle("whitelist")
         .addFields(
           {
-            name: "🟡 Lenient (10+ actions/min → strip)",
+            name: "lenient — higher limits, strip only",
             value: lenientIds.length === 0
-              ? "*None*"
+              ? "*nobody*"
               : lenientIds.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
             inline: false,
           },
           {
-            name: "🟢 Immune (fully ignored — no limits)",
+            name: "immune — completely ignored",
             value: immuneIds.length === 0
-              ? "*None*"
+              ? "*nobody*"
               : immuneIds.map(id => `<@${id}> (\`${id}\`)`).join("\n"),
             inline: false,
           },
         )
-        .setFooter({ text: "Guild owner + this bot are always exempt — no need to add them" }),
+        .setFooter({ text: "server owner and this bot are always exempt, no need to add them" }),
     ]});
     return;
   }
@@ -534,40 +518,39 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
   if (sub === "status") {
     const cfg        = await getConfig(guildId);
     const wl         = await getWhitelistData(guildId);
-    const statusIcon = cfg.enabled ? "🟢" : "🔴";
     const logRef     = cfg.logChannelId ? `<#${cfg.logChannelId}>` : "*not set*";
     const pingIds    = cfg.logPingIds ?? [];
     const pingsRef   = pingIds.length > 0 ? pingIds.map(id => `<@${id}>`).join(", ") : "*none*";
     const punishLabels: Record<PunishAction, string> = {
-      ban: "🔨 ban (permanent)", kick: "👢 kick", strip: "🎭 strip (reversible)",
+      ban: "ban (permanent)", kick: "kick", strip: "strip (reversible)",
     };
 
     const thresholdLines = (Object.entries(cfg.thresholds) as [string, { count: number; window: number }][])
-      .map(([k, v]) => `• \`${k}\`: **${v.count}** in **${v.window / 1000}s**`)
+      .map(([k, v]) => `\`${k}\` — **${v.count}** in **${v.window / 1000}s**`)
       .join("\n");
 
     await message.reply({ embeds: [
       new EmbedBuilder()
         .setColor(cfg.enabled ? COLOR_OK : COLOR_ERR)
-        .setTitle(`${statusIcon} Anti-Nuke Status — ${message.guild.name}`)
+        .setTitle(`antinuke status — ${message.guild.name}`)
         .addFields(
-          { name: "Status",       value: cfg.enabled ? "**Enabled**" : "**Disabled**",    inline: true },
-          { name: "Punishment",   value: punishLabels[cfg.punishAction],                   inline: true },
-          { name: "Log Channel",  value: logRef,                                            inline: true },
+          { name: "status",      value: cfg.enabled ? "**on**" : "**off**",           inline: true },
+          { name: "punishment",  value: punishLabels[cfg.punishAction],                inline: true },
+          { name: "log channel", value: logRef,                                         inline: true },
           {
-            name: "🟡 Lenient WL",
-            value: wl.lenient.size > 0 ? `${wl.lenient.size} user(s)` : "*None*",
+            name: "lenient whitelist",
+            value: wl.lenient.size > 0 ? `${wl.lenient.size} user(s)` : "*nobody*",
             inline: true,
           },
           {
-            name: "🟢 Immune WL",
-            value: wl.immune.size > 0 ? `${wl.immune.size} user(s)` : "*None*",
+            name: "immune whitelist",
+            value: wl.immune.size > 0 ? `${wl.immune.size} user(s)` : "*nobody*",
             inline: true,
           },
-          { name: "Log Pings",    value: pingsRef,         inline: false },
-          { name: "Thresholds",   value: thresholdLines,   inline: false },
+          { name: "log pings",  value: pingsRef,        inline: false },
+          { name: "thresholds", value: thresholdLines,  inline: false },
         )
-        .setFooter({ text: "Bots are always banned regardless of punishment setting" }),
+        .setFooter({ text: "bots always get banned regardless of the punishment setting" }),
     ]});
     return;
   }
@@ -578,7 +561,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
     if (!target) {
       await message.reply({ embeds: [
         new EmbedBuilder().setColor(COLOR_ERR)
-          .setDescription("❌ Mention the offender: `?antinuke restore @badguy`"),
+          .setDescription("mention who you want to restore — example: `?antinuke restore @user`"),
       ]});
       return;
     }
@@ -592,64 +575,64 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
 function buildHelpEmbed(): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(0x2F3136)
-    .setTitle("🛡️ Anti-Nuke — Command Reference")
+    .setTitle("antinuke commands")
     .setDescription(
-      "Uses `GuildAuditLogEntryCreate` for **zero-delay** instant detection.\n" +
-      "Bots are **banned on first destructive action** — no threshold needed.",
+      "uses audit logs for instant detection with zero delay\n" +
+      "bots get banned on their first destructive action, no threshold needed",
     )
     .addFields(
       {
-        name: "⚙️ Setup",
+        name: "setup",
         value: [
-          "`?antinuke enable` — Activate monitoring",
-          "`?antinuke disable` — Deactivate",
-          "`?antinuke log #channel` — Set log channel",
-          "`?antinuke logs p add @user` — Ping user on every log",
-          "`?antinuke logs p remove @user` — Stop pinging",
-          "`?antinuke logs p list` — Show pinged users",
+          "`?antinuke enable` — turn on monitoring",
+          "`?antinuke disable` — turn it off",
+          "`?antinuke log #channel` — set where logs go",
+          "`?antinuke logs p add @user` — ping someone on every log",
+          "`?antinuke logs p remove @user` — stop pinging them",
+          "`?antinuke logs p list` — see who gets pinged",
         ].join("\n"),
       },
       {
-        name: "⚖️ Punishment",
+        name: "punishment",
         value: [
-          "`?antinuke setpunish strip` — Remove all roles *(default, reversible)*",
-          "`?antinuke setpunish kick` — Kick from server",
-          "`?antinuke setpunish ban` — Permanent ban",
-          "*Bots are always banned regardless of this setting.*",
+          "`?antinuke setpunish strip` — remove all roles, default, reversible",
+          "`?antinuke setpunish kick` — kick from server",
+          "`?antinuke setpunish ban` — permanent ban",
+          "*bots always get banned no matter what you set here*",
         ].join("\n"),
       },
       {
-        name: "🟡 Lenient Whitelist — trusted staff with higher limits",
+        name: "lenient whitelist — trusted staff with higher limits",
         value: [
-          "`?antinuke whitelist @user` — Add (shorthand)",
-          "`?antinuke whitelist add @user` — Add",
-          "`?antinuke whitelist remove @user` — Remove from all tiers",
-          "`?antinuke whitelist list` — Show both tiers",
-          "*Trigger: 10+ bans/kicks/deletes in 60 s → roles stripped only*",
+          "`?antinuke whitelist @user` — add someone",
+          "`?antinuke whitelist add @user` — same thing",
+          "`?antinuke whitelist remove @user` — remove from all tiers",
+          "`?antinuke whitelist list` — see both tiers",
+          "*10+ bans/kicks/deletes in 60s triggers a strip, no bans or kicks for these guys*",
         ].join("\n"),
       },
       {
-        name: "🟢 Immune Whitelist — fully bypasses anti-nuke",
+        name: "immune whitelist — fully bypasses antinuke",
         value: [
-          "`?antinuke whitelist-i @user` — Add (shorthand)",
-          "`?antinuke whitelist-i add @user` — Add",
-          "`?antinuke whitelist-i remove @user` — Remove",
-          "*Their actions are completely ignored, no limits, no punishment*",
+          "`?antinuke whitelist-i @user` — add someone",
+          "`?antinuke whitelist-i add @user` — same thing",
+          "`?antinuke whitelist-i remove @user` — remove",
+          "*their actions get completely ignored, no limits, no punishment*",
         ].join("\n"),
       },
       {
-        name: "🔧 Info & Restore",
+        name: "info and restore",
         value: [
-          "`?antinuke status` — Full status + thresholds",
-          "`?antinuke restore @user` — ⚠️ Undo damage (owner only, `strip` mode only)",
+          "`?antinuke status` — full status and thresholds",
+          "`?antinuke restore @user` — undo damage, owner only, strip mode only",
         ].join("\n"),
       },
       {
-        name: "🔍 What is monitored",
+        name: "what gets monitored",
         value:
           "`channelDelete/Create` `roleDelete/Create` `ban` `kick` " +
-          "`guildUpdate` `webhookCreate` `emojiDelete` + webhook message spam",
+          "`guildUpdate` `webhookCreate` `emojiDelete` and webhook message spam",
       },
     )
-    .setFooter({ text: "Guild owner + bot always exempt • Bots = instant ban on first action" });
+    .setFooter({ text: "server owner and this bot are always exempt" });
 }

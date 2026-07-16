@@ -34,10 +34,10 @@ export async function quarantine(
           reason: `Anti-Nuke: rogue bot — ${action}`,
           deleteMessageSeconds: 0,
         });
-        actionsTaken.push("• Banned (bot — instant ban)");
+        actionsTaken.push("banned (bot — instant ban)");
       } catch (e) {
         console.error("[ANTINUKE] Bot ban failed:", (e as Error).message);
-        actionsTaken.push("• Ban failed — check permissions / role hierarchy");
+        actionsTaken.push("ban failed — check permissions / role hierarchy");
       }
     } else {
       const member = guild.members.cache.get(executorId)
@@ -54,7 +54,7 @@ export async function quarantine(
           console.error("[ANTINUKE] Ban failed:", (e as Error).message);
         }),
       ]);
-      actionsTaken.push("• Roles stripped + banned");
+      actionsTaken.push("roles stripped and banned");
     }
 
   } else if (effectivePunish === "kick") {
@@ -66,12 +66,12 @@ export async function quarantine(
       await stripped;
       await member.kick(`Anti-Nuke: threshold exceeded — ${action}`).catch(async () => {
         await member.roles.set([], "Anti-Nuke: kick failed, stripping as fallback").catch(() => {});
-        actionsTaken.push("• Kick failed — stripped roles as fallback");
+        actionsTaken.push("kick failed — stripped roles instead");
         return;
       });
-      actionsTaken.push("• Roles stripped + kicked");
+      actionsTaken.push("roles stripped and kicked");
     } else {
-      actionsTaken.push("• Member not found");
+      actionsTaken.push("member not found");
     }
 
   } else {
@@ -83,9 +83,9 @@ export async function quarantine(
       await member.roles.set([], "Anti-Nuke: automated quarantine — roles stripped").catch((e) => {
         console.error("[ANTINUKE] Strip failed:", (e as Error).message);
       });
-      actionsTaken.push("• All roles stripped");
+      actionsTaken.push("all roles stripped");
     } else {
-      actionsTaken.push("• Member not found");
+      actionsTaken.push("member not found");
     }
   }
 
@@ -101,7 +101,7 @@ export async function quarantine(
           deleted++;
         }
       }
-      if (deleted > 0) actionsTaken.push(`• Deleted ${deleted} rogue webhook(s)`);
+      if (deleted > 0) actionsTaken.push(`deleted ${deleted} rogue webhook(s)`);
     } catch (e) {
       console.error("[ANTINUKE] Webhook cleanup failed:", e);
     }
@@ -110,11 +110,11 @@ export async function quarantine(
   // ── Log + DM — fully async, never blocks punishment ──────────────────────
   const embed = new EmbedBuilder()
     .setColor(0xFF0000)
-    .setTitle("A nigga tried nuking us😂")
+    .setTitle("someone tried to nuke the server")
     .addFields(
-      { name: "Who",           value: `<@${executorId}> (\`${executorId}\`)`, inline: false },
-      { name: "What they did", value: details,                                 inline: false },
-      { name: "Punishment",    value: effectivePunish,                         inline: false },
+      { name: "who",          value: `<@${executorId}> (\`${executorId}\`)`, inline: false },
+      { name: "what they did", value: details,                                inline: false },
+      { name: "punishment",   value: effectivePunish,                         inline: false },
     )
     .setFooter({ text: guild.name })
     .setTimestamp();
@@ -136,7 +136,7 @@ export async function quarantine(
     try {
       const owner = await guild.fetchOwner();
       await owner.send({
-        content: `some random ass nigga got caught in **${guild.name}**`,
+        content: `someone just tried to nuke **${guild.name}** and got caught`,
         embeds: [embed],
       });
     } catch { /* DMs closed */ }
@@ -182,17 +182,16 @@ export async function lenientQuarantine(
 
   const embed = new EmbedBuilder()
     .setColor(0xFF8C00)
-    .setTitle("⚠️ WHITELISTED USER WENT ROGUE")
+    .setTitle("a whitelisted user went rogue")
     .setDescription(
-      `<@${executorId}> is on the **lenient whitelist** but exceeded the extended threshold for \`${action}\`.\n\n` +
-      `**Action:** ${details}\n\n` +
-      `Their roles have been **stripped**. Review and restore manually if needed.\n` +
-      `Use \`?antinuke restore <@${executorId}>\` to give roles back.`,
+      `<@${executorId}> is on the lenient whitelist but crossed the extended threshold for \`${action}\`\n\n` +
+      `**what they did:** ${details}\n\n` +
+      `their roles have been stripped — review this manually and use \`?antinuke restore <@${executorId}>\` if you want to give them back`,
     )
     .addFields(
-      { name: "User",      value: `<@${executorId}> (\`${executorId}\`)`, inline: true },
-      { name: "Trigger",   value: `\`${action}\``,                         inline: true },
-      { name: "Punishment", value: "Roles stripped (whitelist — strip only)", inline: false },
+      { name: "user",       value: `<@${executorId}> (\`${executorId}\`)`, inline: true },
+      { name: "trigger",    value: `\`${action}\``,                         inline: true },
+      { name: "punishment", value: "roles stripped (whitelist — strip only)", inline: false },
     )
     .setFooter({ text: guild.name })
     .setTimestamp();
@@ -214,7 +213,7 @@ export async function lenientQuarantine(
     try {
       const owner = await guild.fetchOwner();
       await owner.send({
-        content: `⚠️ A whitelisted staff member went rogue in **${guild.name}** — their roles have been stripped.`,
+        content: `heads up — a whitelisted staff member went rogue in **${guild.name}** and their roles got stripped`,
         embeds: [embed],
       });
     } catch { /* DMs closed */ }

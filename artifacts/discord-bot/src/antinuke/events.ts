@@ -33,16 +33,16 @@ const AUDIT_TO_ACTION = new Map<AuditLogEvent, ActionType>([
 function buildDetails(entry: GuildAuditLogsEntry): string {
   const tid = entry.targetId ?? "unknown";
   switch (entry.action) {
-    case AuditLogEvent.ChannelDelete: return `Deleted channel \`${tid}\``;
-    case AuditLogEvent.ChannelCreate: return `Created channel \`${tid}\``;
-    case AuditLogEvent.RoleDelete:    return `Deleted role \`${tid}\``;
-    case AuditLogEvent.RoleCreate:    return `Created role \`${tid}\``;
-    case AuditLogEvent.MemberBanAdd:  return `Banned user <@${tid}>`;
-    case AuditLogEvent.MemberKick:    return `Kicked user <@${tid}>`;
-    case AuditLogEvent.GuildUpdate:   return `Modified server settings`;
-    case AuditLogEvent.WebhookCreate: return `Created webhook \`${tid}\``;
-    case AuditLogEvent.EmojiDelete:   return `Deleted emoji \`${tid}\``;
-    default:                          return `Audit action \`${entry.action}\``;
+    case AuditLogEvent.ChannelDelete: return `deleted channel \`${tid}\``;
+    case AuditLogEvent.ChannelCreate: return `created channel \`${tid}\``;
+    case AuditLogEvent.RoleDelete:    return `deleted role \`${tid}\``;
+    case AuditLogEvent.RoleCreate:    return `created role \`${tid}\``;
+    case AuditLogEvent.MemberBanAdd:  return `banned <@${tid}>`;
+    case AuditLogEvent.MemberKick:    return `kicked <@${tid}>`;
+    case AuditLogEvent.GuildUpdate:   return `changed server settings`;
+    case AuditLogEvent.WebhookCreate: return `created a webhook \`${tid}\``;
+    case AuditLogEvent.EmojiDelete:   return `deleted an emoji \`${tid}\``;
+    default:                          return `audit action \`${entry.action}\``;
   }
 }
 
@@ -94,19 +94,19 @@ async function handleAction(
 
   const alertEmbed = new EmbedBuilder()
     .setColor(0xFF0000)
-    .setTitle("🚨 ANTI-NUKE — OFFENDER QUARANTINED")
+    .setTitle("someone tried to nuke the server")
     .setDescription(
       `<@${executorId}> ${
         isBotExecutor
-          ? "is a **rogue bot** and was **immediately quarantined + banned**."
-          : `crossed the **${action}** threshold and has been quarantined.`
+          ? "is a rogue bot and got immediately banned"
+          : `crossed the **${action}** threshold and got dealt with`
       }\n\n` +
-      `**Last action:** ${details}\n\n` +
+      `**what they did:** ${details}\n\n` +
       (isBotExecutor
-        ? "The bot has been permanently **banned** from the server."
-        : `Punishment: \`${config.punishAction}\`. Use \`?antinuke restore <@${executorId}>\` if strip was applied.`
+        ? "the bot has been permanently banned from the server"
+        : `punishment: \`${config.punishAction}\` — use \`?antinuke restore <@${executorId}>\` if you need to undo the strip`
       ) +
-      "\n\n🔄 **Auto-restoring server from `?copy` snapshot…**",
+      "\n\nauto-restoring server from the `?copy` snapshot now",
     )
     .setTimestamp();
   await applyEmbedOverride("antinuke.alert", alertEmbed, {
@@ -127,8 +127,8 @@ async function handleAction(
       console.error("[ANTINUKE] Auto-restore failed:", err);
       const errEmbed = new EmbedBuilder()
         .setColor(0xFF4444)
-        .setTitle("❌ Auto-Restore Error")
-        .setDescription(`The auto-restore from \`?copy\` snapshot failed:\n\`\`\`\n${(err as Error).message}\n\`\`\``)
+        .setTitle("auto-restore failed")
+        .setDescription(`the auto-restore from the \`?copy\` snapshot ran into an error\n\`\`\`\n${(err as Error).message}\n\`\`\``)
         .setTimestamp();
       await postAntiNukeLog(client, guild, errEmbed).catch(() => {});
     }
@@ -147,11 +147,11 @@ async function triggerWebhookSpamAction(
 ): Promise<void> {
   const embed = new EmbedBuilder()
     .setColor(0xFF6B35)
-    .setTitle("⚠️ Webhook Spam Detected")
+    .setTitle("webhook spam caught")
     .addFields(
-      { name: "Webhook ID", value: `\`${webhookId}\``, inline: true },
-      { name: "Channel",    value: channel.isDMBased() ? "DM" : `<#${channel.id}>`, inline: true },
-      { name: "Reason",     value: reason, inline: false },
+      { name: "webhook",  value: `\`${webhookId}\``, inline: true },
+      { name: "channel",  value: channel.isDMBased() ? "DM" : `<#${channel.id}>`, inline: true },
+      { name: "reason",   value: reason, inline: false },
     )
     .setTimestamp();
   await postAntiNukeLog(client, guild, embed);
@@ -168,8 +168,8 @@ async function triggerWebhookSpamAction(
     if (deleted > 0) {
       const cleanupEmbed = new EmbedBuilder()
         .setColor(0xFF0000)
-        .setTitle("🗑️ Rogue Webhooks Deleted")
-        .setDescription(`Deleted **${deleted}** webhook(s) created in the past 2 minutes.`)
+        .setTitle("rogue webhooks deleted")
+        .setDescription(`got rid of **${deleted}** webhook(s) that were created in the last 2 minutes`)
         .setTimestamp();
       await postAntiNukeLog(client, guild, cleanupEmbed);
     }
@@ -223,10 +223,10 @@ export function registerAntiNukeEvents(client: Client): void {
       const name = "name" in channel ? String(channel.name) : "unknown";
       const infoEmbed = new EmbedBuilder()
         .setColor(0xFF6B35)
-        .setTitle("🗑️ Channel Deleted")
+        .setTitle("channel deleted")
         .addFields(
-          { name: "Channel", value: `**#${name}**`,        inline: true },
-          { name: "Type",    value: `\`${channel.type}\``, inline: true },
+          { name: "channel", value: `**#${name}**`,        inline: true },
+          { name: "type",    value: `\`${channel.type}\``, inline: true },
         )
         .setTimestamp();
       await postAntiNukeLog(client, guild, infoEmbed);
@@ -243,10 +243,10 @@ export function registerAntiNukeEvents(client: Client): void {
     void (async () => {
       const infoEmbed = new EmbedBuilder()
         .setColor(0xFF6B35)
-        .setTitle("🗑️ Role Deleted")
+        .setTitle("role deleted")
         .addFields(
-          { name: "Role",  value: `**${role.name}**`, inline: true },
-          { name: "Color", value: role.hexColor,       inline: true },
+          { name: "role",  value: `**${role.name}**`, inline: true },
+          { name: "color", value: role.hexColor,       inline: true },
         )
         .setTimestamp();
       await postAntiNukeLog(client, guild, infoEmbed);
@@ -264,11 +264,11 @@ export function registerAntiNukeEvents(client: Client): void {
       const tag = ban.user.tag ?? ban.user.id;
       const infoEmbed = new EmbedBuilder()
         .setColor(0xFF0000)
-        .setTitle("🔨 Member Banned")
+        .setTitle("member banned")
         .setThumbnail(ban.user.displayAvatarURL({ size: 64 }))
         .addFields(
-          { name: "User",   value: `<@${ban.user.id}> (${tag})`,       inline: true },
-          { name: "Reason", value: ban.reason ?? "*No reason provided*", inline: false },
+          { name: "user",   value: `<@${ban.user.id}> (${tag})`,        inline: true },
+          { name: "reason", value: ban.reason ?? "*no reason provided*", inline: false },
         )
         .setTimestamp();
       await postAntiNukeLog(client, guild, infoEmbed);
@@ -296,7 +296,7 @@ export function registerAntiNukeEvents(client: Client): void {
       webhookMsgTimestamps.delete(webhookId);
       await triggerWebhookSpamAction(
         client, guild, message.channel, webhookId,
-        `Volume: **${fresh.length}** messages in ${WEBHOOK_MSG_WINDOW / 1000}s`,
+        `**${fresh.length}** messages in ${WEBHOOK_MSG_WINDOW / 1000}s`,
       );
       return;
     }
@@ -312,7 +312,7 @@ export function registerAntiNukeEvents(client: Client): void {
       webhookContentSeen.delete(webhookId);
       await triggerWebhookSpamAction(
         client, guild, message.channel, webhookId,
-        `Duplicate: identical message sent twice within ${WEBHOOK_DUPE_WINDOW / 1000}s`,
+        `sent the exact same message twice within ${WEBHOOK_DUPE_WINDOW / 1000}s`,
       );
     } else {
       seen.set(normalised, now);
