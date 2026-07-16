@@ -36,13 +36,28 @@ function resolveModel(config: ChatbotConfig): string {
   return "gpt-4o-mini";
 }
 
+let _providerLogged = false;
 export async function callAI(
   messages: ChatMessage[],
   config: ChatbotConfig,
   maxTokens = 300,
 ): Promise<string | null> {
   const api = getApiConfig();
-  if (!api) return null;
+  if (!api) {
+    if (!_providerLogged) {
+      console.error("[CHATBOT AI] No API key found. Set OPENROUTER_API_KEY, OPENAI_API_KEY, GROQ_API_KEY, or SAMBANOVA_API_KEY.");
+      _providerLogged = true;
+    }
+    return null;
+  }
+  if (!_providerLogged) {
+    const provider = process.env.OPENROUTER_API_KEY ? "OpenRouter"
+      : process.env.OPENAI_API_KEY ? "OpenAI"
+      : process.env.SAMBANOVA_API_KEY ? "SambaNova"
+      : "Groq";
+    console.log(`[CHATBOT AI] Using provider: ${provider}, model: ${resolveModel(config)}`);
+    _providerLogged = true;
+  }
 
   const model = resolveModel(config);
 

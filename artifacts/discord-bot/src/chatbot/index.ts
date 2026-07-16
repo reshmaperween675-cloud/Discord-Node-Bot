@@ -70,12 +70,19 @@ export async function handleChatbot(message: Message): Promise<void> {
     false,
   ).catch(() => {});
 
-  if (!isAiAvailable()) return;
+  if (!isAiAvailable()) {
+    console.warn("[CHATBOT] AI not available — no API key found. Set OPENROUTER_API_KEY, OPENAI_API_KEY, GROQ_API_KEY, or SAMBANOVA_API_KEY.");
+    return;
+  }
 
   const history = getCachedMessages(channelId, 80);
   const decision = shouldReply(message, config, history, botId);
 
-  if (!decision.should) return;
+  if (!decision.should) {
+    console.log(`[CHATBOT] skip reply in ${channelId}: ${decision.reason}`);
+    return;
+  }
+  console.log(`[CHATBOT] will reply in ${channelId}: ${decision.reason}`);
 
   // Check for images — vision path
   const imageUrls = getImageUrls(message);
@@ -133,8 +140,14 @@ export async function handleChatbot(message: Message): Promise<void> {
     aiMessages.push({ role: "user", content: currentContent });
   }
 
-  const response = await callAI(aiMessages, config, 280).catch(() => null);
-  if (!response) return;
+  const response = await callAI(aiMessages, config, 280).catch((err) => {
+    console.error("[CHATBOT] callAI threw:", err);
+    return null;
+  });
+  if (!response) {
+    console.warn("[CHATBOT] callAI returned null — API call failed or returned empty. Check [CHATBOT AI] logs above.");
+    return;
+  }
 
   // Clean response: remove any AI self-identification artifacts
   const cleaned = response
@@ -142,10 +155,16 @@ export async function handleChatbot(message: Message): Promise<void> {
     .replace(/\[mewo\]:\s*/i, "")
     .trim();
 
-  if (!cleaned) return;
+  if (!cleaned) {
+    console.warn("[CHATBOT] cleaned response was empty, skipping send.");
+    return;
+  }
 
+  console.log(`[CHATBOT] sending reply (${cleaned.length} chars) in ${channelId}`);
   const delay = typingDelay(cleaned, decision.delay);
-  await sendWithTyping(message, cleaned, delay);
+  await sendWithTyping(message, cleaned, delay).catch((err) => {
+    console.error("[CHATBOT] sendWithTyping failed:", err);
+  });
   recordBotReply(channelId);
 
   // Save bot reply to cache & DB
