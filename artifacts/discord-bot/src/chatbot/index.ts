@@ -38,7 +38,10 @@ export async function handleChatbot(message: Message): Promise<void> {
   const botId = message.client.user?.id ?? "";
 
   const config = await getConfig(guildId);
-  if (!isChannelEnabled(config, channelId)) return;
+
+  // Always respond to direct @mentions regardless of whether the channel is enabled
+  const directlyMentioned = botId ? message.mentions.users.has(botId) : false;
+  if (!isChannelEnabled(config, channelId) && !directlyMentioned) return;
 
   // Track activity for engine decisions
   trackIncomingMessage(channelId);
