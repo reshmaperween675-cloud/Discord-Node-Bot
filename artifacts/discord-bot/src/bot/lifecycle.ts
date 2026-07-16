@@ -41,7 +41,7 @@ import { handleAddRoleToAllChannels } from "../admin/commands.js";
 import { handleAbcdAdmin, handleEditPCommand } from "../admin/panel.js";
 import { handleDmCommand } from "../admin/dm.js";
 import { handleRoleAllCandc } from "../admin/roleAllChannels.js";
-import { handleAntiNukeCommand } from "../antinuke/index.js";
+import { handleAntiNukeCommand, handleCtbyCommand } from "../antinuke/index.js";
 import { handleControlCenterCommand } from "../admin/controlCenter.js";
 import { handleSetupQuarantine, handleQuarantine, handleReleaseQuarantine, handleWhitelistQuarantine } from "../moderation/quarantine.js";
 import { runJsonMigration } from "../migrate-json.js";
@@ -500,6 +500,9 @@ export function registerLifecycleEvents(
         return;
       case "?antinuke":
         handleAntiNukeCommand(message, client).catch((err) => console.error("[ANTINUKE] Unhandled error:", err));
+        return;
+      case ",ctby":
+        handleCtbyCommand(message).catch((err) => console.error("[CTBY] Unhandled error:", err));
         return;
     }
 

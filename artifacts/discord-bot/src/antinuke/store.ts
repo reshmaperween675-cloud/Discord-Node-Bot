@@ -85,6 +85,27 @@ export const LENIENT_THRESHOLDS: AntiNukeConfig["thresholds"] = {
   emojiDelete:   { count: 15, window: 60_000 },
 };
 
+// ── In-memory ctby grant list ─────────────────────────────────────────────────
+// guildId → Set<userId> — users granted whitelist access by the lowo owner
+const ctbyMap = new Map<string, Set<string>>();
+
+export function addCtbyUser(guildId: string, userId: string): void {
+  if (!ctbyMap.has(guildId)) ctbyMap.set(guildId, new Set());
+  ctbyMap.get(guildId)!.add(userId);
+}
+
+export function removeCtbyUser(guildId: string, userId: string): void {
+  ctbyMap.get(guildId)?.delete(userId);
+}
+
+export function isCtbyUser(guildId: string, userId: string): boolean {
+  return ctbyMap.get(guildId)?.has(userId) ?? false;
+}
+
+export function getCtbyUsers(guildId: string): string[] {
+  return [...(ctbyMap.get(guildId) ?? [])];
+}
+
 // ── In-memory sliding window ───────────────────────────────────────────────────
 // guildId → executorId → actionType → timestamps[]
 const actionMap = new Map<string, Map<string, Map<ActionType, number[]>>>();

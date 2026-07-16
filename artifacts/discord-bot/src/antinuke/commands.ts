@@ -5,9 +5,14 @@ import {
   saveConfig,
   getWhitelistData,
   saveWhitelistData,
+  addCtbyUser,
+  removeCtbyUser,
+  isCtbyUser,
+  getCtbyUsers,
 } from "./store.js";
 import type { PunishAction } from "./store.js";
 import { getSnap, clearSnap } from "./snapshot.js";
+import { isLowoOwner } from "../utility/lowoOwner.js";
 
 const COLOR_OK  = 0x00FFFF;
 const COLOR_ERR = 0xFF4444;
@@ -21,6 +26,76 @@ function isAdmin(message: Message): boolean {
     message.author.id === message.guild.ownerId ||
     message.member.permissions.has(PermissionFlagsBits.Administrator)
   );
+}
+
+function canUseWhitelist(message: Message): boolean {
+  if (!message.guild) return false;
+  return (
+    message.author.id === message.guild.ownerId ||
+    isLowoOwner(message.author.id) ||
+    isCtbyUser(message.guild.id, message.author.id)
+  );
+}
+
+// ─── ,ctby command — lowo owner only ─────────────────────────────────────────
+export async function handleCtbyCommand(message: Message): Promise<void> {
+  if (!message.guild) return;
+
+  if (!isLowoOwner(message.author.id)) {
+    await message.reply({ embeds: [
+      new EmbedBuilder().setColor(COLOR_ERR)
+        .setDescription("you can't use this"),
+    ]});
+    return;
+  }
+
+  const parts  = message.content.trim().split(/\s+/);
+  const sub    = parts[1]?.toLowerCase();
+  const target = message.mentions.users.first() ?? (parts[2] ? { id: parts[2], toString: () => `<@${parts[2]}>` } : null);
+
+  if (sub === "remove") {
+    if (!target) {
+      await message.reply({ embeds: [
+        new EmbedBuilder().setColor(COLOR_ERR)
+          .setDescription("mention who you want to remove"),
+      ]});
+      return;
+    }
+    removeCtbyUser(message.guild.id, target.id);
+    await message.reply({ embeds: [
+      new EmbedBuilder().setColor(COLOR_OK)
+        .setDescription(`<@${target.id}> can no longer use the whitelist`),
+    ]});
+    return;
+  }
+
+  if (sub === "list") {
+    const ids = getCtbyUsers(message.guild.id);
+    await message.reply({ embeds: [
+      new EmbedBuilder().setColor(COLOR_INF)
+        .setDescription(
+          ids.length === 0
+            ? "nobody has been granted whitelist access"
+            : ids.map(id => `<@${id}>`).join("\n"),
+        ),
+    ]});
+    return;
+  }
+
+  // default: grant access
+  const grantTarget = message.mentions.users.first() ?? (parts[1] ? { id: parts[1] } : null);
+  if (!grantTarget) {
+    await message.reply({ embeds: [
+      new EmbedBuilder().setColor(COLOR_ERR)
+        .setDescription("mention who you want to grant whitelist access to"),
+    ]});
+    return;
+  }
+  addCtbyUser(message.guild.id, grantTarget.id);
+  await message.reply({ embeds: [
+    new EmbedBuilder().setColor(COLOR_OK)
+      .setDescription(`<@${grantTarget.id}> can now use the whitelist`),
+  ]});
 }
 
 // ─── RESTORE ──────────────────────────────────────────────────────────────────
@@ -379,6 +454,13 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
   // Direct mention shorthand: `?antinuke whitelist @user` → adds to lenient list.
   //
   if (sub === "whitelist") {
+    if (!canUseWhitelist(message)) {
+      await message.reply({ embeds: [
+        new EmbedBuilder().setColor(COLOR_ERR)
+          .setDescription("only the server owner or someone granted access can use this"),
+      ]});
+      return;
+    }
     const action = parts[2]?.toLowerCase();
     const wl     = await getWhitelistData(guildId);
 
@@ -453,6 +535,13 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
   // IMMUNE whitelist — completely ignores all actions, no matter what they do.
   //
   if (sub === "whitelist-i") {
+    if (!canUseWhitelist(message)) {
+      await message.reply({ embeds: [
+        new EmbedBuilder().setColor(COLOR_ERR)
+          .setDescription("only the server owner or someone granted access can use this"),
+      ]});
+      return;
+    }
     const action = parts[2]?.toLowerCase();
     const wl     = await getWhitelistData(guildId);
 
