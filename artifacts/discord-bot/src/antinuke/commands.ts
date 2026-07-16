@@ -397,11 +397,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       wl.lenient.add(target.id);
       await saveWhitelistData(guildId, wl);
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
-        .setTitle("lenient whitelist updated")
-        .setDescription(
-          `<@${target.id}> is now on the lenient whitelist\n\n` +
-          `they can do up to **10 bans/kicks/deletes a minute** before their roles get stripped — they won't be banned or kicked`,
-        )] });
+        .setDescription(`<@${target.id}> has been whitelisted`)] });
       return;
     }
 
@@ -419,7 +415,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
         .setDescription(
           wasThere
-            ? `<@${target.id}> is off the whitelist, back to normal limits`
+            ? `<@${target.id}> has been removed from the whitelist`
             : `<@${target.id}> wasn't on the whitelist`,
         )] });
       return;
@@ -473,12 +469,8 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       wl.lenient.delete(target.id);
       wl.immune.add(target.id);
       await saveWhitelistData(guildId, wl);
-      await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_WRN)
-        .setTitle("immune whitelist updated")
-        .setDescription(
-          `<@${target.id}> is now fully immune — antinuke won't touch them no matter what they do\n\n` +
-          `only add people you fully trust here`,
-        )] });
+      await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
+        .setDescription(`<@${target.id}> has been whitelisted`)] });
       return;
     }
 
@@ -495,8 +487,8 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
       await message.reply({ embeds: [new EmbedBuilder().setColor(COLOR_OK)
         .setDescription(
           wasThere
-            ? `<@${target.id}> is off the immune whitelist, back to normal limits`
-            : `<@${target.id}> wasn't on the immune whitelist`,
+            ? `<@${target.id}> has been removed from the whitelist`
+            : `<@${target.id}> wasn't on the whitelist`,
         )] });
       return;
     }
