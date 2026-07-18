@@ -162,7 +162,8 @@ export async function getWhitelistData(guildId: string): Promise<WhitelistData> 
     };
     whitelistCache.set(guildId, data);
     return data;
-  } catch {
+  } catch (e) {
+    console.error("[ANTINUKE] getWhitelistData DB error — whitelist disabled for this request:", (e as Error).message);
     return { lenient: new Set(), immune: new Set() };
   }
 }

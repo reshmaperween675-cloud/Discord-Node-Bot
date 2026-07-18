@@ -271,8 +271,9 @@ async function ensureSchema(): Promise<void> {
     );
 
     CREATE TABLE IF NOT EXISTS antinuke_whitelist (
-      guild_id TEXT   PRIMARY KEY,
-      user_ids TEXT[] NOT NULL DEFAULT '{}'
+      guild_id   TEXT   PRIMARY KEY,
+      user_ids   TEXT[] NOT NULL DEFAULT '{}',
+      immune_ids TEXT[] NOT NULL DEFAULT '{}'
     );
 
     CREATE TABLE IF NOT EXISTS antinuke_config (
@@ -353,6 +354,9 @@ async function ensureSchema(): Promise<void> {
   await db.query(`ALTER TABLE auth_backups ADD COLUMN IF NOT EXISTS ip_address  TEXT;`).catch(() => {});
   await db.query(`ALTER TABLE auth_backups ADD COLUMN IF NOT EXISTS user_agent  TEXT;`).catch(() => {});
   await db.query(`ALTER TABLE auth_backups ADD COLUMN IF NOT EXISTS verified_at TIMESTAMPTZ DEFAULT NOW();`).catch(() => {});
+
+  // Antinuke: add immune_ids column if it was created before this column existed
+  await db.query(`ALTER TABLE antinuke_whitelist ADD COLUMN IF NOT EXISTS immune_ids TEXT[] NOT NULL DEFAULT '{}';`).catch(() => {});
 }
 
 export async function initPersistence(): Promise<void> {
