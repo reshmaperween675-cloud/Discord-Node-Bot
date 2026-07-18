@@ -153,7 +153,7 @@ export async function handleSetupQuarantine(message: Message): Promise<void> {
   // ── 2. Deny the role from seeing every existing channel ──────────────────
   for (const [, channel] of guild.channels.cache) {
     if (channel.name === QUARANTINE_CHANNEL_NAME) continue;
-    if (!channel.isTextBased() && channel.type !== ChannelType.GuildVoice) continue;
+    if (channel.isThread()) continue;
     try {
       await channel.permissionOverwrites.edit(quarantineRole, {
         ViewChannel: false,

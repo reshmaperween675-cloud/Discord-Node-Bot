@@ -371,7 +371,7 @@ export async function handlePasteCommand(message: Message, client: Client): Prom
         try { guildEdit.splash = await downloadBuffer(snap.guild.splashURL); } catch { /* skip */ }
       }
       if (Object.keys(guildEdit).length > 0)
-        await guild.edit(guildEdit, "?paste restore");
+        await guild.edit(guildEdit);
     } catch (e) {
       errors.push(`Guild identity: ${(e as Error).message}`);
     }
@@ -700,7 +700,7 @@ export async function runPasteRestore(guild: Guild, client: Client): Promise<{ f
       try { guildEdit.splash = await downloadBuffer(snap.guild.splashURL); } catch { /* skip */ }
     }
     if (Object.keys(guildEdit).length > 0)
-      await guild.edit(guildEdit, "Anti-Nuke auto-restore: guild identity");
+      await guild.edit(guildEdit);
   } catch (e) {
     errors.push(`Guild identity: ${(e as Error).message}`);
   }
