@@ -146,7 +146,7 @@ export async function handleChatbotCommand(message: Message): Promise<void> {
       if (!model) {
         await message.reply(
           "❌ Usage: `?chatbot model <model>`\n\n**Popular OpenRouter models:**\n" +
-          "`openai/gpt-4o-mini` (default, fast)\n`openai/gpt-4o` (smarter)\n`anthropic/claude-3-5-haiku` (fast, great)\n`google/gemini-flash-1.5` (fast)\n`meta-llama/llama-3.1-8b-instruct:free` (free)"
+          "`openai/gpt-4o-mini` (default, fast)\n`openai/gpt-4o` (smarter)\n`anthropic/claude-3-5-haiku` (fast, great)\n`google/gemini-2.0-flash-exp:free` (free, fast)\n`meta-llama/llama-3.1-8b-instruct:free` (free)"
         ).catch(() => {});
         return;
       }
@@ -298,7 +298,7 @@ export async function handleChatbotCommand(message: Message): Promise<void> {
               "`openai/gpt-4o-mini` — default, fast & cheap",
               "`openai/gpt-4o` — smarter",
               "`anthropic/claude-3-5-haiku` — fast, great personality",
-              "`google/gemini-flash-1.5` — fast",
+              "`google/gemini-2.0-flash-exp:free` — fast, free",
               "`meta-llama/llama-3.1-8b-instruct:free` — free tier",
             ].join("\n"),
           })
