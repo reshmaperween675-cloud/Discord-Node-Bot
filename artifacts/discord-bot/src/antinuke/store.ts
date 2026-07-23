@@ -57,14 +57,14 @@ export interface AntiNukeConfig {
  *     trigger on 4 since some legitimate bots do batch-create.
  */
 export const DEFAULT_THRESHOLDS: AntiNukeConfig["thresholds"] = {
-  channelDelete: { count: 1, window: 10_000 },
+  channelDelete: { count: 3, window: 10_000 },
   channelCreate: { count: 3, window: 10_000 },
-  roleDelete:    { count: 1, window: 10_000 },
+  roleDelete:    { count: 3, window: 10_000 },
   roleCreate:    { count: 3, window: 10_000 },
-  ban:           { count: 2, window: 10_000 },
-  kick:          { count: 2, window: 10_000 },
-  guildUpdate:   { count: 1, window: 10_000 },
-  webhookCreate: { count: 2, window: 10_000 },
+  ban:           { count: 3, window: 10_000 },
+  kick:          { count: 3, window: 10_000 },
+  guildUpdate:   { count: 3, window: 10_000 },
+  webhookCreate: { count: 3, window: 10_000 },
   emojiDelete:   { count: 3, window: 10_000 },
 };
 

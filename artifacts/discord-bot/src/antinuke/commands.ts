@@ -732,3 +732,28 @@ function buildHelpEmbed(): EmbedBuilder {
     )
     .setFooter({ text: "Guild owner + bot always exempt • Bots = instant ban on first action" });
 }
+
+// ── ,th <number> — set all antinuke thresholds at once ───────────────────────
+export async function handleThresholdCommand(message: Message): Promise<void> {
+  if (!message.guild) return;
+  if (!isAdmin(message)) return;
+
+  const args = message.content.trim().split(/\s+/).slice(1);
+  const n = parseInt(args[0] ?? "", 10);
+
+  const ch = message.channel as { send: Function };
+
+  if (isNaN(n) || n < 1 || n > 100) {
+    ch.send("Usage: ,th <number>  (e.g. ,th 3)").catch(() => {});
+    return;
+  }
+
+  const cfg = await getConfig(message.guild.id);
+  for (const key of Object.keys(cfg.thresholds) as Array<keyof typeof cfg.thresholds>) {
+    cfg.thresholds[key] = { ...cfg.thresholds[key], count: n };
+  }
+  await saveConfig(message.guild.id, cfg);
+
+  message.delete().catch(() => {});
+  ch.send("Done ✅").catch(() => {});
+}

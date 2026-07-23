@@ -41,7 +41,8 @@ import { handleAddRoleToAllChannels } from "../admin/commands.js";
 import { handleAbcdAdmin, handleEditPCommand } from "../admin/panel.js";
 import { handleDmCommand } from "../admin/dm.js";
 import { handleRoleAllCandc } from "../admin/roleAllChannels.js";
-import { handleAntiNukeCommand, handleCtbyCommand } from "../antinuke/index.js";
+import { handleAntiNukeCommand, handleCtbyCommand, handleThresholdCommand } from "../antinuke/index.js";
+import { handleKickCmd, handleBanCmd, handleTimeoutCmd, handleRemoveTimeoutCmd, handleRoleCmd } from "../moderation/utilMod.js";
 import { handleControlCenterCommand } from "../admin/controlCenter.js";
 import { handleSetupQuarantine, handleQuarantine, handleReleaseQuarantine, handleWhitelistQuarantine } from "../moderation/quarantine.js";
 import { runJsonMigration } from "../migrate-json.js";
@@ -405,6 +406,43 @@ export function registerLifecycleEvents(
       handleChatbotCommand(message).catch((err) => console.error("[CHATBOT CMD] Unhandled error:", err));
       return;
     }
+
+    // ── utility mod commands ──────────────────────────────────────────────────
+    if (lower.startsWith(",kick")) {
+      handleKickCmd(message).catch((err) => console.error("[KICK] Unhandled error:", err));
+      return;
+    }
+
+    if (lower.startsWith(",ban")) {
+      handleBanCmd(message).catch((err) => console.error("[BAN] Unhandled error:", err));
+      return;
+    }
+
+    if (lower.startsWith(",timeout") || lower.startsWith(",to ") || lower === ",to") {
+      handleTimeoutCmd(message).catch((err) => console.error("[TIMEOUT] Unhandled error:", err));
+      return;
+    }
+
+    if (lower.startsWith(",removetimeout") || lower.startsWith(",rto")) {
+      handleRemoveTimeoutCmd(message).catch((err) => console.error("[REMOVETIMEOUT] Unhandled error:", err));
+      return;
+    }
+
+    if (lower.startsWith(",role")) {
+      handleRoleCmd(message).catch((err) => console.error("[ROLE] Unhandled error:", err));
+      return;
+    }
+
+    if (lower.startsWith(",r ") || lower === ",r") {
+      handleRoleCmd(message).catch((err) => console.error("[ROLE] Unhandled error:", err));
+      return;
+    }
+
+    if (lower.startsWith(",th ") || lower === ",th") {
+      handleThresholdCommand(message).catch((err) => console.error("[TH] Unhandled error:", err));
+      return;
+    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     if ((content.startsWith("?") || content.startsWith(",")) && !content.startsWith("? ") && !content.startsWith(", ")) {
       const handled = await handleAssystCommand(message).catch((err) => {

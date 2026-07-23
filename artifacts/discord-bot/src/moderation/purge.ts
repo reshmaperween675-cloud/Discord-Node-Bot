@@ -189,42 +189,6 @@ export async function handlePurgeCommand(message: Message): Promise<boolean> {
   // Delete the invoking command message itself
   try { await message.delete(); } catch { /* ignore */ }
 
-  // ── .purge recover [@user] [amount]
-  if (args[0]?.toLowerCase() === "recover") {
-    const userMentions = [...message.mentions.users.values()];
-    const amountToken = args.slice(1).find((a) => /^\d+$/.test(a));
-    const amount = amountToken ? Math.min(parseInt(amountToken, 10), 25) : 10;
-
-    const cached = recoveryCache.get(channel.id) ?? [];
-    if (cached.length === 0) {
-      await ephemeralReply(channel, "📭 Nothing to recover in this channel.");
-      return true;
-    }
-
-    let pool = cached;
-    if (userMentions.length > 0) {
-      const ids = new Set(userMentions.map((u) => u.id));
-      pool = pool.filter((m) => ids.has(m.authorId));
-    }
-    const slice = pool.slice(0, amount);
-    if (slice.length === 0) {
-      await ephemeralReply(channel, "📭 No matching deleted messages to recover.");
-      return true;
-    }
-
-    await channel.send(`📥 Recovering **${slice.length}** message(s):`);
-    for (const m of slice.reverse()) {
-      const time = `<t:${Math.floor(m.createdAt / 1000)}:t>`;
-      const body = m.content || "*(no text)*";
-      const attach = m.attachmentUrls.length > 0
-        ? `\n📎 ${m.attachmentUrls.join("\n📎 ")}`
-        : "";
-      const text = `**${m.authorTag}** ${time}\n${body}${attach}`;
-      await channel.send({ content: text.slice(0, 1900), allowedMentions: { parse: [] } });
-    }
-    return true;
-  }
-
   // ── .purge all  → max 100 most recent
   if (args[0]?.toLowerCase() === "all") {
     const msgs = await fetchRecent(channel, 100);
@@ -245,8 +209,7 @@ export async function handlePurgeCommand(message: Message): Promise<boolean> {
       "Usage:\n" +
       "`.purge <amount>` — delete N recent messages\n" +
       "`.purge <@user> [@user2 …] <amount>` — delete N from each user\n" +
-      "`.purge all` — delete the last 100\n" +
-      "`.purge recover [@user] [amount]` — restore deleted messages",
+      "`.purge all` — delete the last 100",
     );
     return true;
   }
