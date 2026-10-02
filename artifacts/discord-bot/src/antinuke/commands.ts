@@ -1,5 +1,5 @@
 import type { Message, TextChannel, Client } from "discord.js";
-import { EmbedBuilder, ChannelType, OverwriteType, PermissionFlagsBits } from "discord.js";
+import { EmbedBuilder, ChannelType, OverwriteType } from "discord.js";
 import {
   getConfig,
   saveConfig,
@@ -20,11 +20,11 @@ const COLOR_INF = 0x2F3136;
 const COLOR_WIN = 0x00FF99;
 const COLOR_WRN = 0xFF8C00;
 
-function isAdmin(message: Message): boolean {
-  if (!message.guild || !message.member) return false;
+export function canManageAntiNuke(message: Message): boolean {
+  if (!message.guild) return false;
   return (
     message.author.id === message.guild.ownerId ||
-    message.member.permissions.has(PermissionFlagsBits.Administrator)
+    isLowoOwner(message.author.id)
   );
 }
 
@@ -131,10 +131,10 @@ export async function handleCtbyCommand(message: Message): Promise<void> {
 async function runRestore(message: Message, client: Client, offenderId: string): Promise<void> {
   const guild = message.guild!;
 
-  if (message.author.id !== guild.ownerId) {
+  if (!(message.author.id === guild.ownerId || isLowoOwner(message.author.id))) {
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_ERR)
-        .setDescription("❌ Only the **server owner** can run a restore."),
+        .setDescription("❌ Only the **server owner** or the **Lowo owner** can run a restore."),
     ] });
     return;
   }
@@ -323,10 +323,10 @@ function resolveTarget(message: Message, parts: string[], offset: number) {
 
 export async function handleAntiNukeCommand(message: Message, client: Client): Promise<void> {
   if (!message.guild) return;
-  if (!isAdmin(message)) {
+  if (!canManageAntiNuke(message)) {
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_ERR)
-        .setDescription("❌ You need the **Administrator** permission to use anti-nuke commands."),
+        .setDescription("❌ Only the **server owner** or the **Lowo owner** can use anti-nuke commands."),
     ] });
     return;
   }
@@ -711,7 +711,7 @@ function buildHelpEmbed(): EmbedBuilder {
 // ── ,th <number> — set all antinuke thresholds at once ───────────────────────
 export async function handleThresholdCommand(message: Message): Promise<void> {
   if (!message.guild) return;
-  if (!isAdmin(message)) return;
+  if (!canManageAntiNuke(message)) return;
 
   const args = message.content.trim().split(/\s+/).slice(1);
   const n    = parseInt(args[0] ?? "", 10);
