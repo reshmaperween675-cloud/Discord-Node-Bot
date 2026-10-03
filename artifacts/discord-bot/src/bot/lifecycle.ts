@@ -36,7 +36,12 @@ import { handleEndCommand } from "../commands/endRaid.js";
 import { upsertMessageActivity, upsertVoiceActivity } from "../activity/db.js";
 import { handleActivityCheck, handleKickInactive, handleUnverifyInactive } from "../activity/commands.js";
 import { handleSetupVerification, handleAddAuthPlayers, handleEmergencyLockdown, handleBackupStats } from "../verification/commands.js";
-import { handleSetupAuthVerification, handleMemberJoin, handleReroleVerification } from "../verification/setupAuthVerification.js";
+import {
+  handleSetupAuthVerification,
+  handleMemberJoin,
+  handleReroleVerification,
+  loadConfig,
+} from "../verification/setupAuthVerification.js";
 import { handleTestAuth } from "../verification/testAuth.js";
 import { handleHelp67 } from "../help67.js";
 import { handleAddRoleToAllChannels } from "../admin/commands.js";
