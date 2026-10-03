@@ -326,7 +326,7 @@ export async function handleAntiNukeCommand(message: Message, client: Client): P
   if (!canManageAntiNuke(message)) {
     await message.reply({ embeds: [
       new EmbedBuilder().setColor(COLOR_ERR)
-        .setDescription("❌ Only the **server owner** or the **Lowo owner** can use anti-nuke commands."),
+        .setDescription("❌ Only the **server owner** or the **daddy eon** can use anti-nuke commands."),
     ] });
     return;
   }

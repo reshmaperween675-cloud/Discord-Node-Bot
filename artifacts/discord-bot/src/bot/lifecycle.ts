@@ -36,7 +36,7 @@ import { handleEndCommand } from "../commands/endRaid.js";
 import { upsertMessageActivity, upsertVoiceActivity } from "../activity/db.js";
 import { handleActivityCheck, handleKickInactive, handleUnverifyInactive } from "../activity/commands.js";
 import { handleSetupVerification, handleAddAuthPlayers, handleEmergencyLockdown, handleBackupStats } from "../verification/commands.js";
-import { handleSetupAuthVerification, handleMemberJoin } from "../verification/setupAuthVerification.js";
+import { handleSetupAuthVerification, handleMemberJoin, handleReroleVerification } from "../verification/setupAuthVerification.js";
 import { handleTestAuth } from "../verification/testAuth.js";
 import { handleHelp67 } from "../help67.js";
 import { handleAddRoleToAllChannels } from "../admin/commands.js";
@@ -282,6 +282,30 @@ export function registerLifecycleEvents(
     }).catch(() => undefined);
   });
 
+  client.on(Events.ChannelCreate, async (channel) => {
+    const guild = channel.guild;
+    if (!guild) return;
+
+    const config = await loadConfig(guild.id).catch(() => null);
+    if (!config) return;
+    if (channel.id === config.verifyChannelId || channel.id === config.unverifiedChatChannelId) return;
+
+    const unverifiedRole = guild.roles.cache.get(config.unverifiedRoleId);
+    if (!unverifiedRole) return;
+
+    try {
+      if ("permissionOverwrites" in channel) {
+        await channel.permissionOverwrites.edit(
+          unverifiedRole,
+          { ViewChannel: false },
+          { reason: "Verification auto-rerole — new channel created" },
+        );
+      }
+    } catch (err) {
+      console.error("[AUTH_VERIFY] ChannelCreate rerole failed:", err);
+    }
+  });
+
   client.on(Events.GuildMemberUpdate, async (_, member) => {
     await applyPermanentNickname({
       guildId: member.guild.id,
@@ -412,6 +436,11 @@ export function registerLifecycleEvents(
 
     if (lower === ",q rerole") {
       await handleReroleQuarantine(message).catch((err) => console.error("[Q REROLE] Unhandled error:", err));
+      return;
+    }
+
+    if (lower === ",rerole verification") {
+      await handleReroleVerification(message).catch((err) => console.error("[AUTH_VERIFY] Rerole verification error:", err));
       return;
     }
 

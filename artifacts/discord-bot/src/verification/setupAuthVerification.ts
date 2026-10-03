@@ -50,6 +50,51 @@ export async function loadConfig(guildId: string): Promise<AuthVerifyConfig | nu
   return res.rows[0]?.value ?? null;
 }
 
+export function getVerificationReroleTargets(
+  channels: Array<{ id: string; type: number }>,
+  skipIds: Set<string>,
+): Array<{ id: string; type: number }> {
+  return channels.filter(channel => !skipIds.has(channel.id));
+}
+
+export async function applyVerificationRerole(
+  guild: Guild,
+  config: AuthVerifyConfig,
+): Promise<{ updated: number; failed: number }> {
+  const unverifiedRole = guild.roles.cache.get(config.unverifiedRoleId);
+  if (!unverifiedRole) return { updated: 0, failed: 0 };
+
+  const skipIds = new Set([config.verifyChannelId, config.unverifiedChatChannelId]);
+  const targets = getVerificationReroleTargets(
+    [...guild.channels.cache.values()] as Array<{ id: string; type: number }>,
+    skipIds,
+  );
+
+  let updated = 0;
+  let failed = 0;
+
+  for (const channel of targets) {
+    const actualChannel = guild.channels.cache.get(channel.id);
+    if (!actualChannel || !("permissionOverwrites" in actualChannel)) {
+      continue;
+    }
+
+    try {
+      await actualChannel.permissionOverwrites.edit(
+        unverifiedRole,
+        { ViewChannel: false },
+        { reason: "Verification rerole — deny unverified access" },
+      );
+      updated++;
+    } catch (err) {
+      console.error(`[AUTH_VERIFY] Failed to rerole ${actualChannel.id}:`, err);
+      failed++;
+    }
+  }
+
+  return { updated, failed };
+}
+
 async function getUserBackup(userId: string, guildId: string) {
   const db = getPool();
   const res = await db.query<{
@@ -426,6 +471,32 @@ export async function handleSetupAuthVerification(message: import("discord.js").
 }
 
 // ── GuildMemberAdd ─────────────────────────────────────────────────────────────
+
+export async function handleReroleVerification(message: import("discord.js").Message): Promise<void> {
+  if (!message.guild || !message.member) return;
+
+  const canManage =
+    message.member.permissions.has(PermissionFlagsBits.ManageGuild) ||
+    message.author.id === message.guild.ownerId;
+
+  if (!canManage) {
+    await message.reply("❌ You need **Manage Server** permission to use `,rerole verification`.");
+    return;
+  }
+
+  const config = await loadConfig(message.guild.id);
+  if (!config) {
+    await message.reply("❌ Verification isn't configured in this server. Run `?setupauthverification` first.");
+    return;
+  }
+
+  const result = await applyVerificationRerole(message.guild, config);
+  await message.reply(
+    `verification rerole done ✅\n` +
+    `• Updated **${result.updated}** channel/category override(s)\n` +
+    (result.failed > 0 ? `• Failed **${result.failed}** update(s) — check bot permissions.` : "• Nothing failed."),
+  );
+}
 
 export async function handleMemberJoin(member: GuildMember): Promise<void> {
   if (member.user.bot) return;
