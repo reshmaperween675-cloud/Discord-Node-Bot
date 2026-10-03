@@ -601,6 +601,7 @@ export function registerLifecycleEvents(
         handleSetupVerification(message).catch((err) => console.error("[VERIFICATION] Unhandled error:", err));
         return;
       case "?setupauthverification":
+      case "?setauthverification":
         handleSetupAuthVerification(message).catch((err) => console.error("[AUTH_VERIFY] Unhandled error:", err));
         return;
       case "?testauth":
