@@ -297,6 +297,14 @@ export async function handleQuarantine(message: Message): Promise<void> {
   }
 
   const guild = message.guild;
+  if (
+    !isAdmin(message.member) &&
+    (target.id === guild.ownerId ||
+      target.roles.highest.comparePositionTo(message.member.roles.highest) >= 0)
+  ) {
+    await message.reply("❌ You can only quarantine members whose highest role is below your highest role.");
+    return;
+  }
 
   const quarantineRole = await getOrFindQuarantineRole(message);
   if (!quarantineRole) {
