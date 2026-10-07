@@ -140,14 +140,17 @@ await msg.reply({ files: [{ attachment: buffer, name: "fake-message.png" }] });
 
 ---
 
-### 9. AI Grok Image Generation (`mewo ai grok-imagine <prompt>`)
+### 9. AI Horde Image Generation (`mewo ai imagine <prompt>`)
 **File:** `src/mewo/modules/ai.ts` — function exported and referenced in router
 
 Implement using:
-- xAI API for Grok: `https://api.x.ai/v1/images/generations`
-- Requires `GROK_API_KEY` environment variable
+- AI Horde async API: `https://stablehorde.net/api/v2/generate/async`
+- Free community-powered workers; requests are queued and completion time varies
+- Optional `AI_HORDE_API_KEY` for a registered account; anonymous key is the default
+- Optional `AI_HORDE_MODEL`; defaults to `Juggernaut XL`
+- Set `nsfw: true` for NSFW-capable workers; do not disable prompt safety filters
 - Show the generated image in an embed
-- If no key, show setup instructions
+- Poll the request status endpoint before fetching the completed image
 
 ---
 
@@ -218,7 +221,7 @@ All imports use .js extension (ES modules)
 |---------|---------|--------|
 | chatgpt | `OPENAI_API_KEY` | platform.openai.com |
 | llama | `GROQ_API_KEY` | console.groq.com (free) |
-| grok-imagine | `GROK_API_KEY` | x.ai |
+| mewo ai imagine | `AI_HORDE_API_KEY` | AI Horde (optional; anonymous key is used by default) |
 | perplexity | `PERPLEXITY_API_KEY` | perplexity.ai |
 | tts elevenlabs | `ELEVENLABS_API_KEY` | elevenlabs.io |
 | ocr | `OCR_API_KEY` | ocr.space (free) |

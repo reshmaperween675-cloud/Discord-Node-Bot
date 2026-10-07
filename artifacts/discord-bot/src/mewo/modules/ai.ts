@@ -386,112 +386,99 @@ export const cmdDownload: Handler = async (msg, args) => {
   }
 };
 
-async function imagineViaHuggingFace(prompt: string, apiKey: string): Promise<Buffer> {
-  // Hard 25-second wall-clock timeout that covers BOTH the response headers
-  // AND the full body download.  The AbortController is kept alive through the
-  // entire operation — clearTimeout only runs in `finally` after arrayBuffer().
-  const controller = new AbortController();
-  const timer = setTimeout(
-    () => controller.abort(new Error("HuggingFace request timed out after 25s")),
-    25_000,
-  );
-  try {
-    const res = await fetch(
-      "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-          "x-use-cache": "false",
-        },
-        body: JSON.stringify({
-          inputs: prompt,
-          parameters: {
-            num_inference_steps: 4,
-            width: 1024,
-            height: 1024,
-            guidance_scale: 0,
-          },
-        }),
-        signal: controller.signal,
-      },
-    );
-    if (!res.ok) {
-      const body = await res.text();
-      throw new Error(`hf ${res.status}: ${body.slice(0, 300)}`);
-    }
-    return Buffer.from(await res.arrayBuffer()); // timer still running here
-  } finally {
-    clearTimeout(timer); // cleared AFTER body read — this is intentional
-  }
-}
-
-async function imagineViaPollinations(prompt: string): Promise<{ buffer: Buffer; ext: string }> {
-  // Hard 20-second wall-clock timeout covering BOTH headers AND body download.
-  // Without this guard, a throttled Pollinations response that drip-feeds the
-  // image body can stall the Node.js event loop for 15+ minutes, causing all
-  // queued slash-command interactions to expire (Discord error 10062 —
-  // "Application did not respond" / "Unknown interaction").
-  const controller = new AbortController();
-  const timer = setTimeout(
-    () => controller.abort(new Error("Pollinations request timed out after 20s")),
-    20_000,
-  );
-  try {
-    const seed = Math.floor(Math.random() * 2147483647);
-    const encoded = encodeURIComponent(prompt);
-    const url = `https://image.pollinations.ai/prompt/${encoded}?model=flux-realism&width=1024&height=1024&seed=${seed}&nologo=true`;
-    const res = await fetch(url, { signal: controller.signal });
-    if (!res.ok) throw new Error(`pollinations ${res.status}`);
-    const contentType = res.headers.get("content-type") ?? "image/jpeg";
-    const ext = contentType.includes("png") ? "png" : "jpg";
-    const buffer = Buffer.from(await res.arrayBuffer()); // timer still running here
-    return { buffer, ext };
-  } finally {
-    clearTimeout(timer); // cleared AFTER body read — this is intentional
-  }
-}
-
 export const cmdGrokImagine: Handler = async (msg, args) => {
   if (!args.length) {
     await msg.reply({ embeds: [err("Provide a prompt. Usage: `mewo ai imagine <prompt>`")] });
     return;
   }
   const prompt = args.join(" ");
-  const hfKey = process.env.HF_API_KEY ?? process.env.HUGGING_FACE_API_KEY ?? process.env.HF_API_TOKEN;
+  const apiKey = process.env.AI_HORDE_API_KEY ?? "0000000000";
+  const model = process.env.AI_HORDE_MODEL ?? "Juggernaut XL";
 
   const thinking = await msg.reply({
     embeds: [new EmbedBuilder()
       .setColor(0x00B4FF)
-      .setDescription("🎨 Generating image... (this may take a few seconds)")
+      .setDescription("🎨 Sending your prompt to the free community image queue...")
     ]
   });
 
   try {
-    let buffer: Buffer;
-    let ext = "png";
-    let footer: string;
-
-    if (hfKey) {
-      buffer = await imagineViaHuggingFace(prompt, hfKey);
-      footer = "mewo • ai • FLUX.1-schnell";
-    } else {
-      const result = await imagineViaPollinations(prompt);
-      buffer = result.buffer;
-      ext = result.ext;
-      footer = "mewo • ai • FLUX Realism";
+    const apiUrl = "https://stablehorde.net/api/v2";
+    const headers = {
+      "Content-Type": "application/json",
+      apikey: apiKey,
+      "Client-Agent": "mewo-discord-bot:1.0",
+    };
+    const submitResponse = await fetch(`${apiUrl}/generate/async`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        prompt,
+        params: {
+          n: 1,
+          width: 1024,
+          height: 1024,
+          steps: 20,
+          sampler_name: "k_euler_a",
+          cfg_scale: 7,
+        },
+        models: [model],
+        nsfw: true,
+        censor_nsfw: false,
+        r2: false,
+      }),
+    });
+    const submission = await submitResponse.json() as { id?: string; message?: string };
+    if (!submitResponse.ok || !submission.id) {
+      throw new Error(`AI Horde submission HTTP ${submitResponse.status}: ${submission.message ?? "missing request ID"}`);
     }
+
+    const deadline = Date.now() + 8 * 60_000;
+    let imageBuffer: Buffer | undefined;
+    while (Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 7_000));
+      const checkResponse = await fetch(`${apiUrl}/generate/check/${submission.id}`, {
+        headers: { "Client-Agent": "mewo-discord-bot:1.0" },
+      });
+      const check = await checkResponse.json() as {
+        done?: boolean;
+        faulted?: boolean;
+        is_possible?: boolean;
+      };
+      if (!checkResponse.ok) throw new Error(`AI Horde status HTTP ${checkResponse.status}`);
+      if (check.faulted) throw new Error("AI Horde reported a failed generation");
+      if (check.is_possible === false) throw new Error("No active AI Horde workers support this model");
+
+      if (check.done) {
+        const resultResponse = await fetch(`${apiUrl}/generate/status/${submission.id}`, {
+          headers: { "Client-Agent": "mewo-discord-bot:1.0" },
+        });
+        const result = await resultResponse.json() as {
+          generations?: Array<{ img?: string; censored?: boolean }>;
+          faulted?: boolean;
+        };
+        if (!resultResponse.ok || result.faulted) {
+          throw new Error(`AI Horde result HTTP ${resultResponse.status}`);
+        }
+        const generation = result.generations?.[0];
+        if (!generation?.img || generation.censored) {
+          throw new Error("AI Horde returned no usable image");
+        }
+        imageBuffer = Buffer.from(generation.img, "base64");
+        break;
+      }
+    }
+    if (!imageBuffer) throw new Error("AI Horde generation timed out");
 
     await thinking.edit({
       embeds: [new EmbedBuilder()
         .setColor(0x00B4FF)
         .setTitle("AI Image Generation")
         .setDescription(`> ${prompt.slice(0, 200)}`)
-        .setImage(`attachment://image.${ext}`)
-        .setFooter({ text: footer })
+        .setImage("attachment://image.webp")
+        .setFooter({ text: `mewo • ai • AI Horde • ${model}` })
       ],
-      files: [{ attachment: buffer, name: `image.${ext}` }],
+      files: [{ attachment: imageBuffer, name: "image.webp" }],
     });
   } catch (e) {
     console.error("[MEWO AI] imagine error:", e);
