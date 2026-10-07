@@ -398,7 +398,7 @@ export const cmdGrokImagine: Handler = async (msg, args) => {
   const thinking = await msg.reply({
     embeds: [new EmbedBuilder()
       .setColor(0x00B4FF)
-      .setDescription("🎨 Sending your prompt to the free community image queue...")
+      .setDescription("🎨 Wait EoN is generating your image...")
     ]
   });
 
