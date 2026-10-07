@@ -26,6 +26,7 @@ import { handleCopyCommand, handlePasteCommand, handleCopyEmojisCommand, handleP
 import { handleNsfwCommand } from "../commands/nsfw.js";
 import { handleCaptionCommand } from "../commands/caption.js";
 import { handleModuleCommand, runCustomModules } from "../commands/moduleManager.js";
+import { handlePredModule } from "../commands/pred.js";
 import { handleAssystCommand } from "../commands/assyst.js";
 import { handleChatbot } from "../chatbot/index.js";
 import { handleChatbotCommand } from "../chatbot/commands.js";
@@ -376,6 +377,8 @@ export function registerLifecycleEvents(
 
     const content = message.content.trim();
     const lower = content.toLowerCase();
+
+    if (await handlePredModule(message)) return;
 
     if (lower.startsWith(".purge")) {
       handlePurgeCommand(message).catch((err) => console.error("[PURGE] Unhandled error:", err));
