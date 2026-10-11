@@ -30,18 +30,43 @@ function modEmbed(color: number, title: string, desc: string) {
 export const kickData = new SlashCommandBuilder()
   .setName("kick")
   .setDescription("Kick a member from the server.")
-  .setDefaultMemberPermissions(MOD)
+  .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
   .addUserOption((o) => o.setName("user").setDescription("Member to kick").setRequired(true))
   .addStringOption((o) => o.setName("reason").setDescription("Reason").setRequired(false));
 
+export function canKickMember(moderator: GuildMember, target: GuildMember): boolean {
+  if (!moderator.permissions.has(PermissionFlagsBits.KickMembers)) return false;
+  if (target.id === target.guild.ownerId) return false;
+  if (
+    moderator.id !== moderator.guild.ownerId &&
+    target.roles.highest.comparePositionTo(moderator.roles.highest) >= 0
+  ) {
+    return false;
+  }
+  return true;
+}
+
 export async function executeKick(interaction: ChatInputCommandInteraction): Promise<void> {
+  const guild = interaction.guild;
+  if (!guild) { await interaction.editReply({ content: "❌ This command can only be used in a server." }); return; }
+  const moderator = await guild.members.fetch(interaction.user.id).catch(() => null);
+  if (!moderator) { await interaction.editReply({ content: "❌ Could not verify your server permissions." }); return; }
+  if (!moderator.permissions.has(PermissionFlagsBits.KickMembers)) {
+    await interaction.editReply({ content: "❌ You need the **Kick Members** permission to use this command." });
+    return;
+  }
+
   const target = interaction.options.getUser("user", true);
   const reason = interaction.options.getString("reason") ?? "No reason provided";
-  const member = await interaction.guild?.members.fetch(target.id).catch(() => null);
+  const member = await guild.members.fetch(target.id).catch(() => null);
   if (!member) { await interaction.editReply({ content: "❌ Member not found." }); return; }
+  if (!canKickMember(moderator, member)) {
+    await interaction.editReply({ content: "❌ You can only kick members with a lower highest role than yours." });
+    return;
+  }
   if (!member.kickable) { await interaction.editReply({ content: "❌ I cannot kick this member." }); return; }
-  const vars = { target: target.id, moderator: interaction.user.id, reason, guildName: interaction.guild?.name ?? "" };
-  const dmEmbed = await applyEmbedOverride("mod.kick.dm", modEmbed(0xe74c3c, "👢  YOU WERE KICKED", `**Server:** ${interaction.guild?.name}\n**Reason:** ${reason}`), vars);
+  const vars = { target: target.id, moderator: interaction.user.id, reason, guildName: guild.name };
+  const dmEmbed = await applyEmbedOverride("mod.kick.dm", modEmbed(0xe74c3c, "👢  YOU WERE KICKED", `**Server:** ${guild.name}\n**Reason:** ${reason}`), vars);
   try { await target.send({ embeds: [dmEmbed] }); } catch { /**/ }
   await member.kick(reason);
   const kickEmbed = await applyEmbedOverride("mod.kick", modEmbed(0xe74c3c, "👢  MEMBER KICKED", `${HR}\n▸  **MEMBER** ${DOT} <@${target.id}>\n▸  **ACTIONED BY** ${DOT} <@${interaction.user.id}>\n${HR}\n**REASON**\n> ${reason}`).setThumbnail(target.displayAvatarURL()), vars);
