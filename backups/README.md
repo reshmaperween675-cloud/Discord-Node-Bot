@@ -1,26 +1,26 @@
-# Railway Database Backup — 2026-07-11
+# Railway Database Backup — 2026-10-11
 
-Backup of the "railway" Postgres database (34 tables: leveling, LOWO settings, economy, moderation, tournaments, etc).
+Full backup of the Railway PostgreSQL database, including schema and data (39 user tables).
 
 ## Files
-- `railway_backup_20260711.sql` — Plain SQL dump (schema + data). Human-readable, restore with `psql`.
-- `railway_backup_20260711.dump` — Custom-format compressed dump. Restore with `pg_restore` (supports parallel restore, selective table restore).
+- `railway_backup_20261011.sql` — Plain SQL dump; restore with `psql`.
+- `railway_backup_20261011.dump` — PostgreSQL custom-format dump; restore with `pg_restore` (supports parallel restore and selective table restore).
 
-## Restoring to a new Railway (or any) Postgres database
+## Restoring to a new PostgreSQL database
 
-Get your new database's connection URL, then run ONE of:
+Set `DATABASE_URL` to the new database's connection URL, then run one of:
 
-### Option A — plain SQL (simplest)
+### Option A — plain SQL
+```sh
+psql "$DATABASE_URL" -f railway_backup_20261011.sql
 ```
-psql "postgresql://USER:PASS@HOST:PORT/DBNAME" -f railway_backup_20260711.sql
-```
 
-### Option B — custom format (recommended, faster, supports -j parallel jobs)
-```
-pg_restore --no-owner --no-privileges -d "postgresql://USER:PASS@HOST:PORT/DBNAME" railway_backup_20260711.dump
+### Option B — custom format
+```sh
+pg_restore --no-owner --no-privileges -d "$DATABASE_URL" railway_backup_20261011.dump
 ```
 
 Notes:
-- The dump was taken with `--no-owner --no-privileges`, so it will apply cleanly regardless of the new database's role names.
-- The source server was PostgreSQL 18.4. If your new database is an older major version, restoring may hit incompatibilities — use a Postgres 18+ target if possible.
-- Both files contain full data (not just schema) as of the dump time above.
+- The dump was taken with `--no-owner --no-privileges`, so it can be restored regardless of the destination role names.
+- The source server was PostgreSQL 18.6. Use PostgreSQL 18 or newer to avoid version incompatibilities.
+- Both files contain full data as of the backup date.
