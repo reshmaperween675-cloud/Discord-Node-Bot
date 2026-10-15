@@ -74,7 +74,7 @@ export async function handleBanCmd(message: Message): Promise<void> {
   send(message, `${target.user.username} banned${reason ? ` — ${reason}` : ""}`);
 }
 
-// ── ,timeout / ,to <@user> <duration> [reason] ───────────────────────────────
+// ── ?timeout / ?to <@user> <duration> [reason] ───────────────────────────────
 export async function handleTimeoutCmd(message: Message): Promise<void> {
   if (!message.guild || !message.member) return;
   if (!message.member.permissions.has(PermissionFlagsBits.ModerateMembers)) return;
@@ -82,7 +82,7 @@ export async function handleTimeoutCmd(message: Message): Promise<void> {
   const args = message.content.trim().split(/\s+/).slice(1);
   del(message);
 
-  if (args.length < 2) { send(message, "Usage: ,timeout <@user> <duration>  e.g. 30m, 1h, 2d"); return; }
+  if (args.length < 2) { send(message, "Usage: ?timeout / ?to <@user> <duration>  e.g. 30m, 1h, 2d"); return; }
 
   const target = await resolveMember(message.guild, args[0]);
   if (!target) { send(message, "user not found"); return; }
@@ -113,13 +113,13 @@ export async function handleRemoveTimeoutCmd(message: Message): Promise<void> {
   send(message, `timeout removed from ${target.user.username}`);
 }
 
-// ── ,role / ,r ───────────────────────────────────────────────────────────────
-// ,role <@user> <role>            → add role to user
-// ,role all <role>                → add role to every member
-// ,role remove/r <@user> <role>  → remove role from user
-// ,r <@user> <role>              → shortcut add
-// ,r all <role>                  → shortcut all
-// ,r remove/r <@user> <role>    → shortcut remove
+// ── ?role / ?r ───────────────────────────────────────────────────────────────
+// ?role <@user> <role>            → add role to user
+// ?role all <role>                → add role to every member
+// ?role remove/r <@user> <role>  → remove role from user
+// ?r <@user> <role>              → shortcut add
+// ?r all <role>                  → shortcut all
+// ?r remove/r <@user> <role>    → shortcut remove
 
 export async function handleRoleCmd(message: Message): Promise<void> {
   if (!message.guild || !message.member) return;
@@ -129,7 +129,7 @@ export async function handleRoleCmd(message: Message): Promise<void> {
   del(message);
 
   if (!args[0]) {
-    send(message, "Usage:\n,role <@user> <role>\n,role all <role>\n,role remove <@user> <role>");
+    send(message, "Usage:\n?role <@user> <role>\n?role all <role>\n?role remove <@user> <role>");
     return;
   }
 
@@ -137,7 +137,7 @@ export async function handleRoleCmd(message: Message): Promise<void> {
 
   // ── remove
   if (sub === "remove" || sub === "r") {
-    if (args.length < 3) { send(message, "Usage: ,role remove <@user> <role>"); return; }
+    if (args.length < 3) { send(message, "Usage: ?role remove <@user> <role>"); return; }
     const target = await resolveMember(message.guild, args[1]);
     if (!target) { send(message, "user not found"); return; }
     const role = await resolveRole(message.guild, args.slice(2).join(" "));
@@ -150,7 +150,7 @@ export async function handleRoleCmd(message: Message): Promise<void> {
 
   // ── all
   if (sub === "all") {
-    if (!args[1]) { send(message, "Usage: ,role all <role>"); return; }
+    if (!args[1]) { send(message, "Usage: ?role all <role>"); return; }
     const role = await resolveRole(message.guild, args.slice(1).join(" "));
     if (!role) { send(message, "role not found"); return; }
     const members = await message.guild.members.fetch();
@@ -165,8 +165,8 @@ export async function handleRoleCmd(message: Message): Promise<void> {
     return;
   }
 
-  // ── add: ,role <@user> <role>
-  if (args.length < 2) { send(message, "Usage: ,role <@user> <role>"); return; }
+  // ── add: ?role <@user> <role>
+  if (args.length < 2) { send(message, "Usage: ?role <@user> <role>"); return; }
   const target = await resolveMember(message.guild, args[0]);
   if (!target) { send(message, "user not found"); return; }
   const role = await resolveRole(message.guild, args.slice(1).join(" "));

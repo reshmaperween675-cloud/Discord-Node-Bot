@@ -380,7 +380,7 @@ export function registerLifecycleEvents(
 
     if (await handlePredModule(message)) return;
 
-    if (lower.startsWith(".purge")) {
+    if (lower === "?purge" || lower.startsWith("?purge ")) {
       handlePurgeCommand(message).catch((err) => console.error("[PURGE] Unhandled error:", err));
       return;
     }
@@ -491,7 +491,7 @@ export function registerLifecycleEvents(
       return;
     }
 
-    if (lower.startsWith(",timeout") || lower.startsWith(",to ") || lower === ",to") {
+    if (lower === "?timeout" || lower.startsWith("?timeout ") || lower === "?to" || lower.startsWith("?to ")) {
       handleTimeoutCmd(message).catch((err) => console.error("[TIMEOUT] Unhandled error:", err));
       return;
     }
@@ -501,12 +501,12 @@ export function registerLifecycleEvents(
       return;
     }
 
-    if (lower.startsWith(",role")) {
+    if (lower === "?role" || lower.startsWith("?role ")) {
       handleRoleCmd(message).catch((err) => console.error("[ROLE] Unhandled error:", err));
       return;
     }
 
-    if (lower.startsWith(",r ") || lower === ",r") {
+    if (lower === "?r" || lower.startsWith("?r ")) {
       handleRoleCmd(message).catch((err) => console.error("[ROLE] Unhandled error:", err));
       return;
     }

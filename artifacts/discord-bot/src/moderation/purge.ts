@@ -170,26 +170,26 @@ async function ephemeralReply(channel: TextChannel, text: string): Promise<void>
   } catch { /* ignore */ }
 }
 
-// ─── Main .purge handler ──────────────────────────────────────────────────────
+// ─── Main ?purge handler ──────────────────────────────────────────────────────
 export async function handlePurgeCommand(message: Message): Promise<boolean> {
   const content = message.content.trim();
-  if (!content.toLowerCase().startsWith(".purge")) return false;
+  if (!/^\?purge(?:\s|$)/i.test(content)) return false;
   if (!message.guild || !message.member) return false;
   if (!(message.channel instanceof TextChannel)) return false;
 
   const channel = message.channel;
 
   if (!memberCanPurge(message.member)) {
-    await ephemeralReply(channel, "🚫 You don't have permission to use `.purge`.");
+    await ephemeralReply(channel, "🚫 You don't have permission to use `?purge`.");
     try { await message.delete(); } catch { /* ignore */ }
     return true;
   }
-  const args = content.slice(".purge".length).trim().split(/\s+/).filter(Boolean);
+  const args = content.slice("?purge".length).trim().split(/\s+/).filter(Boolean);
 
   // Delete the invoking command message itself
   try { await message.delete(); } catch { /* ignore */ }
 
-  // ── .purge all  → max 100 most recent
+  // ── ?purge all  → max 100 most recent
   if (args[0]?.toLowerCase() === "all") {
     const msgs = await fetchRecent(channel, 100);
     pushRecoverable(channel.id, msgs.map(snapshotMessage));
@@ -198,7 +198,7 @@ export async function handlePurgeCommand(message: Message): Promise<boolean> {
     return true;
   }
 
-  // ── .purge <@user> [@user2] <amount>
+  // ── ?purge <@user> [@user2] <amount>
   const userMentions = [...message.mentions.users.values()];
   const amountToken = args.find((a) => /^\d+$/.test(a));
   const amount = amountToken ? parseInt(amountToken, 10) : NaN;
@@ -207,9 +207,9 @@ export async function handlePurgeCommand(message: Message): Promise<boolean> {
     await ephemeralReply(
       channel,
       "Usage:\n" +
-      "`.purge <amount>` — delete N recent messages\n" +
-      "`.purge <@user> [@user2 …] <amount>` — delete N from each user\n" +
-      "`.purge all` — delete the last 100",
+      "`?purge <amount>` — delete N recent messages\n" +
+      "`?purge <@user> [@user2 …] <amount>` — delete N from each user\n" +
+      "`?purge all` — delete the last 100",
     );
     return true;
   }
@@ -237,7 +237,7 @@ export async function handlePurgeCommand(message: Message): Promise<boolean> {
 // ─── /purgeconfig slash command ───────────────────────────────────────────────
 export const purgeConfigData = new SlashCommandBuilder()
   .setName("purgeconfig")
-  .setDescription("Allow or remove a user's permission to use .purge")
+  .setDescription("Allow or remove a user's permission to use ?purge")
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
   .addUserOption((o) =>
     o.setName("user").setDescription("User to allow / remove").setRequired(true),
@@ -260,12 +260,12 @@ export async function executePurgeConfig(interaction: ChatInputCommandInteractio
 
   if (action === "list") {
     if (cfg.allowedUserIds.length === 0) {
-      await interaction.editReply({ content: "📋 No users currently allow-listed for `.purge`." });
+      await interaction.editReply({ content: "📋 No users currently allow-listed for `?purge`." });
       return;
     }
     const mentions = cfg.allowedUserIds.map((id) => `<@${id}>`).join(", ");
     await interaction.editReply({
-      content: `📋 Allow-listed for \`.purge\`:\n${mentions}`,
+      content: `📋 Allow-listed for \`?purge\`:\n${mentions}`,
     });
     return;
   }
@@ -284,7 +284,7 @@ export async function executePurgeConfig(interaction: ChatInputCommandInteractio
 
   await interaction.editReply({
     content: added
-      ? `✅ <@${target.id}> can now use \`.purge\`.`
-      : `🚫 <@${target.id}> can no longer use \`.purge\`.`,
+      ? `✅ <@${target.id}> can now use \`?purge\`.`
+      : `🚫 <@${target.id}> can no longer use \`?purge\`.`,
   });
 }
