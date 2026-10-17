@@ -16,7 +16,7 @@ import {
 import { getPool } from "../persistence.js";
 import { updateAuthTokens, saveRoleSnapshot, getStoredRoles } from "./db.js";
 import { buildOAuthUrl, refreshAccessToken } from "./oauth.js";
-import { buildVerifyPanel } from "./panel.js";
+import { buildVerifyPanel, DEFAULT_VERIFICATION_PANEL_NAME } from "./panel.js";
 
 const COLOR_ACCENT  = 0x00ffff;
 const COLOR_SUCCESS = 0x00ff88;
@@ -30,6 +30,8 @@ interface AuthVerifyConfig {
   unverifiedRoleId:        string;
   verifyChannelId:         string;
   unverifiedChatChannelId: string;
+  panelName?:              string;
+  verifyPanelMessageId?:   string;
 }
 
 async function saveConfig(guildId: string, config: AuthVerifyConfig): Promise<void> {
@@ -48,6 +50,16 @@ export async function loadConfig(guildId: string): Promise<AuthVerifyConfig | nu
     [`auth_verify_config:${guildId}`],
   );
   return res.rows[0]?.value ?? null;
+}
+
+export async function saveVerificationPanelConfig(
+  guildId: string,
+  panelName: string,
+  verifyPanelMessageId: string,
+): Promise<void> {
+  const config = await loadConfig(guildId);
+  if (!config) throw new Error("Auth verification is not configured for this server.");
+  await saveConfig(guildId, { ...config, panelName, verifyPanelMessageId });
 }
 
 export function getVerificationReroleTargets(
@@ -430,11 +442,12 @@ export async function handleSetupAuthVerification(message: import("discord.js").
     ? buildOAuthUrl(guild.id)
     : "https://discord.com";
 
-  const { embed: verifyEmbed, row } = buildVerifyPanel(guild.name, oauthUrl);
+  const panelName = existing?.panelName || DEFAULT_VERIFICATION_PANEL_NAME;
+  const { embed: verifyEmbed, row } = buildVerifyPanel(guild.name, oauthUrl, panelName);
 
   // Clear old messages and repost so it's always at the bottom
   await verifyChannel.bulkDelete(10).catch(() => {});
-  await verifyChannel.send({ embeds: [verifyEmbed], components: [row] });
+  const verifyPanelMessage = await verifyChannel.send({ embeds: [verifyEmbed], components: [row] });
 
   // ── 6. Persist config ──────────────────────────────────────────────────────
   await saveConfig(guild.id, {
@@ -442,6 +455,8 @@ export async function handleSetupAuthVerification(message: import("discord.js").
     unverifiedRoleId:        unverifiedRole.id,
     verifyChannelId:         verifyChannel.id,
     unverifiedChatChannelId: unverifiedChatChannel.id,
+    panelName:               existing?.panelName,
+    verifyPanelMessageId:    verifyPanelMessage.id,
   });
 
   // ── 7. Success reply ───────────────────────────────────────────────────────

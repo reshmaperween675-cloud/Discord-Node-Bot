@@ -7,7 +7,8 @@ import {
   TextChannel,
 } from "discord.js";
 import { buildOAuthUrl } from "./oauth.js";
-import { buildVerifyPanel } from "./panel.js";
+import { buildVerifyPanel, DEFAULT_VERIFICATION_PANEL_NAME } from "./panel.js";
+import { loadConfig } from "./setupAuthVerification.js";
 
 function isAdmin(member: GuildMember): boolean {
   return member.permissions.has(PermissionFlagsBits.Administrator);
@@ -31,7 +32,9 @@ export async function handleTestAuth(message: Message): Promise<void> {
   }
 
   const oauthUrl = buildOAuthUrl(message.guild.id);
-  const { embed, row } = buildVerifyPanel(message.guild.name, oauthUrl);
+  const config = await loadConfig(message.guild.id).catch(() => null);
+  const panelName = config?.panelName || DEFAULT_VERIFICATION_PANEL_NAME;
+  const { embed, row } = buildVerifyPanel(message.guild.name, oauthUrl, panelName);
 
   // Add a subtle admin-only note so it's clear this is a preview
   embed.setFooter({ text: "⚠️ preview — run ?setupauthverification to deploy this to #verify" });

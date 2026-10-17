@@ -36,7 +36,7 @@ import { handleMewoCommand } from "../mewo/router.js";
 import { handleEndCommand } from "../commands/endRaid.js";
 import { upsertMessageActivity, upsertVoiceActivity } from "../activity/db.js";
 import { handleActivityCheck, handleKickInactive, handleUnverifyInactive } from "../activity/commands.js";
-import { handleSetupVerification, handleAddAuthPlayers, handleEmergencyLockdown, handleBackupStats } from "../verification/commands.js";
+import { handleSetupVerification, handleEditVerificationPanel, handleAddAuthPlayers, handleEmergencyLockdown, handleBackupStats } from "../verification/commands.js";
 import {
   handleSetupAuthVerification,
   handleMemberJoin,
@@ -602,6 +602,9 @@ export function registerLifecycleEvents(
         return;
       case "?setupverification":
         handleSetupVerification(message).catch((err) => console.error("[VERIFICATION] Unhandled error:", err));
+        return;
+      case "?editvpanel":
+        handleEditVerificationPanel(message).catch((err) => console.error("[AUTH_VERIFY] Panel edit error:", err));
         return;
       case "?setupauthverification":
       case "?setauthverification":

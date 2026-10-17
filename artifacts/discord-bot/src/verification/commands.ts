@@ -17,8 +17,8 @@ import {
   refreshAccessToken,
   addUserToGuild,
 } from "./oauth.js";
-import { buildVerifyPanel } from "./panel.js";
-import { loadConfig } from "./setupAuthVerification.js";
+import { buildVerifyPanel, DEFAULT_VERIFICATION_PANEL_NAME } from "./panel.js";
+import { loadConfig, saveVerificationPanelConfig } from "./setupAuthVerification.js";
 
 const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
@@ -42,7 +42,9 @@ export async function handleSetupVerification(message: Message): Promise<void> {
     return;
   }
 
-  const { embed, row } = buildVerifyPanel(message.guild.name, oauthUrl);
+  const config = await loadConfig(message.guild.id).catch(() => null);
+  const panelName = config?.panelName || DEFAULT_VERIFICATION_PANEL_NAME;
+  const { embed, row } = buildVerifyPanel(message.guild.name, oauthUrl, panelName);
 
   try {
     await (message.channel as TextChannel).send({ embeds: [embed], components: [row] });
@@ -51,6 +53,96 @@ export async function handleSetupVerification(message: Message): Promise<void> {
     console.error("[VERIFICATION] Failed to send verification panel:", err);
     await message.reply({ content: "❌ Failed to post the verification panel. Check my **Send Messages** and **Embed Links** permissions in this channel." }).catch(() => {});
   }
+}
+
+export async function handleEditVerificationPanel(message: Message): Promise<void> {
+  if (!message.guild || !message.member) return;
+  if (!isAdmin(message.member)) {
+    await message.reply({ content: "❌ You need **Manage Server** permissions to run this command." });
+    return;
+  }
+
+  const requestedName = message.content.trim().replace(/^\?editvpanel\b/i, "").trim();
+  if (!requestedName) {
+    await message.reply({
+      content: "Usage: `?editvpanel <Another clan name>`\nUse `?editvpanel default` to restore **Welcome to Last Stand**.",
+    });
+    return;
+  }
+
+  const panelName = requestedName.toLowerCase() === "default"
+    ? DEFAULT_VERIFICATION_PANEL_NAME
+    : requestedName;
+  if (panelName.length > 80) {
+    await message.reply({ content: "❌ The clan name must be 80 characters or fewer." });
+    return;
+  }
+
+  if (!process.env.DISCORD_CLIENT_ID || !process.env.DISCORD_CLIENT_SECRET || !process.env.OAUTH_REDIRECT_URI) {
+    await message.reply({ content: "❌ The verification OAuth settings are incomplete. Ask the bot owner to check the Railway environment." });
+    return;
+  }
+
+  const config = await loadConfig(message.guild.id).catch((err) => {
+    console.error("[AUTH_VERIFY] Failed to load verification config:", err);
+    return null;
+  });
+  if (!config?.verifyChannelId) {
+    await message.reply({ content: "❌ Auth verification is not set up for this server. Run `?setupauthverification` first." });
+    return;
+  }
+
+  const verifyChannel = await message.guild.channels.fetch(config.verifyChannelId).catch(() => null);
+  if (!(verifyChannel instanceof TextChannel)) {
+    await message.reply({ content: "❌ I couldn't find the configured verification channel." });
+    return;
+  }
+
+  const oauthUrl = buildOAuthUrl(message.guild.id);
+  const { embed, row } = buildVerifyPanel(message.guild.name, oauthUrl, panelName);
+  const botId = message.client.user?.id;
+  let oldPanel: Message | null = null;
+
+  if (config.verifyPanelMessageId) {
+    const savedMessage = await verifyChannel.messages.fetch(config.verifyPanelMessageId).catch(() => null);
+    if (savedMessage && botId && savedMessage.author.id === botId) oldPanel = savedMessage;
+  }
+
+  if (!oldPanel && botId) {
+    const recentMessages = await verifyChannel.messages.fetch({ limit: 50 }).catch(() => null);
+    oldPanel = recentMessages?.find((candidate) =>
+      candidate.author.id === botId &&
+      candidate.embeds.some((existingEmbed) =>
+        existingEmbed.title?.startsWith("Welcome to ") &&
+        existingEmbed.description?.includes("We verify everyone before giving server access."),
+      ),
+    ) ?? null;
+  }
+
+  let panelMessageId: string;
+  try {
+    if (oldPanel) {
+      await oldPanel.edit({ embeds: [embed], components: [row] });
+      panelMessageId = oldPanel.id;
+    } else {
+      const sent = await verifyChannel.send({ embeds: [embed], components: [row] });
+      panelMessageId = sent.id;
+    }
+  } catch (err) {
+    console.error("[AUTH_VERIFY] Failed to edit verification panel:", err);
+    await message.reply({ content: "❌ Couldn't update the verification panel. Check the bot's permissions in the verification channel." });
+    return;
+  }
+
+  try {
+    await saveVerificationPanelConfig(message.guild.id, panelName, panelMessageId);
+  } catch (err) {
+    console.error("[AUTH_VERIFY] Failed to save verification panel settings:", err);
+    await message.reply({ content: "⚠️ The panel was updated, but its new name couldn't be saved for future setups." });
+    return;
+  }
+
+  await message.reply({ content: `✅ Verification panel updated in <#${verifyChannel.id}>: **Welcome to ${panelName}**.` });
 }
 
 export async function handleAddAuthPlayers(message: Message): Promise<void> {
