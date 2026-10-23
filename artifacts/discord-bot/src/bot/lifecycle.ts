@@ -61,7 +61,7 @@ const BOT_DISPLAY_NAME = "EonZ Management Bot";
 const BOT_DISPLAY_STYLE = {
   display_name_font_id: 14, // Orbitron (Mainframe)
   display_name_effect_id: 2, // Gradient
-  display_name_colors: [0x00ffff, 0x5865f2],
+  display_name_colors: [0x00ffff, 0xf0ffff, 0x00d6e8],
 } as const;
 
 function runCensorSelfTest(): void {
