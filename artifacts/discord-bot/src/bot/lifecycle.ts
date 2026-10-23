@@ -56,13 +56,7 @@ import { handleControlCenterCommand } from "../admin/controlCenter.js";
 import { handleSetupQuarantine, handleQuarantine, handleReroleQuarantine, handleReleaseQuarantine, handleWhitelistQuarantine } from "../moderation/quarantine.js";
 import { applyPermanentNickname, handlePermanentNickCommand, permanentNicknameStore } from "../moderation/permanentNicknames.js";
 import { runJsonMigration } from "../migrate-json.js";
-
-const BOT_DISPLAY_NAME = "EonZ Management Bot";
-const BOT_DISPLAY_STYLE = {
-  display_name_font_id: 14, // Orbitron (Mainframe)
-  display_name_effect_id: 2, // Gradient
-  display_name_colors: [0x00ffff, 0xf0ffff, 0x00d6e8],
-} as const;
+import { applyBotPresence, applyBotProfileToGuild, getBotProfile, handleBotProfileCommand } from "../profile/commands.js";
 
 function runCensorSelfTest(): void {
   const MUST_FLAG: [string, string][] = [
@@ -121,53 +115,6 @@ async function registerCommandsForGuild(
     console.log(`[READY] Registered ${commands.length} commands to guild: ${guildId}`);
   } catch (err) {
     console.error(`[ERROR] Failed to register commands for guild ${guildId}:`, err);
-  }
-}
-
-async function setNicknameForGuild(
-  guild: import("discord.js").Guild,
-): Promise<void> {
-  try {
-    const me = await guild.members.fetchMe();
-    if (me.displayName !== BOT_DISPLAY_NAME) {
-      await me.setNickname(BOT_DISPLAY_NAME);
-      console.log(`[READY] Bot nickname set for guild: ${guild.id}`);
-    }
-  } catch (err) {
-    console.error(`[ERROR] Failed to update bot nickname for guild ${guild.id}:`, err);
-  }
-
-  try {
-    const updated = await guild.client.rest.patch(
-      `/guilds/${guild.id}/members/@me`,
-      { body: BOT_DISPLAY_STYLE },
-    ) as {
-      display_name_styles?: {
-        font_id?: number;
-        effect_id?: number;
-        colors?: number[];
-      } | null;
-    };
-
-    const applied = updated?.display_name_styles;
-    const colorsMatch =
-      applied?.colors?.length === BOT_DISPLAY_STYLE.display_name_colors.length &&
-      applied.colors.every((color, index) => color === BOT_DISPLAY_STYLE.display_name_colors[index]);
-
-    if (
-      applied?.font_id === BOT_DISPLAY_STYLE.display_name_font_id &&
-      applied.effect_id === BOT_DISPLAY_STYLE.display_name_effect_id &&
-      colorsMatch
-    ) {
-      console.log(`[READY] Bot display-name style confirmed for guild: ${guild.id}`);
-    } else {
-      console.warn(
-        `[WARN] Discord did not confirm the requested bot display-name style for guild ${guild.id}; ` +
-        "the style may not have been applied.",
-      );
-    }
-  } catch (err) {
-    console.error(`[ERROR] Failed to apply bot display-name style for guild ${guild.id}:`, err);
   }
 }
 
@@ -257,9 +204,11 @@ export function registerLifecycleEvents(
       console.error("[ERROR] Failed to clear global commands:", err);
     }
 
+    const profile = await getBotProfile();
+    applyBotPresence(readyClient, profile);
     for (const [guildId, guild] of readyClient.guilds.cache) {
       await registerCommandsForGuild(readyClient.user.id, guildId, rest, baseCommands);
-      await setNicknameForGuild(guild);
+      await applyBotProfileToGuild(guild, profile);
     }
 
     try {
@@ -313,7 +262,8 @@ export function registerLifecycleEvents(
 
   client.on(Events.GuildCreate, async (guild) => {
     await registerCommandsForGuild(client.user!.id, guild.id, rest, baseCommands);
-    await setNicknameForGuild(guild);
+    const profile = await getBotProfile();
+    await applyBotProfileToGuild(guild, profile);
   });
 
   client.on(Events.GuildMemberAdd, async (member) => {
@@ -377,6 +327,12 @@ export function registerLifecycleEvents(
     // ── Owner DM control system — handled entirely separately from guild logic ──
     if (!message.guild) {
       console.log(`[OWNER-CONTROL] MessageCreate fired for a DM from ${message.author.id}`);
+      if (message.content.trim().toLowerCase().startsWith("?botprofile")) {
+        handleBotProfileCommand(message, client).catch((err) =>
+          console.error("[BOT PROFILE] Unhandled error:", err),
+        );
+        return;
+      }
       handleOwnerDM(message, client).catch((err) =>
         console.error("[OWNER-CONTROL] Unhandled error:", err),
       );
@@ -417,6 +373,14 @@ export function registerLifecycleEvents(
 
     const content = message.content.trim();
     const lower = content.toLowerCase();
+
+    if (lower === "?botprofile" || lower.startsWith("?botprofile ")) {
+      await handleBotProfileCommand(message, client).catch((err) => {
+        console.error("[BOT PROFILE] Unhandled error:", err);
+        return message.reply("❌ Something went wrong while updating the bot profile.").then(() => undefined);
+      });
+      return;
+    }
 
     if (await handlePredModule(message)) return;
 
