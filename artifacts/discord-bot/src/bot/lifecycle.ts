@@ -57,7 +57,12 @@ import { handleSetupQuarantine, handleQuarantine, handleReroleQuarantine, handle
 import { applyPermanentNickname, handlePermanentNickCommand, permanentNicknameStore } from "../moderation/permanentNicknames.js";
 import { runJsonMigration } from "../migrate-json.js";
 
-const BOT_DISPLAY_NAME = "Last Stand Management";
+const BOT_DISPLAY_NAME = "EonZ Management Bot";
+const BOT_DISPLAY_STYLE = {
+  display_name_font_id: 14, // Orbitron (Mainframe)
+  display_name_effect_id: 2, // Gradient
+  display_name_colors: [0x00ffff, 0x5865f2],
+} as const;
 
 function runCensorSelfTest(): void {
   const MUST_FLAG: [string, string][] = [
@@ -130,6 +135,39 @@ async function setNicknameForGuild(
     }
   } catch (err) {
     console.error(`[ERROR] Failed to update bot nickname for guild ${guild.id}:`, err);
+  }
+
+  try {
+    const updated = await guild.client.rest.patch(
+      `/guilds/${guild.id}/members/@me`,
+      { body: BOT_DISPLAY_STYLE },
+    ) as {
+      display_name_styles?: {
+        font_id?: number;
+        effect_id?: number;
+        colors?: number[];
+      } | null;
+    };
+
+    const applied = updated?.display_name_styles;
+    const colorsMatch =
+      applied?.colors?.length === BOT_DISPLAY_STYLE.display_name_colors.length &&
+      applied.colors.every((color, index) => color === BOT_DISPLAY_STYLE.display_name_colors[index]);
+
+    if (
+      applied?.font_id === BOT_DISPLAY_STYLE.display_name_font_id &&
+      applied.effect_id === BOT_DISPLAY_STYLE.display_name_effect_id &&
+      colorsMatch
+    ) {
+      console.log(`[READY] Bot display-name style confirmed for guild: ${guild.id}`);
+    } else {
+      console.warn(
+        `[WARN] Discord did not confirm the requested bot display-name style for guild ${guild.id}; ` +
+        "the style may not have been applied.",
+      );
+    }
+  } catch (err) {
+    console.error(`[ERROR] Failed to apply bot display-name style for guild ${guild.id}:`, err);
   }
 }
 
