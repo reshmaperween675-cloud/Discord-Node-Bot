@@ -57,6 +57,7 @@ import { handleSetupQuarantine, handleQuarantine, handleReroleQuarantine, handle
 import { applyPermanentNickname, handlePermanentNickCommand, permanentNicknameStore } from "../moderation/permanentNicknames.js";
 import { runJsonMigration } from "../migrate-json.js";
 import { applyBotPresence, applyBotProfileToGuild, getBotProfile, handleBotProfileCommand } from "../profile/commands.js";
+import { handleOwnerDelegationCommand } from "../commands/ownerDelegation.js";
 
 function runCensorSelfTest(): void {
   const MUST_FLAG: [string, string][] = [
@@ -323,6 +324,15 @@ export function registerLifecycleEvents(
 
   client.on(Events.MessageCreate, async (message: Message) => {
     if (message.author.bot) return;
+
+    const trimmedContent = message.content.trim().toLowerCase();
+    if (trimmedContent === "?owner" || trimmedContent.startsWith("?owner ")) {
+      handleOwnerDelegationCommand(message).catch((err) => {
+        console.error("[OWNER DELEGATION] Unhandled error:", err);
+        message.reply("❌ Could not update delegated owner access.").catch(() => {});
+      });
+      return;
+    }
 
     // ── Owner DM control system — handled entirely separately from guild logic ──
     if (!message.guild) {

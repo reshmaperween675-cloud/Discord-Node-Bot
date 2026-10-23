@@ -5,6 +5,7 @@ import { ANIMAL_BY_ID, PITY_THRESHOLD, BACKGROUND_BY_ID } from "./data.js";
 import { generateProfileCard } from "./profileCard.js";
 import { isCensored } from "./censor.js";
 import { PermissionFlagsBits } from "discord.js";
+import { isLowoOwner } from "../utility/lowoOwner.js";
 import { emoji, allEmojiKeys, isOverridden, saveOverrides, catalogKeys, mergeOverrides } from "./emojis.js";
 import {
   baseEmbed, replyEmbed, successEmbed, errorEmbed, warnEmbed, val, COLOR,
@@ -265,7 +266,7 @@ export async function cmdEmojiList(message: Message, args: string[]): Promise<vo
  * Restricted to bot owner (`LOWO_OWNER_ID`) or members with Manage Server.
  */
 export async function cmdEmojiSync(message: Message): Promise<void> {
-  const isOwner = process.env.LOWO_OWNER_ID === message.author.id;
+  const isOwner = isLowoOwner(message.author.id);
   const isAdmin = message.member?.permissions.has(PermissionFlagsBits.ManageGuild) ?? false;
   if (!isOwner && !isAdmin) {
     await message.reply(`${emoji("locked")} Only the bot owner or members with **Manage Server** can run \`emojisync\`.`);
@@ -339,7 +340,7 @@ export async function cmdEmojiSync(message: Message): Promise<void> {
  * Restricted to bot owner (`LOWO_OWNER_ID`) or members with Manage Server.
  */
 export async function cmdEmojiUpload(message: Message): Promise<void> {
-  const isOwner = process.env.LOWO_OWNER_ID === message.author.id;
+  const isOwner = isLowoOwner(message.author.id);
   const isAdmin = message.member?.permissions.has(PermissionFlagsBits.ManageGuild) ?? false;
   if (!isOwner && !isAdmin) {
     await message.reply(`${emoji("locked")} Only the bot owner or members with **Manage Server** can run \`emojiupload\`.`);

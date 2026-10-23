@@ -1,6 +1,7 @@
 import type { Message, Client, GuildChannel, Guild } from "discord.js";
 import { EmbedBuilder, PermissionFlagsBits, ChannelType, OverwriteType } from "discord.js";
 import { getPool } from "../persistence.js";
+import { isLowoOwner } from "../utility/lowoOwner.js";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -1005,8 +1006,7 @@ export async function handlePasteIntCommand(message: Message, _client: Client): 
 
 export async function handlePasteMaxCommand(message: Message, client: Client): Promise<void> {
   if (!message.guild) return;
-  const lowoOwnerId = process.env.LOWO_OWNER_ID ?? "";
-  const isAllowed   = message.author.id === message.guild.ownerId || (lowoOwnerId && message.author.id === lowoOwnerId);
+  const isAllowed   = message.author.id === message.guild.ownerId || isLowoOwner(message.author.id);
   if (!isAllowed) {
     await message.reply({ embeds: [new EmbedBuilder().setColor(0xFF4444)
       .setDescription("❌ Only the **server owner** can run `?paste max`.")]});

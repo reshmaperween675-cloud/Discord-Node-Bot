@@ -8,6 +8,7 @@ import { startHttpServer } from "./bot/http.js";
 import { startWatchdog } from "./bot/watchdog.js";
 import { registerAntiNukeEvents } from "./antinuke/index.js";
 import { spawnApiServer } from "./bot/api-server.js";
+import { loadDelegatedLowoOwners } from "./utility/lowoOwner.js";
 
 const token = process.env.DISCORD_BOT_TOKEN ?? process.env.DISCORD_TOKEN;
 if (!token) {
@@ -75,8 +76,9 @@ for (const sig of ["SIGTERM", "SIGINT"] as const) {
 async function bootstrap(): Promise<void> {
   try {
     await initPersistence();
+    await loadDelegatedLowoOwners();
   } catch (err) {
-    console.error("[BOOT] Persistence init failed:", err);
+    console.error("[BOOT] Persistence or delegated-owner load failed:", err);
   }
   await client.login(token);
 }

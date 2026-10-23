@@ -8,6 +8,7 @@ import {
 } from "./data.js";
 import { adminListAll, adminClearAll, fmtListingForAdmin } from "./market.js";
 import { latestPendingEntry, markReleased, formatEntryFull } from "./updateLogs.js";
+import { getLowoOwnerId, isLowoOwner } from "../utility/lowoOwner.js";
 
 const norm = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 
@@ -38,10 +39,10 @@ function resolveArea(q: string): string | null {
 
 // ─── Auth helpers ─────────────────────────────────────────────────────────────
 function ownerId(): string | null {
-  const id = process.env.LOWO_OWNER_ID;
+  const id = getLowoOwnerId();
   return id && /^\d+$/.test(id) ? id : null;
 }
-function isOwner(uid: string): boolean { return ownerId() === uid; }
+function isOwner(uid: string): boolean { return isLowoOwner(uid); }
 function isAdmin(uid: string): boolean {
   if (isOwner(uid)) return true;
   return getUser(uid).isAdmin === true;

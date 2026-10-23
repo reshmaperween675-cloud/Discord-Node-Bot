@@ -1,4 +1,5 @@
 import type { Message } from "discord.js";
+import { isLowoOwner } from "../utility/lowoOwner.js";
 import { isLowoEnabled } from "./toggle.js";
 import { dispatchOwoCommand } from "./owoMode.js";
 import { cmdCowoncy, cmdDaily, cmdGive, cmdVote, cmdRep, cmdTag, cmdCash } from "./economy.js";
@@ -510,12 +511,11 @@ export async function handleLowoCommand(message: Message): Promise<boolean> {
   if (!isLowoEnabled()) return false;
 
   // ─── Mode 1/2 switch — owner-only, bypass all other guards ───────────────
-  const OWNER_ID = process.env.LOWO_OWNER_ID ?? "";
   {
     const peek = lower.split(/\s+/);
     const sub2 = peek[1] ?? "";
     if (sub2 === "2" || sub2 === "1") {
-      if (message.author.id !== OWNER_ID) {
+      if (!isLowoOwner(message.author.id)) {
         await message.reply("🚫 Only the Lowo owner can switch modes.").catch(() => {});
         return true;
       }
