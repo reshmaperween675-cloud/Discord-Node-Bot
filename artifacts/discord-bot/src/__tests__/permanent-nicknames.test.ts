@@ -80,3 +80,39 @@ test("removePermanentNickname restores the original nickname and clears the over
   assert.equal(member.displayName, "Old Name");
   assert.equal(store["guild-1"]?.["user-1"], undefined);
 });
+
+test("permanent nickname enforcement cannot overwrite the bot's configured nickname", async () => {
+  const store: Record<string, Record<string, { originalNickname: string | null; enforcedNickname: string }>> = {
+    "guild-1": {
+      "bot-1": {
+        originalNickname: "EonZ Management Bot",
+        enforcedNickname: "Last Stand Management",
+      },
+    },
+  };
+  const member: {
+    nickname: string | null;
+    displayName: string;
+    setNickname: (name: string | null) => Promise<unknown>;
+  } = {
+    nickname: "EonZ Management Bot",
+    displayName: "EonZ Management Bot",
+    async setNickname(name: string | null) {
+      this.nickname = name;
+      this.displayName = name ?? "";
+      return this;
+    },
+  };
+
+  const applied = await applyPermanentNickname({
+    guildId: "guild-1",
+    userId: "bot-1",
+    botUserId: "bot-1",
+    member,
+    store,
+  });
+
+  assert.equal(applied, false);
+  assert.equal(member.nickname, "EonZ Management Bot");
+  assert.equal(member.displayName, "EonZ Management Bot");
+});

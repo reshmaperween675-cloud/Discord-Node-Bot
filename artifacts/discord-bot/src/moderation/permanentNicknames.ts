@@ -43,14 +43,18 @@ export function setPermanentNickname({
 export async function applyPermanentNickname({
   guildId,
   userId,
+  botUserId,
   member,
   store = permanentNicknameStore,
 }: {
   guildId: string;
   userId: string;
+  botUserId?: string;
   member: { nickname: string | null; displayName: string; setNickname: (nickname: string | null) => Promise<unknown> };
   store?: PermanentNicknameStore;
 }): Promise<boolean> {
+  if (botUserId && userId === botUserId) return false;
+
   const record = store[guildId]?.[userId];
   if (!record) return false;
 
@@ -112,6 +116,24 @@ export async function handlePermanentNickCommand(message: Message): Promise<bool
       return true;
     }
 
+    if (target.id === message.client.user?.id) {
+      const guildStore = permanentNicknameStore[message.guild.id];
+      const hadRecord = Boolean(guildStore?.[target.id]);
+      if (guildStore) {
+        delete guildStore[target.id];
+        if (Object.keys(guildStore).length === 0) {
+          delete permanentNicknameStore[message.guild.id];
+        }
+      }
+
+      await message.reply(
+        hadRecord
+          ? "Removed the bot's active permanent nickname rule; its configured name will remain unchanged."
+          : "This bot has no active permanent nickname rule.",
+      );
+      return true;
+    }
+
     const previous = await removePermanentNickname({
       guildId: message.guild.id,
       userId: target.id,
@@ -146,6 +168,11 @@ export async function handlePermanentNickCommand(message: Message): Promise<bool
     const target = await message.guild.members.fetch(targetId).catch(() => null);
     if (!target) {
       await message.reply("❌ Please mention a valid server member.");
+      return true;
+    }
+
+    if (target.id === message.client.user?.id) {
+      await message.reply("❌ The bot's name is managed by its startup configuration and can't be set with `?nick`.");
       return true;
     }
 

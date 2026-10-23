@@ -7,4 +7,4 @@ Discord's public API docs may not describe native display-name styles for bots, 
 
 **Why:** A supplied Discord screenshot showed a bot with an actual styled display name, contradicting the initial assumption that the feature was user-only. Public docs and older community field maps can lag behind current font and effect IDs.
 
-**How to apply:** Check the current field/font map before changing the payload, keep the style scoped to each guild, and log API rejection or missing confirmation without claiming the style was applied.
+**How to apply:** Check the current field/font map before changing the payload, keep the style scoped to each guild, and log API rejection or missing confirmation without claiming the style was applied. Permanent-nickname enforcement must skip the bot's own account so a saved old nickname cannot override its startup-configured name; clearing the bot's rule should not restore a stale original nickname.

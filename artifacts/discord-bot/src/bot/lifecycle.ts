@@ -321,6 +321,7 @@ export function registerLifecycleEvents(
     await applyPermanentNickname({
       guildId: member.guild.id,
       userId: member.id,
+      botUserId: client.user?.id,
       member,
       store: permanentNicknameStore,
     }).catch(() => undefined);
@@ -354,6 +355,7 @@ export function registerLifecycleEvents(
     await applyPermanentNickname({
       guildId: member.guild.id,
       userId: member.id,
+      botUserId: client.user?.id,
       member,
       store: permanentNicknameStore,
     }).catch(() => undefined);
