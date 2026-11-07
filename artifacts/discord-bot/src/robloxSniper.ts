@@ -337,9 +337,8 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
 
     if (lower === "?track list") {
       const config = await getTrackerConfig(message.guild.id);
-      const embed = new EmbedBuilder()
-        .setTitle("Tracked Players")
-        .setDescription(
+      const embed = buildInfoEmbed(
+        "Tracked Players",
           config.trackers.length
             ? config.trackers.map((tracker) =>
                 `• **${tracker.displayName || tracker.username}** (${tracker.username}) — ${
@@ -351,8 +350,7 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
                 }`
               ).join("\n")
             : "No players are currently being tracked.",
-        )
-        .setFooter({ text: "EoNZ Sniper V1" });
+      );
       await message.reply({ embeds: [embed] });
       return;
     }
