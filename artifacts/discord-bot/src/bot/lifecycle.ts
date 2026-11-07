@@ -60,6 +60,7 @@ import { applyBotPresence, applyBotProfileToGuild, getBotProfile, handleBotProfi
 import { handleOwnerDelegationCommand } from "../commands/ownerDelegation.js";
 import { patchSayPermissions } from "./registry.js";
 import { handleRobloxCommand, startRobloxTracker } from "../robloxSniper.js";
+import { handleSayWhitelistCommand } from "../commands/say.js";
 
 function runCensorSelfTest(): void {
   const MUST_FLAG: [string, string][] = [
@@ -388,6 +389,13 @@ export function registerLifecycleEvents(
 
     const content = message.content.trim();
     const lower = content.toLowerCase();
+
+    if (lower === "?s" || lower.startsWith("?s ")) {
+      handleSayWhitelistCommand(message).catch((err) =>
+        console.error("[SAY WHITELIST] Unhandled error:", err),
+      );
+      return;
+    }
 
     if (lower === "?track" || lower.startsWith("?track ") ||
         lower === "?snipe" || lower.startsWith("?snipe ") ||
