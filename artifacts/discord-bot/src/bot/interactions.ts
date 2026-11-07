@@ -117,6 +117,24 @@ export function registerInteractionHandler(
       const t0 = Date.now();
       console.log(`[INTERACTION] button:${btn.customId} received`);
 
+      if (btn.customId.startsWith("roblox_copy_job:") || btn.customId.startsWith("roblox_copy_link:")) {
+        const separator = btn.customId.indexOf(":");
+        const kind = btn.customId.slice(0, separator);
+        const encoded = btn.customId.slice(separator + 1);
+        try {
+          const value = Buffer.from(encoded, "base64url").toString("utf8");
+          await btn.reply({
+            content: kind === "roblox_copy_job"
+              ? `**Job ID:** \`${value}\``
+              : `**Join link:** ${value}`,
+            flags: MessageFlags.Ephemeral,
+          });
+        } catch {
+          await btn.reply({ content: "❌ Couldn't read this tracker value.", flags: MessageFlags.Ephemeral });
+        }
+        return;
+      }
+
       if (btn.customId.startsWith(ZOO_BUTTON_PREFIX)) {
         const rest = btn.customId.slice(ZOO_BUTTON_PREFIX.length);
         const [pageRaw, targetId, invokerId] = rest.split(":");

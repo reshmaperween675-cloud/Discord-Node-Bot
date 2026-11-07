@@ -135,6 +135,10 @@ function rosealLink(placeId: number, jobId: string): string {
   return `https://www.roseal.live/join?placeId=${placeId}&gameInstanceId=${jobId}`;
 }
 
+function encodeButtonValue(value: string): string {
+  return Buffer.from(value, "utf8").toString("base64url");
+}
+
 function buildInfoEmbed(title: string, description: string): EmbedBuilder {
   return new EmbedBuilder()
     .setTitle(title)
@@ -175,10 +179,11 @@ function buildTrackerEmbed(
       : state.inGame
         ? "🟢 Online - In Game"
         : "🟢 Online";
+  const borderColor = state.online && !(state as { leftGame?: boolean }).leftGame ? 0x2ECC71 : 0xED4245;
   const embed = new EmbedBuilder()
     .setTitle(`EoNZ Sniper V1 — ${user.displayName || user.name}`)
     .setURL(`https://www.roblox.com/users/${user.id}/profile`)
-    .setColor(0x5865F2)
+    .setColor(borderColor)
     .addFields(
       { name: "Game", value: state.inGame ? state.gameName : "N/A", inline: false },
       { name: "Status", value: status, inline: true },
@@ -189,14 +194,30 @@ function buildTrackerEmbed(
     .setTimestamp();
   if (avatarUrl) embed.setThumbnail(avatarUrl);
 
+  const components = new ActionRowBuilder<ButtonBuilder>();
   if (state.placeId && state.jobId && state.inGame) {
     const link = rosealLink(state.placeId, state.jobId);
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    components.addComponents(
       new ButtonBuilder().setLabel("Join Game").setStyle(ButtonStyle.Link).setURL(link),
     );
-    return { embed, row };
   }
-  return { embed };
+  if (state.jobId) {
+    components.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`roblox_copy_job:${encodeButtonValue(state.jobId)}`)
+        .setLabel("Copy Job ID")
+        .setStyle(ButtonStyle.Secondary),
+    );
+  }
+  if (state.placeId && state.jobId) {
+    components.addComponents(
+      new ButtonBuilder()
+        .setCustomId(`roblox_copy_link:${encodeButtonValue(rosealLink(state.placeId, state.jobId))}`)
+        .setLabel("Copy Join Link")
+        .setStyle(ButtonStyle.Secondary),
+    );
+  }
+  return components.components.length ? { embed, row: components } : { embed };
 }
 
 export async function handleRobloxCommand(message: Message, client: Client): Promise<void> {
