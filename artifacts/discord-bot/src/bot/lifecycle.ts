@@ -59,6 +59,7 @@ import { runJsonMigration } from "../migrate-json.js";
 import { applyBotPresence, applyBotProfileToGuild, getBotProfile, handleBotProfileCommand } from "../profile/commands.js";
 import { handleOwnerDelegationCommand } from "../commands/ownerDelegation.js";
 import { patchSayPermissions } from "./registry.js";
+import { handleRobloxCommand, startRobloxTracker } from "../robloxSniper.js";
 
 function runCensorSelfTest(): void {
   const MUST_FLAG: [string, string][] = [
@@ -231,6 +232,7 @@ export function registerLifecycleEvents(
     logAdminToken();
     runCensorSelfTest();
     startWeeklyResetScheduler(readyClient);
+    startRobloxTracker(readyClient);
 
     try {
       startLowoCron(readyClient);
@@ -386,6 +388,15 @@ export function registerLifecycleEvents(
 
     const content = message.content.trim();
     const lower = content.toLowerCase();
+
+    if (lower === "?track" || lower.startsWith("?track ") ||
+        lower === "?snipe" || lower.startsWith("?snipe ") ||
+        lower === "?t" || lower.startsWith("?t ")) {
+      handleRobloxCommand(message, client).catch((err) =>
+        console.error("[ROBLOX SNIPER] Unhandled error:", err),
+      );
+      return;
+    }
 
     if (lower === "?botprofile" || lower.startsWith("?botprofile ")) {
       await handleBotProfileCommand(message, client).catch((err) => {
