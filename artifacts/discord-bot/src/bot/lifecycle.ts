@@ -391,6 +391,7 @@ export function registerLifecycleEvents(
 
     if (lower === "?track" || lower.startsWith("?track ") ||
         lower === "?snipe" || lower.startsWith("?snipe ") ||
+        lower === "?untrack" || lower.startsWith("?untrack ") ||
         lower === "?t" || lower.startsWith("?t ")) {
       handleRobloxCommand(message, client).catch((err) =>
         console.error("[ROBLOX SNIPER] Unhandled error:", err),

@@ -103,6 +103,17 @@ async function getUniverseInfo(universeId: number): Promise<{ name?: string; roo
   return data.data?.[0] ?? null;
 }
 
+async function getAvatarUrl(userId: number): Promise<string | null> {
+  const response = await fetch(
+    `https://thumbnails.roblox.com/v1/users/avatar?userIds=${userId}&size=420x420&format=Png&isCircular=false`,
+  );
+  if (!response.ok) return null;
+  const data = await response.json() as {
+    data?: Array<{ imageUrl?: string; state?: string }>;
+  };
+  return data.data?.[0]?.state === "Completed" ? data.data[0].imageUrl ?? null : null;
+}
+
 function getMentionTokens(message: Message): string[] {
   const tokens = new Set<string>();
   for (const user of message.mentions.users.values()) tokens.add(`<@${user.id}>`);
@@ -131,7 +142,7 @@ async function resolvePresence(user: RobloxUser, presence: RobloxPresence | null
   if (presence?.universeId) {
     const universe = await getUniverseInfo(presence.universeId).catch(() => null);
     if (universe?.name) gameName = universe.name;
-    if (universe?.rootPlaceId) placeId = universe.rootPlaceId;
+    if (!placeId && universe?.rootPlaceId) placeId = universe.rootPlaceId;
   }
 
   return {
@@ -147,6 +158,7 @@ async function resolvePresence(user: RobloxUser, presence: RobloxPresence | null
 function buildTrackerEmbed(
   user: RobloxUser,
   state: Awaited<ReturnType<typeof resolvePresence>>,
+  avatarUrl?: string | null,
 ): { embed: EmbedBuilder; row?: ActionRowBuilder<ButtonBuilder> } {
   const status = (state as { leftGame?: boolean }).leftGame
     ? "Left Game"
@@ -166,6 +178,7 @@ function buildTrackerEmbed(
     )
     .setFooter({ text: "EoNZ Sniper V1" })
     .setTimestamp();
+  if (avatarUrl) embed.setThumbnail(avatarUrl);
 
   if (state.placeId && state.jobId && state.inGame) {
     const link = rosealLink(state.placeId, state.jobId);
@@ -187,6 +200,20 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
     const rest = content.slice("?t".length).trim();
     if (!rest.toLowerCase().startsWith("access")) return;
     const ids = [...message.mentions.users.values()].map((u) => u.id);
+
+    if (/^access\s+list$/i.test(rest)) {
+      const current = await getJson(message.guild.id, "access");
+      const access: string[] = Array.isArray(current)
+        ? current.filter((id) => typeof id === "string")
+        : [];
+      await message.reply(
+        access.length
+          ? `Snipe and track access:\n${access.map((id) => `<@${id}>`).join("\n")}`
+          : "No users currently have tracking access.",
+      );
+      return;
+    }
+
     if (!ids.length) return;
 
     const current = await getJson(message.guild.id, "access");
@@ -200,19 +227,48 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
     return;
   }
 
-  if (lower === "?track" || lower.startsWith("?track ") || lower === "?snipe" || lower.startsWith("?snipe ")) {
+  if (lower === "?track" || lower.startsWith("?track ") ||
+      lower === "?snipe" || lower.startsWith("?snipe ") ||
+      lower === "?untrack" || lower.startsWith("?untrack ")) {
     if (!(await hasAccess(message))) return;
+
+    if (lower === "?untrack" || lower.startsWith("?untrack ")) {
+      const username = content.trim().replace(/^\?untrack\s+/i, "").replace(/^@/, "").trim();
+      if (!username) {
+        await message.reply("Usage: `?untrack RobloxUsername`");
+        return;
+      }
+      const config = await getTrackerConfig(message.guild.id);
+      const user = await resolveRobloxUser(username);
+      const keep = config.trackers.filter((tracker) =>
+        user ? tracker.userId !== String(user.id) : tracker.username.toLowerCase() !== username.toLowerCase(),
+      );
+      if (keep.length === config.trackers.length) {
+        await message.reply("That player is not being tracked.");
+        return;
+      }
+      await setJson(message.guild.id, "trackers", keep);
+      await message.reply(`✅ Stopped tracking **${user?.displayName || username}**.`);
+      return;
+    }
 
     if (lower === "?track help" || lower === "?track modules") {
       await message.reply(
         "Roblox tracking commands\n\n" +
         "?track setup - use this channel for tracker messages\n" +
         "?track ping @user/@role - choose who gets pinged when someone joins a tracked game\n" +
+        "?track ping list - show current tracking pings\n" +
+        "?track ping remove - stop tracking pings\n" +
         "?track username - track a player in The Strongest Battlegrounds\n" +
         "?track username all - track them in any game\n" +
         "?track username game name - track them only while in that game\n" +
         "?snipe username - check where a player is right now\n" +
-        "?t access @user - give someone track and snipe access\n\n" +
+        "?snipe username all games - check them in any game\n" +
+        "?track list - show everyone currently being tracked\n" +
+        "?untrack username - stop tracking a player\n" +
+        "?t access @user, @user1 - give track and snipe access to multiple users\n" +
+        "?t access remove @user - remove track and snipe access\n" +
+        "?t access list - show who has access\n\n" +
         "Only the eon can manage access.",
       );
       return;
@@ -227,9 +283,36 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
 
     if (lower === "?track ping" || lower.startsWith("?track ping ")) {
       if (!isLowoOwner(message.author.id) && message.guild.ownerId !== message.author.id) return;
+      const pingLower = lower.trim();
+      if (pingLower === "?track ping list") {
+        const targets = await getJson(message.guild.id, "ping");
+        await message.reply(
+          Array.isArray(targets) && targets.length
+            ? `Tracking pings:\n${targets.join("\n")}`
+            : "No tracking pings are configured.",
+        );
+        return;
+      }
+      if (pingLower === "?track ping remove") {
+        await setJson(message.guild.id, "ping", []);
+        await message.reply("✅ Tracking ping removed.");
+        return;
+      }
       const tokens = getMentionTokens(message);
       await setJson(message.guild.id, "ping", tokens);
       await message.reply(tokens.length ? `✅ Tracking ping configured for ${tokens.join(", ")}.` : "✅ Tracking ping disabled.");
+      return;
+    }
+
+    if (lower === "?track list") {
+      const config = await getTrackerConfig(message.guild.id);
+      await message.reply(
+        config.trackers.length
+          ? `Currently tracked:\n${config.trackers.map((tracker) =>
+              `• **${tracker.displayName || tracker.username}** (${tracker.username}) - ${tracker.filter === "all" ? "all games" : tracker.filter === "default" ? "The Strongest Battlegrounds" : tracker.filter}`
+            ).join("\n")}`
+          : "No players are currently being tracked.",
+      );
       return;
     }
 
@@ -246,7 +329,10 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
       const tokens = rawArgs.split(/\s+/);
       username = tokens.shift() ?? rawArgs;
       const remainder = tokens.join(" ").trim();
-      if (remainder) filter = remainder.toLowerCase();
+      if (/^all(?:\s+games)?$/i.test(remainder)) filter = "all";
+      else if (remainder) filter = remainder.toLowerCase();
+    } else {
+      username = rawArgs.split(/\s+/)[0] ?? rawArgs;
     }
 
     username = username.replace(/^@/, "").trim();
@@ -257,9 +343,10 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
     }
     const presence = await getPresence(user.id);
     const state = await resolvePresence(user, presence);
+    const avatarUrl = await getAvatarUrl(user.id);
 
     if (isSnipe) {
-      const { embed, row } = buildTrackerEmbed(user, state);
+      const { embed, row } = buildTrackerEmbed(user, state, avatarUrl);
       await message.reply({ embeds: [embed], components: row ? [row] : [] });
       return;
     }
@@ -272,7 +359,7 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
       return;
     }
 
-    const { embed, row } = buildTrackerEmbed(user, state);
+    const { embed, row } = buildTrackerEmbed(user, state, avatarUrl);
     const sent = await channel.send({ embeds: [embed], components: row ? [row] : [] });
     const existingConfig = await getTrackerConfig(message.guild.id);
     const tracker: Tracker = {
@@ -353,7 +440,8 @@ async function pollTrackers(client: Client): Promise<void> {
         : !state.inGame && wasInGame
           ? { ...state, inGame: false, gameName: "N/A", leftGame: true }
           : { ...state, leftGame: false };
-      const { embed, row } = buildTrackerEmbed(user, visibleState);
+      const avatarUrl = await getAvatarUrl(user.id);
+      const { embed, row } = buildTrackerEmbed(user, visibleState, avatarUrl);
       await message.edit({ embeds: [embed], components: row ? [row] : [] }).catch(() => {});
     }
 
