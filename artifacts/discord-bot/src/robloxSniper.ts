@@ -156,7 +156,7 @@ function buildTrackerEmbed(
         ? "Online - In Game"
         : "Online";
   const embed = new EmbedBuilder()
-    .setTitle(`Roblox Tracker — ${user.displayName || user.name}`)
+    .setTitle(`EoNZ Sniper V1 — ${user.displayName || user.name}`)
     .setURL(`https://www.roblox.com/users/${user.id}/profile`)
     .addFields(
       { name: "Game", value: state.inGame ? state.gameName : "N/A", inline: false },
@@ -164,7 +164,7 @@ function buildTrackerEmbed(
       { name: "Roblox User", value: user.name, inline: true },
       { name: "Job ID", value: state.jobId || "N/A", inline: false },
     )
-    .setFooter({ text: "Live Roblox tracker" })
+    .setFooter({ text: "EoNZ Sniper V1" })
     .setTimestamp();
 
   if (state.placeId && state.jobId && state.inGame) {
@@ -213,7 +213,7 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
         "?track username game name - track them only while in that game\n" +
         "?snipe username - check where a player is right now\n" +
         "?t access @user - give someone track and snipe access\n\n" +
-        "Only the Lowo owner can manage access.",
+        "Only the eon can manage access.",
       );
       return;
     }
