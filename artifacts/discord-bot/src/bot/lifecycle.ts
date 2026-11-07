@@ -58,6 +58,7 @@ import { applyPermanentNickname, handlePermanentNickCommand, permanentNicknameSt
 import { runJsonMigration } from "../migrate-json.js";
 import { applyBotPresence, applyBotProfileToGuild, getBotProfile, handleBotProfileCommand } from "../profile/commands.js";
 import { handleOwnerDelegationCommand } from "../commands/ownerDelegation.js";
+import { patchSayPermissions } from "./registry.js";
 
 function runCensorSelfTest(): void {
   const MUST_FLAG: [string, string][] = [
@@ -209,6 +210,7 @@ export function registerLifecycleEvents(
     applyBotPresence(readyClient, profile);
     for (const [guildId, guild] of readyClient.guilds.cache) {
       await registerCommandsForGuild(readyClient.user.id, guildId, rest, baseCommands);
+      await patchSayPermissions(readyClient, rest, guildId);
       await applyBotProfileToGuild(guild, profile);
     }
 
@@ -263,6 +265,7 @@ export function registerLifecycleEvents(
 
   client.on(Events.GuildCreate, async (guild) => {
     await registerCommandsForGuild(client.user!.id, guild.id, rest, baseCommands);
+    await patchSayPermissions(client, rest, guild.id);
     const profile = await getBotProfile();
     await applyBotProfileToGuild(guild, profile);
   });

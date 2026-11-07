@@ -118,6 +118,7 @@ import {
 import { handleCreateTicket } from "../tickets/ticketFlow.js";
 import { handleCloseTicket, handleDeleteTicket } from "../tickets/ticketControls.js";
 import { executeCreator } from "../commands/creator.js";
+import { executeSay } from "../commands/say.js";
 
 export const PUBLIC_COMMANDS: ReadonlySet<string> = new Set([
   "levellb", "weeklylb", "rank", "leaderboard", "help",
@@ -221,6 +222,7 @@ export function buildSlashHandlers(
     translate: executeTranslate,
     time: executeTime,
     creator: (i) => executeCreator(i, client),
+    say: executeSay,
     play: executePlay,
     pause: executePause,
     resume: executeResume,

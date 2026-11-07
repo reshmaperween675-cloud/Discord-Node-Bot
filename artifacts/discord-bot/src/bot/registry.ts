@@ -1,5 +1,6 @@
 import { REST, Routes } from "discord.js";
 import type { Client } from "discord.js";
+import { getLowoOwnerId } from "../utility/lowoOwner.js";
 
 import { data as setupPanelData } from "../commands/setupChallengePanel.js";
 import {
@@ -88,6 +89,7 @@ import {
   translateData,
 } from "../utility/utilCommands.js";
 import { creatorData } from "../commands/creator.js";
+import { sayData } from "../commands/say.js";
 
 const SLASH_COMMANDS: unknown[] = [
   setupPanelData.toJSON(),
@@ -156,6 +158,7 @@ const SLASH_COMMANDS: unknown[] = [
   pingData.toJSON(),
   translateData.toJSON(),
   creatorData.toJSON(),
+  sayData.toJSON(),
 ];
 
 export const BASE_COMMANDS: unknown[] = [
@@ -169,6 +172,45 @@ export const BASE_COMMANDS: unknown[] = [
   lowoadminData.toJSON(),
 ];
 
+export async function patchSayPermissions(
+  client: Client,
+  rest: REST,
+  guildId: string,
+): Promise<void> {
+  try {
+    const commands = (await rest.get(
+      Routes.applicationGuildCommands(client.user!.id, guildId),
+    )) as { id: string; name: string }[];
+    const sayCommand = commands.find((cmd) => cmd.name === "say");
+    if (!sayCommand) return;
+
+    const lowoOwnerId = getLowoOwnerId();
+    const guild = client.guilds.cache.get(guildId);
+    const guildOwnerId = guild?.ownerId;
+
+    const permissions: { id: string; type: "USER"; permission: boolean }[] = [];
+    if (guildOwnerId) {
+      permissions.push({ id: guildOwnerId, type: "USER", permission: true });
+    }
+    if (lowoOwnerId) {
+      permissions.push({ id: lowoOwnerId, type: "USER", permission: true });
+    }
+
+    if (permissions.length > 0) {
+      await rest.put(
+        Routes.applicationCommandPermissions(
+          client.user!.id,
+          guildId,
+          sayCommand.id,
+        ),
+        { body: { permissions } },
+      );
+    }
+  } catch (err) {
+    console.error(`[REGISTRY] Failed to patch /say permissions for guild ${guildId}:`, err);
+  }
+}
+
 export function makeReregister(
   client: Client,
   rest: REST,
@@ -176,14 +218,17 @@ export function makeReregister(
   return async () => {
     const guilds = [...client.guilds.cache.keys()];
     await Promise.all(
-      guilds.map((guildId) =>
-        rest
-          .put(Routes.applicationGuildCommands(client.user!.id, guildId), {
+      guilds.map(async (guildId) => {
+        try {
+          await rest.put(Routes.applicationGuildCommands(client.user!.id, guildId), {
             body: BASE_COMMANDS,
-          })
-          .then(() => console.log(`[TOGGLE] Re-registered commands for guild ${guildId}`))
-          .catch((err) => console.error(`[TOGGLE] Failed for guild ${guildId}:`, err)),
-      ),
+          });
+          console.log(`[TOGGLE] Re-registered commands for guild ${guildId}`);
+          await patchSayPermissions(client, rest, guildId);
+        } catch (err) {
+          console.error(`[TOGGLE] Failed for guild ${guildId}:`, err);
+        }
+      }),
     );
   };
 }
