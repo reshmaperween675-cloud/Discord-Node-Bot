@@ -306,13 +306,23 @@ export async function handleRobloxCommand(message: Message, client: Client): Pro
 
     if (lower === "?track list") {
       const config = await getTrackerConfig(message.guild.id);
-      await message.reply(
-        config.trackers.length
-          ? `Currently tracked:\n${config.trackers.map((tracker) =>
-              `• **${tracker.displayName || tracker.username}** (${tracker.username}) - ${tracker.filter === "all" ? "all games" : tracker.filter === "default" ? "The Strongest Battlegrounds" : tracker.filter}`
-            ).join("\n")}`
-          : "No players are currently being tracked.",
-      );
+      const embed = new EmbedBuilder()
+        .setTitle("Tracked Players")
+        .setDescription(
+          config.trackers.length
+            ? config.trackers.map((tracker) =>
+                `• **${tracker.displayName || tracker.username}** (${tracker.username}) — ${
+                  tracker.filter === "all"
+                    ? "all games"
+                    : tracker.filter === "default"
+                      ? "The Strongest Battlegrounds"
+                      : tracker.filter
+                }`
+              ).join("\n")
+            : "No players are currently being tracked.",
+        )
+        .setFooter({ text: "EoNZ Sniper V1" });
+      await message.reply({ embeds: [embed] });
       return;
     }
 
