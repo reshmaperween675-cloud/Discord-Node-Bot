@@ -12,14 +12,21 @@ export interface CustomModule {
 type ModuleRow = { modules: CustomModule[] };
 
 const KV_KEY = (guildId: string) => `custom_modules:${guildId}`;
+const MODULE_CACHE_TTL_MS = 5_000;
+const moduleCache = new Map<string, { modules: CustomModule[]; expiresAt: number }>();
 
 async function loadModules(guildId: string): Promise<CustomModule[]> {
+  const cached = moduleCache.get(guildId);
+  if (cached && cached.expiresAt > Date.now()) return cached.modules;
+
   const db = getPool();
   const res = await db.query<{ value: ModuleRow }>(
     "SELECT value FROM bot_kv WHERE key = $1",
     [KV_KEY(guildId)]
   );
-  return res.rows[0]?.value?.modules ?? [];
+  const modules = res.rows[0]?.value?.modules ?? [];
+  moduleCache.set(guildId, { modules, expiresAt: Date.now() + MODULE_CACHE_TTL_MS });
+  return modules;
 }
 
 async function saveModules(guildId: string, modules: CustomModule[]): Promise<void> {
@@ -30,6 +37,7 @@ async function saveModules(guildId: string, modules: CustomModule[]): Promise<vo
      ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, updated_at = NOW()`,
     [KV_KEY(guildId), JSON.stringify({ modules })]
   );
+  moduleCache.set(guildId, { modules, expiresAt: Date.now() + MODULE_CACHE_TTL_MS });
 }
 
 function isAdmin(message: Message): boolean {
