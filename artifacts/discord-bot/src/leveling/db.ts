@@ -68,12 +68,9 @@ export const DEFAULT_LEVEL_ROLES: Record<string, string> = {
 
 // ─── In-memory caches ─────────────────────────────────────────────────────────
 
-const userCache    = new Map<string, UserData>();
 const configCache  = new Map<string, GuildConfig>();
 const rolesCache   = new Map<string, Record<string, string>>();
 let weeklyResetCache: number | null = null;
-
-function ukey(guildId: string, userId: string) { return `${guildId}:${userId}`; }
 
 // ─── DB row converters ────────────────────────────────────────────────────────
 
@@ -212,8 +209,6 @@ export async function removeLevelRole(guildId: string, level: number): Promise<b
 // ─── Users ────────────────────────────────────────────────────────────────────
 
 export async function getUser(guildId: string, userId: string): Promise<UserData> {
-  const k = ukey(guildId, userId);
-  if (userCache.has(k)) return userCache.get(k)!;
   const { rows } = await getPool().query(
     `SELECT * FROM leveling_users WHERE guild_id = $1 AND user_id = $2 LIMIT 1`,
     [guildId, userId]
@@ -221,12 +216,10 @@ export async function getUser(guildId: string, userId: string): Promise<UserData
   const user = rows[0]
     ? rowToUser(rows[0] as Record<string, unknown>)
     : { xp: 0, level: 0, totalXp: 0, weeklyXp: 0, lastMessageAt: 0, lastMessageContent: "" };
-  userCache.set(k, user);
   return user;
 }
 
 export async function saveUser(guildId: string, userId: string, user: UserData): Promise<void> {
-  userCache.set(ukey(guildId, userId), user);
   await getPool().query(
     `INSERT INTO leveling_users
        (guild_id, user_id, xp, level, total_xp, weekly_xp, last_message_at, last_message_content)
@@ -254,8 +247,6 @@ export async function getAllUsers(guildId: string): Promise<Array<{ userId: stri
 }
 
 export async function resetUser(guildId: string, userId: string): Promise<void> {
-  const blank: UserData = { xp: 0, level: 0, totalXp: 0, weeklyXp: 0, lastMessageAt: 0, lastMessageContent: "" };
-  userCache.set(ukey(guildId, userId), blank);
   await getPool().query(
     `INSERT INTO leveling_users
        (guild_id, user_id, xp, level, total_xp, weekly_xp, last_message_at, last_message_content)
@@ -276,6 +267,16 @@ export async function modifyUserXp(
   if (mode === "add")    user.totalXp = Math.max(0, user.totalXp + deltaOrAbsolute);
   else if (mode === "remove") user.totalXp = Math.max(0, user.totalXp - deltaOrAbsolute);
   else                   user.totalXp = Math.max(0, deltaOrAbsolute);
+
+  let level = 0;
+  let remainingXp = user.totalXp;
+  while (remainingXp >= 5 * level * level + 50 * level + 100) {
+    remainingXp -= 5 * level * level + 50 * level + 100;
+    level++;
+  }
+  user.level = level;
+  user.xp = remainingXp;
+
   await saveUser(guildId, userId, user);
   return user;
 }
@@ -306,9 +307,6 @@ export async function resetWeeklyXp(guildId: string): Promise<void> {
     `UPDATE leveling_users SET weekly_xp = 0 WHERE guild_id = $1`,
     [guildId]
   );
-  for (const [k, u] of userCache.entries()) {
-    if (k.startsWith(`${guildId}:`)) u.weeklyXp = 0;
-  }
 }
 
 export async function recordWeeklyHistory(entry: WeeklyHistoryEntry): Promise<void> {
