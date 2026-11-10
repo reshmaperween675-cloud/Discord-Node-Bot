@@ -61,6 +61,7 @@ import { handleOwnerDelegationCommand } from "../commands/ownerDelegation.js";
 import { patchSayPermissions } from "./registry.js";
 import { handleRobloxCommand, startRobloxTracker } from "../robloxSniper.js";
 import { handleSayWhitelistCommand } from "../commands/say.js";
+import { claimDiscordMessage } from "../persistence.js";
 
 function runCensorSelfTest(): void {
   const MUST_FLAG: [string, string][] = [
@@ -330,6 +331,12 @@ export function registerLifecycleEvents(
 
   client.on(Events.MessageCreate, async (message: Message) => {
     if (message.author.bot) return;
+    try {
+      if (!(await claimDiscordMessage(message.id))) return;
+    } catch (err) {
+      console.error("[MESSAGE DISPATCH] Failed to claim message for processing:", err);
+      return;
+    }
 
     const trimmedContent = message.content.trim().toLowerCase();
     if (trimmedContent === "?owner" || trimmedContent.startsWith("?owner ")) {

@@ -6,6 +6,8 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const useDb = !!DATABASE_URL;
 
 let pool: pg.Pool | null = null;
+const localMessageClaims = new Map<string, number>();
+let messageClaimCount = 0;
 
 export function getPool(): pg.Pool {
   if (!pool) {
@@ -31,6 +33,11 @@ async function ensureSchema(): Promise<void> {
       key        TEXT PRIMARY KEY,
       value      JSONB NOT NULL,
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS discord_message_claims (
+      message_id TEXT PRIMARY KEY,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
 
     CREATE TABLE IF NOT EXISTS activity_tracker (
@@ -390,6 +397,39 @@ export async function flushAll(): Promise<void> {
 
 export function isUsingDatabase(): boolean {
   return useDb;
+}
+
+export async function claimDiscordMessage(messageId: string): Promise<boolean> {
+  if (!useDb) {
+    if (localMessageClaims.has(messageId)) return false;
+    localMessageClaims.set(messageId, Date.now());
+    if (localMessageClaims.size > 20_000) {
+      const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+      for (const [id, claimedAt] of localMessageClaims) {
+        if (claimedAt < cutoff || localMessageClaims.size > 15_000) {
+          localMessageClaims.delete(id);
+        }
+      }
+    }
+    return true;
+  }
+
+  const result = await getPool().query<{ message_id: string }>(
+    `INSERT INTO discord_message_claims (message_id)
+     VALUES ($1)
+     ON CONFLICT (message_id) DO NOTHING
+     RETURNING message_id`,
+    [messageId],
+  );
+  if (!result.rows.length) return false;
+
+  messageClaimCount++;
+  if (messageClaimCount % 1_000 === 0) {
+    void getPool()
+      .query("DELETE FROM discord_message_claims WHERE created_at < NOW() - INTERVAL '1 day'")
+      .catch((err) => console.error("[PERSISTENCE] Failed to prune Discord message claims:", err));
+  }
+  return true;
 }
 
 export async function pingDb(): Promise<{ ok: boolean; latencyMs?: number; error?: string }> {
