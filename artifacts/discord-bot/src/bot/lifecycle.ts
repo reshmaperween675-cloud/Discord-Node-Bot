@@ -61,6 +61,7 @@ import { handleOwnerDelegationCommand } from "../commands/ownerDelegation.js";
 import { patchSayPermissions } from "./registry.js";
 import { handleRobloxCommand, startRobloxTracker } from "../robloxSniper.js";
 import { handleSayWhitelistCommand } from "../commands/say.js";
+import { handleAutoReactMessage } from "../commands/autoReact.js";
 import { claimDiscordMessage } from "../persistence.js";
 
 function runCensorSelfTest(): void {
@@ -360,6 +361,12 @@ export function registerLifecycleEvents(
         console.error("[OWNER-CONTROL] Unhandled error:", err),
       );
       return;
+    }
+
+    try {
+      if (await handleAutoReactMessage(message)) return;
+    } catch (err) {
+      console.error("[AUTOREACT] Failed to process message:", err);
     }
 
     spyModCommand(message).catch(() => {});
