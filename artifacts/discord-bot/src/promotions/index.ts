@@ -60,17 +60,27 @@ async function hasAccess(interaction: ChatInputCommandInteraction): Promise<bool
   return cfg.accessRoleIds.some(id => roleIds.includes(id));
 }
 
-// ── Hierarchy guard ────────────────────────────────────────────────────────────
-// Prevents mods from promoting anyone to a role at or above their own highest role.
-// Administrators are exempt — they already have full server control.
+export function canPromoteMember(
+  actor: GuildMember,
+  bot: GuildMember,
+  targetId: string,
+  fromRole: GuildMember["roles"]["highest"],
+  toRole: GuildMember["roles"]["highest"],
+): boolean {
+  return actor.id !== targetId &&
+    actor.roles.highest.comparePositionTo(fromRole) > 0 &&
+    actor.roles.highest.comparePositionTo(toRole) > 0 &&
+    bot.roles.highest.comparePositionTo(fromRole) > 0 &&
+    bot.roles.highest.comparePositionTo(toRole) > 0 &&
+    toRole.comparePositionTo(fromRole) > 0;
+}
 
 function guardHierarchy(
   interaction: ChatInputCommandInteraction,
-  toRolePosition: number,
+  rolePosition: number,
 ): boolean {
-  if (interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) return true;
-  const invokerHighest = (interaction.member as GuildMember).roles.highest.position;
-  return toRolePosition < invokerHighest;
+  const invoker = interaction.guild?.members.cache.get(interaction.user.id);
+  return !!invoker && invoker.roles.highest.position > rolePosition;
 }
 
 // ── Reason formatter ──────────────────────────────────────────────────────────
@@ -211,18 +221,41 @@ export async function executePromote(interaction: ChatInputCommandInteraction): 
   }
 
   const target    = interaction.options.getUser("user", true);
-  const fromRole  = interaction.options.getRole("from", true);
-  const toRole    = interaction.options.getRole("to", true);
+  const fromRoleOption = interaction.options.getRole("from", true);
+  const toRoleOption   = interaction.options.getRole("to", true);
   const reasons   = formatReasons(interaction.options.getString("reasons", true));
 
-  // Block privilege escalation: mods cannot promote to a role at or above their own
-  if (!guardHierarchy(interaction, toRole.position)) {
-    await interaction.editReply("❌ You can't promote someone to a role at or above your own highest role.");
+  const guild = interaction.guild;
+  if (!guild) {
+    await interaction.editReply("❌ This command can only be used in a server.");
+    return;
+  }
+  const fromRole = guild.roles.cache.get(fromRoleOption.id);
+  const toRole = guild.roles.cache.get(toRoleOption.id);
+  if (!fromRole || !toRole) {
+    await interaction.editReply("❌ Could not verify the selected roles. Please try again.");
+    return;
+  }
+  const actor = guild.members.cache.get(interaction.user.id) ??
+    await guild.members.fetch(interaction.user.id).catch(() => null);
+  const bot = guild.members.me ?? await guild.members.fetchMe().catch(() => null);
+  if (!actor || !bot) {
+    await interaction.editReply("❌ Could not verify role hierarchy. Please try again.");
+    return;
+  }
+  if (!canPromoteMember(actor, bot, target.id, fromRole, toRole)) {
+    await interaction.editReply(
+      "❌ You can't promote yourself, the new role must be higher than the current role, and both roles must be below your and my highest roles."
+    );
     return;
   }
 
   // Fetch the guild member and swap roles
-  const member = await interaction.guild!.members.fetch(target.id).catch(() => null);
+  const member = await guild.members.fetch(target.id).catch(() => null);
+  if (member && !member.roles.cache.has(fromRole.id)) {
+    await interaction.editReply("❌ The member does not currently have the selected role to promote from.");
+    return;
+  }
   if (!member) {
     await interaction.editReply("❌ Could not find that member in this server.");
     return;
@@ -269,7 +302,7 @@ export async function executeDemote(interaction: ChatInputCommandInteraction): P
   const toRole   = interaction.options.getRole("to", true);
   const reasons  = formatReasons(interaction.options.getString("reasons", true));
 
-  // Block privilege escalation: mods cannot demote someone from a role at or above their own
+  // Block demotions involving roles at or above the caller's highest role.
   if (!guardHierarchy(interaction, fromRole.position)) {
     await interaction.editReply("❌ You can't demote someone from a role at or above your own highest role.");
     return;
