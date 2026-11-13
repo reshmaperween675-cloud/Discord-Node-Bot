@@ -2,13 +2,13 @@ import { parseEmoji, type Message } from "discord.js";
 import { getPool } from "../persistence.js";
 import { isLowoOwner } from "../utility/lowoOwner.js";
 
-interface AutoReactConfig {
+export interface AutoReactTarget {
   userId: string;
   emoji: string;
 }
 
 interface CachedConfig {
-  config: AutoReactConfig | null;
+  config: AutoReactTarget[];
   expiresAt: number;
 }
 
@@ -38,36 +38,58 @@ function resolveEmoji(message: Message, input: string): string | null {
   return parsed?.name && !parsed.id && isUnicodeEmoji(parsed.name) ? parsed.name : null;
 }
 
-async function loadConfig(guildId: string): Promise<AutoReactConfig | null> {
+export function normalizeAutoReactConfig(value: unknown): AutoReactTarget[] {
+  if (!value || typeof value !== "object") return [];
+  const record = value as Record<string, unknown>;
+  const targets = Array.isArray(record.targets)
+    ? record.targets
+    : typeof record.userId === "string" && typeof record.emoji === "string"
+      ? [{ userId: record.userId, emoji: record.emoji }]
+      : [];
+
+  return targets.filter(
+    (target): target is AutoReactTarget =>
+      !!target &&
+      typeof target === "object" &&
+      typeof target.userId === "string" &&
+      typeof target.emoji === "string",
+  );
+}
+
+export function upsertAutoReactTarget(
+  targets: AutoReactTarget[],
+  target: AutoReactTarget,
+): AutoReactTarget[] {
+  const index = targets.findIndex((entry) => entry.userId === target.userId);
+  if (index === -1) return [...targets, target];
+  return targets.map((entry, entryIndex) => entryIndex === index ? target : entry);
+}
+
+async function loadConfig(guildId: string): Promise<AutoReactTarget[]> {
   const cached = configCache.get(guildId);
   if (cached && cached.expiresAt > Date.now()) return cached.config;
 
-  const result = await getPool().query<{ value: AutoReactConfig }>(
+  const result = await getPool().query<{ value: unknown }>(
     "SELECT value FROM bot_kv WHERE key = $1",
     [configKey(guildId)],
   );
-  const value = result.rows[0]?.value;
-  const config = value &&
-    typeof value.userId === "string" &&
-    typeof value.emoji === "string"
-    ? value
-    : null;
+  const config = normalizeAutoReactConfig(result.rows[0]?.value);
   configCache.set(guildId, { config, expiresAt: Date.now() + CACHE_TTL_MS });
   return config;
 }
 
-async function saveConfig(guildId: string, config: AutoReactConfig): Promise<void> {
+async function saveConfig(guildId: string, config: AutoReactTarget[]): Promise<void> {
   await getPool().query(
     `INSERT INTO bot_kv (key, value, updated_at) VALUES ($1, $2::jsonb, NOW())
      ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, updated_at = NOW()`,
-    [configKey(guildId), JSON.stringify(config)],
+    [configKey(guildId), JSON.stringify({ targets: config })],
   );
   configCache.set(guildId, { config, expiresAt: Date.now() + CACHE_TTL_MS });
 }
 
 async function disableConfig(guildId: string): Promise<void> {
   await getPool().query("DELETE FROM bot_kv WHERE key = $1", [configKey(guildId)]);
-  configCache.set(guildId, { config: null, expiresAt: Date.now() + CACHE_TTL_MS });
+  configCache.set(guildId, { config: [], expiresAt: Date.now() + CACHE_TTL_MS });
 }
 
 export async function handleAutoReactMessage(message: Message): Promise<boolean> {
@@ -85,7 +107,7 @@ export async function handleAutoReactMessage(message: Message): Promise<boolean>
     if (args.length === 1 && args[0]?.toLowerCase() === "disable") {
       try {
         await disableConfig(guild.id);
-        await message.reply("✅ Auto-react dihsabled");
+        await message.reply("✅ Auto-react disabled for this server.");
       } catch (error) {
         console.error("[AUTOREACT] Failed to disable auto-react:", error);
         await message.reply("❌ Could not disable auto-react. Please try again.");
@@ -113,7 +135,12 @@ export async function handleAutoReactMessage(message: Message): Promise<boolean>
     }
 
     try {
-      await saveConfig(guild.id, { userId: target.id, emoji });
+      const currentTargets = await loadConfig(guild.id);
+      const updatedTargets = upsertAutoReactTarget(currentTargets, {
+        userId: target.id,
+        emoji,
+      });
+      await saveConfig(guild.id, updatedTargets);
       await message.reply(`✅ I'll react with ${emoji} to ${target}'s messages in this server.`);
     } catch (error) {
       console.error("[AUTOREACT] Failed to save auto-react:", error);
@@ -123,8 +150,9 @@ export async function handleAutoReactMessage(message: Message): Promise<boolean>
   }
 
   const config = await loadConfig(guild.id);
-  if (config?.userId === message.author.id) {
-    await message.react(config.emoji);
+  const target = config.find((entry) => entry.userId === message.author.id);
+  if (target) {
+    await message.react(target.emoji);
   }
   return false;
 }
