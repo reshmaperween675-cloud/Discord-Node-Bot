@@ -77,7 +77,7 @@ export async function handleAutoReactMessage(message: Message): Promise<boolean>
   const commandMatch = message.content.trim().match(/^\?autoreact(?:\s+([\s\S]*))?$/i);
   if (commandMatch) {
     if (!canManageAutoReact(message.author.id, guild.ownerId)) {
-      await message.reply("🚫 Only the Lowo owner or this server's owner can manage auto-react.");
+      await message.reply("no ez 😂🤣🤣🤣");
       return true;
     }
 
@@ -85,7 +85,7 @@ export async function handleAutoReactMessage(message: Message): Promise<boolean>
     if (args.length === 1 && args[0]?.toLowerCase() === "disable") {
       try {
         await disableConfig(guild.id);
-        await message.reply("✅ Auto-react disabled for this server.");
+        await message.reply("✅ Auto-react dihsabled");
       } catch (error) {
         console.error("[AUTOREACT] Failed to disable auto-react:", error);
         await message.reply("❌ Could not disable auto-react. Please try again.");
